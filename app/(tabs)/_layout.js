@@ -2,8 +2,8 @@ import { Tabs } from "expo-router";
 import { Platform } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
-import { appStyle } from "styles/appStyle";
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from "@styles/appStyle";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 
