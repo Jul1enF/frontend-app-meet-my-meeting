@@ -1,8 +1,8 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native"
 import Modal from "react-native-modal"
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
-import { appStyle } from "styles/appStyle"
-import { redirectToStores } from "utils/redirectToStores"
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from "@styles/appStyle"
+import { redirectToStores } from "@utils/redirectToStores"
 
 
 export default function ForcedUpdateModal({ appObsolete, screenWidth, screenHeight, freeHeight, modalOffsetTop }) {

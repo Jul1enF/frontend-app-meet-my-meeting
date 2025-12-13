@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-import { RPH, RPW, phoneDevice } from 'utils/dimensions.js'
-import { appStyle } from 'styles/appStyle.js';
+import { RPH, RPW, phoneDevice } from '@utils/dimensions.js'
+import { appStyle } from '@styles/appStyle.js';
 
 export default function GoingBackHeader({ previousPage, previousPageName, leftFunction }) {
 const router = useRouter()

@@ -5,8 +5,8 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, StatusBar } from '
 import { useEffect } from "react";
 import * as SplashScreen from 'expo-splash-screen';
 
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
-import { appStyle } from 'styles/appStyle';
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from '@styles/appStyle';
 
 export default function HomePage() {
 

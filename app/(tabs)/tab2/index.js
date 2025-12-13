@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
-import GoingBackHeader from 'components/ui/GoingBackHeader';
+import GoingBackHeader from '@components/ui/GoingBackHeader';
 
-import { RPH, RPW } from 'utils/dimensions'
-import { appStyle } from 'styles/appStyle';
+import { RPH, RPW } from '@utils/dimensions'
+import { appStyle } from '@styles/appStyle';
 
 export default function Tab2Page() {
   return (

@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-import Button from 'components/ui/Button';
-import ConfirmationModal from 'components/ui/ConfirmationModal';
-import HorizontalMenu from 'components/ui/HorizontalMenu';
+import Button from '@components/ui/Button';
+import ConfirmationModal from '@components/ui/ConfirmationModal';
+import HorizontalMenu from '@components/ui/HorizontalMenu';
 import { useState } from 'react';
 
-import { RPH, RPW, phoneDevice } from 'utils/dimensions'
-import { appStyle } from 'styles/appStyle';
+import { RPH, RPW, phoneDevice } from '@utils/dimensions'
+import { appStyle } from '@styles/appStyle';
 
 export default function Tab1Page() {
   const [modalVisible, setModalVisible] = useState(false)

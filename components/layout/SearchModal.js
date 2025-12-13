@@ -3,8 +3,8 @@ import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Modal from "react-native-modal"
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
-import { appStyle } from "styles/appStyle";
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from "@styles/appStyle";
 import { router } from "expo-router";
 
 

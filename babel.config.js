@@ -11,11 +11,11 @@ module.exports = function (api) {
         {
           root: [path.resolve("./")],
           alias: {
-            styles: path.resolve("./styles"),
-            components: path.resolve("./components"),
-            utils: path.resolve("./utils"),
-            hooks: path.resolve("./hooks"),
-            reducers: path.resolve("./reducers"),
+            "@styles" : path.resolve("./styles"),
+            "@components" : path.resolve("./components"),
+            "@utils" : path.resolve("./utils"),
+            "@hooks" : path.resolve("./hooks"),
+            "@reducers" : path.resolve("./reducers"),
           },
           extensions: [".js", ".jsx", ".ts", ".tsx"],
         },

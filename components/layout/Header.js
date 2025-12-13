@@ -11,9 +11,9 @@ import SearchModal from "./SearchModal";
 
 import { useState } from 'react'
 import { useSelector } from "react-redux";
-import useLayoutSpaces from "hooks/useLayoutSpaces"
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
-import { appStyle } from "styles/appStyle";
+import useLayoutSpaces from "@hooks/useLayoutSpaces"
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from "@styles/appStyle";
 
 
 

@@ -1,4 +1,4 @@
-import { RPH, RPW, phoneDevice } from 'utils/dimensions'
+import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { colorsStyle } from './colorsStyle'
 const { brightGrey, lightGrey, darkWhite } = colorsStyle
 

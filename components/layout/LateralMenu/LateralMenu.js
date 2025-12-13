@@ -1,10 +1,10 @@
 import { StyleSheet, View, FlatList } from "react-native"
 import Modal from "react-native-modal"
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import LateralMenuItem from "./LateralMenuItem"
-import { appStyle } from "styles/appStyle"
+import { appStyle } from "@styles/appStyle"
 
-import { logout } from "reducers/user";
+import { logout } from "@reducers/user";
 import { useDispatch } from "react-redux";
 
 

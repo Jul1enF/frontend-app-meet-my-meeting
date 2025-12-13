@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 import Constants from 'expo-constants';
-import { appStyle } from "styles/appStyle"
+import { appStyle } from "@styles/appStyle"
 
 export default function useLayoutSpaces(tabBar, secondHeader) {
     const { height: screenHeight, width: screenWidth } = useSafeAreaFrame()

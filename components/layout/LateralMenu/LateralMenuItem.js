@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native"
-import { RPH, RPW, phoneDevice } from "utils/dimensions"
-import { appStyle } from "styles/appStyle"
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from "@styles/appStyle"
 import { router } from "expo-router";
 
 
