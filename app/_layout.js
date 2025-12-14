@@ -35,10 +35,6 @@ export default function RootLayout() {
                 header: (props) => <Header {...props} appObsolete={appObsolete} />,
             }} >
                 <Stack.Screen name="index" />
-                 <Stack.Screen name="home" options={{
-                    title: "Accueil",
-                    animation : "none",
-                }} />
                 <Stack.Screen name="(tabs)" />
             </Stack>
         </Provider>

@@ -45,15 +45,15 @@ export default function Header({appObsolete}) {
                     end={{ x: 1, y: 0.5 }}
                 >
                     <View style={styles.menuIconContainer}>
-                        <FontAwesome name="navicon" style={styles.icon} size={phoneDevice ? RPW(7) : 38} onPress={() => setMenuVisible(!menuVisible)} />
+                        <FontAwesome name="navicon" style={styles.icon} size={phoneDevice ? RPW(6) : 38} onPress={() => setMenuVisible(!menuVisible)} />
                     </View>
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}>
-                            APP NAME
+                            Meet My Meeting
                         </Text>
                     </View>
                     <View style={styles.searchIconContainer}>
-                        <FontAwesome6 name="magnifying-glass" style={styles.icon} size={phoneDevice ? RPW(6.5) : 38} onPress={() => setSearchVisible(!searchVisible)} />
+                        <FontAwesome6 name="magnifying-glass" style={styles.icon} size={phoneDevice ? RPW(6) : 38} onPress={() => setSearchVisible(!searchVisible)} />
                     </View>
                 </LinearGradient>
                 <View style={styles.headerLigne}></View>
@@ -90,10 +90,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     title: {
-        fontSize: phoneDevice ? RPW(8) : 55,
+        fontSize: phoneDevice ? RPW(7) : 52,
         color: appStyle.darkWhite,
         letterSpacing: phoneDevice ? 1.5 : 4,
         fontWeight: "600",
+        paddingBottom : phoneDevice ? RPW(1) : 4
     },
     searchIconContainer: {
         width: "15%",

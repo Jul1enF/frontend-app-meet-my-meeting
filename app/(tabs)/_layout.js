@@ -28,7 +28,7 @@ export default function TabsLayout() {
           color = focused ? appStyle.darkWhite : appStyle.lightGrey
 
           switch (route.name) {
-            case 'tab1':
+            case 'date-picker':
               iconName = 'square-outline'
               break;
             case 'tab2':
@@ -58,8 +58,8 @@ export default function TabsLayout() {
 
       })}
     >
-      <Tabs.Screen name="tab1" options={{
-        title: "Tab 1"
+      <Tabs.Screen name="date-picker" options={{
+        title: "Date Picker",
       }} />
       <Tabs.Screen name="tab2" options={{
         title: "Tab 2",
