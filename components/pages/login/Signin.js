@@ -42,7 +42,7 @@ export default function Signin({setSignForm}) {
 
         if (data){
             dispatch(login(data.user))
-            router.push("/")
+            router.push("/(tabs)/pages")
         }
 
     }

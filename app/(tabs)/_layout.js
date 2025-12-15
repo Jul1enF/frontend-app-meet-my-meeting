@@ -64,7 +64,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="tab2" options={{
         title: "Tab 2",
       }} />
-      <Tabs.Screen name="(pages)" options={{
+      <Tabs.Screen name="pages" options={{
         tabBarItemStyle: { display: "none" },
       }} />
     </Tabs>

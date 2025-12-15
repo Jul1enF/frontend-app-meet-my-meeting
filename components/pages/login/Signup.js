@@ -59,7 +59,7 @@ export default function Signup({ setSignForm }) {
 
         if (data) {
             dispatch(login(data.user))
-            router.push("/")
+            router.push("/(tabs)/pages")
         }
     }
 
