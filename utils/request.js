@@ -4,10 +4,10 @@ export default async function request({path, method = "GET", body, params, jwtTo
     const modal = typeof setModalVisible === "function" ? true : false
     const uploading = typeof setUploading === "function" ? true : false
 
-    const displayWarning = (message) => {
+    const displayWarning = (message, success) => {
         if (warning) {
-            setWarning(message ? message : "Erreur : Problème de connexion")
-            setTimeout(() => setWarning(""), 4500);
+            setWarning({ text : message ? message : "Erreur : Problème de connexion", success : success ? success : false})
+            setTimeout(() => setWarning({}), 4500);
         }
     }
 
@@ -16,7 +16,7 @@ export default async function request({path, method = "GET", body, params, jwtTo
         ref.current = false;
     }
     try {
-        warning && setWarning("")
+        warning && setWarning({})
         uploading && setUploading(true)
 
         const url = process.env.EXPO_PUBLIC_BACK_ADDRESS;
@@ -45,7 +45,7 @@ export default async function request({path, method = "GET", body, params, jwtTo
         } else if (!data.result) {
             displayWarning()
         } else {
-            data.successMsg && displayWarning(data.successMsg)
+            data.successMsg && displayWarning(data.successMsg, true)
             return data
         }
     }

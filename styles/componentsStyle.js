@@ -21,6 +21,7 @@ export const componentsStyle = {
     headerHeight: phoneDevice ? RPW(16) : 105,
     tabBarHeight: phoneDevice ? RPW(18) : 90,
     secondHeaderHeight: phoneDevice ? RPW(10) : 62,
+    passwordIconSize: phoneDevice ? RPW(5.2) : 35,
 
     // Export of sizes that can be called in specific places
     regularItemWidth,
@@ -38,23 +39,30 @@ export const componentsStyle = {
     // Components Style
     pageBody: {
         flex: 1,
-        backgroundColor : darkWhite,
-        paddingTop : pagePaddingTop,
-        paddingBottom : pagePaddingBottom,
+        backgroundColor: darkWhite,
+        paddingTop: pagePaddingTop,
+        paddingBottom: pagePaddingBottom,
+        alignItems : "center",
     },
     card: {
         paddingTop: phoneDevice ? RPW(6) : 45,
         paddingBottom: phoneDevice ? RPW(6.5) : 50,
-        paddingHorizontal : cardLateralPadding,
+        paddingHorizontal: cardLateralPadding,
         borderRadius: regularItemBorderRadius,
         marginTop: phoneDevice ? RPW(6) : 40,
         alignItems: "center",
         width: (cardLateralPadding * 2) + regularItemWidth,
-        backgroundColor : darkGrey,
+        backgroundColor: darkGrey,
     },
     input: {
         paddingBottom: 0,
         paddingTop: 0,
+    },
+    inputWithIcon: {
+        paddingBottom: 0,
+        paddingTop: 0,
+        width: "90%",
+        height: "100%",
     },
     button: {
         alignItems: "center",
@@ -65,16 +73,16 @@ export const componentsStyle = {
         width: regularItemWidth,
         borderRadius: regularItemBorderRadius,
         marginTop: phoneDevice ? RPW(3) : 25,
-        paddingHorizontal : phoneDevice ? RPW(2) : 20,
+        paddingHorizontal: phoneDevice ? RPW(2) : 20,
     },
     largeItem: {
         height: largeItemHeight,
         width: largeItemWidth,
         borderRadius: regularItemBorderRadius,
         marginTop: phoneDevice ? RPW(3) : 25,
-        paddingHorizontal : phoneDevice ? RPW(2) : 20,
+        paddingHorizontal: phoneDevice ? RPW(2) : 20,
     },
-     horizontalLine: {
+    horizontalLine: {
         height: phoneDevice ? 1.5 : 2,
         backgroundColor: brightGrey,
     },

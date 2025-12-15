@@ -18,7 +18,6 @@ export default function Tab2Page() {
 const styles = StyleSheet.create({
   body: {
     ...appStyle.pageBody,
-    alignItems: 'center',
     justifyContent: 'center',
   },
   pageTitle: {

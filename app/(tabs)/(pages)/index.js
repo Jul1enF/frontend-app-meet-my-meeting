@@ -6,7 +6,7 @@ import { appStyle } from '@styles/appStyle';
 export default function Home2Page() {
   return (
     <View style={styles.container}>
-      <Text>Home 2 !</Text>
+      <Text>Welcome !</Text>
     </View>
   );
 }
@@ -14,7 +14,6 @@ export default function Home2Page() {
 const styles = StyleSheet.create({
   container: {
     ...appStyle.pageBody,
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

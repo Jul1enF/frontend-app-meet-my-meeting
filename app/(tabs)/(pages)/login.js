@@ -1,20 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
 
-import {RPH, RPW} from '@utils/dimensions'
-import { appStyle } from '@styles/appStyle';
+import Signin from '@components/pages/login/Signin';
+import Signup from '@components/pages/login/Signup';
 
 export default function LoginPage() {
-  return (
-    <View style={styles.container}>
-      <Text>Login !</Text>
-    </View>
-  );
-}
+  const [signForm, setSignForm] = useState("signin")
 
-const styles = StyleSheet.create({
-  container: {
-    ...appStyle.pageBody,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (signForm === "signin") return <Signin setSignForm={setSignForm} />
+  else return <Signup setSignForm={setSignForm} />
+}

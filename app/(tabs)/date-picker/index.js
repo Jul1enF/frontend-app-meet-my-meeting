@@ -31,7 +31,6 @@ export default function DatePickerPage() {
 const styles = StyleSheet.create({
   body: {
     ...appStyle.pageBody,
-    alignItems: 'center',
   },
   pageTitle: {
     ...appStyle.pageTitle,

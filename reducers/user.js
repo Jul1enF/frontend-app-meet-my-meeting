@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const defaultUser = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    jwtToken: "",
+    role : "",
+    appointments: [],
+}
+
 const initialState = {
-    value: {
-        first_name: "",
-        last_name: "",
-        email: "",
-        push_token: "",
-        jwtToken: "",
-        bookmarks: [],
-    },
+    value: defaultUser,
 }
 
 export const userSlice = createSlice({
@@ -19,17 +21,7 @@ export const userSlice = createSlice({
             state.value = action.payload
         },
         logout: (state, action) => {
-            state.value = {
-                first_name: "",
-                last_name: "",
-                email: "",
-                push_token: "",
-                jwtToken: "",
-                bookmarks: [],
-            }
-        },
-        changePushToken: (state, action) => {
-            state.value.push_token = action.payload
+            state.value = defaultUser
         },
         addBookmark: (state, action) => {
             state.value.bookmarks.push(action.payload)
@@ -45,5 +37,5 @@ export const userSlice = createSlice({
     }
 })
 
-export const { login, changePushToken, logout, addBookmark, removeBookmark, changeUserInfos } = userSlice.actions
+export const { login, logout, addBookmark, removeBookmark, changeUserInfos } = userSlice.actions
 export default userSlice.reducer

@@ -12,13 +12,10 @@ export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight,
 
     const dispatch = useDispatch()
     const logoutUser = () => dispatch(logout())
-    const logged = jwtToken ? true : false
 
     const sectionsArray = [
-        { sectionName: "Accueil", link: "/home" },
-        { sectionName: "Accueil 2", link: "/(tabs)/(pages)" },
-        { sectionName: logged ? "Se déconnecter" : "Se connecter / S'inscrire", link: logged ? "/home" : "/(tabs)/(pages)/login", func: jwtToken ? logoutUser : null },
-        { sectionName: "Tab 2", link: "/tab2" },
+        { sectionName: "Accueil", link: "/(tabs)/(pages)" },
+        { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/" : "/(tabs)/(pages)/login", func: jwtToken ? logoutUser : null },
     ]
     // user.is_admin && sectionsArray.push({ sectionName: "Écrire / Modifier un article", link: "/redaction" })
 
