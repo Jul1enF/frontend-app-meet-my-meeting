@@ -18,7 +18,7 @@ const pagePaddingBottom = phoneDevice ? RPW(15) : 120
 
 export const componentsStyle = {
     // Main sizes of the app
-    headerHeight: phoneDevice ? RPW(16) : 120,
+    headerHeight: phoneDevice ? RPW(16) : 105,
     tabBarHeight: phoneDevice ? RPW(18) : 90,
     secondHeaderHeight: phoneDevice ? RPW(10) : 62,
 

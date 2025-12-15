@@ -44,7 +44,6 @@ export default function ConfirmationModal({visible, closeModal, confirmationText
 const styles = StyleSheet.create({
     modalBody: {
         ...appStyle.card,
-        backgroundColor : appStyle.darkGrey
     },
     confirmationText: {
         ...appStyle.regularText,

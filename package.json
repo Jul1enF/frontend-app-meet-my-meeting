@@ -12,6 +12,7 @@
     "clear-expo-cache": "rm -rf node_modules && yarn cache clean && yarn && rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-map-*"
   },
   "dependencies": {
+    "@react-native-vector-icons/material-design-icons": "^12.4.0",
     "@reduxjs/toolkit": "^2.5.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "expo": "~53.0.24",

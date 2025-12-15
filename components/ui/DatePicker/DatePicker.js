@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 
 import { appStyle } from "@styles/appStyle";
@@ -7,58 +7,64 @@ import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import Calendar from "./Calendar";
 
 import Modal from "react-native-modal"
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import Button from "../Button";
+import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import moment from 'moment/min/moment-with-locales'
-moment.locale('fr')
+import moment from 'moment'
 
-export default function DatePicker() {
+export default function DatePicker({ chosenDate, setChosenDate }) {
     const { height: screenHeight, width: screenWidth } = useSafeAreaFrame()
+    const {top} = useSafeAreaInsets()
 
     const [calendarVisible, setCalendarVisible] = useState(false)
-    const [chosenDate, setChosenDate] = useState(new Date())
+    const updateCalendarVisible = () => setCalendarVisible(!calendarVisible)
+
 
     return (
         <View>
-            <TouchableOpacity style={styles.datePickerBtn} activeOpacity={0.6} onPress={() => setCalendarVisible(!calendarVisible)}>
-                <Text style={[appStyle.regularText, {fontWeight : "700"}]} >{moment(chosenDate).format("DD / MM / YYYY")}</Text>
-                <FontAwesome6 name="calendar-days" size={phoneDevice ? RPW(4.4) : 28} color={appStyle.strongBlack} style={styles.calendarIcon} />
-            </TouchableOpacity>
+
+            <View style={{ justifyContent: "center" }} >
+
+                <FontAwesome6 name="calendar-days" size={phoneDevice ? RPW(5) : 30} color={appStyle.fontColorDarkBg} style={styles.calendarIcon} onPress={updateCalendarVisible} />
+                <Button func={updateCalendarVisible} text={moment(chosenDate).format("DD / MM / YYYY")} />
+
+            </View>
 
 
             <Modal
                 isVisible={calendarVisible}
-                style={styles.modal}
+                style={[styles.modal, { paddingTop: phoneDevice ? RPW(36) + top : 0 }]}
                 statusBarTranslucent={true}
                 backdropColor="black"
-                backdropOpacity={0.9}
+                backdropOpacity={0.8}
                 animationIn="slideInUp"
                 animationOut="slideOutDown"
                 deviceWidth={screenWidth}
                 deviceHeight={screenHeight}
-                onBackButtonPress={() => setCalendarVisible(!calendarVisible)}
-                onBackdropPress={() => setCalendarVisible(!calendarVisible)}
+                onBackButtonPress={() => setCalendarVisible(false)}
+                onBackdropPress={() => setCalendarVisible(false)}
             >
-                <Calendar chosenDate={chosenDate} setChosenDate={setChosenDate} />
+                <Calendar chosenDate={chosenDate} setChosenDate={setChosenDate} setCalendarVisible={setCalendarVisible} />
             </Modal>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    datePickerBtn : {
+    datePickerBtn: {
         ...appStyle.button,
-        backgroundColor : appStyle.strongRed,
+        backgroundColor: appStyle.strongRed,
         ...appStyle.regularItem,
     },
-    calendarIcon : {
-        position : "absolute",
-        right : phoneDevice ? RPW(3) : 23,
-        paddingBottom : phoneDevice ? RPW(0.3) : 2,
+    calendarIcon: {
+        position: "absolute",
+        zIndex: 10,
+        right: phoneDevice ? RPW(3) : 23,
+        marginTop: appStyle.regularItem.marginTop * 0.85,
     },
     modal: {
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: phoneDevice ? "flex-start" : "center",
         flex: 1,
     }
 })

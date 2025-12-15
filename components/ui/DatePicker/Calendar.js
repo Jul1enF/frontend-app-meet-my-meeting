@@ -1,76 +1,65 @@
-import { View, StyleSheet } from "react-native";
-import { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useState, useMemo } from "react";
 
 import DayItem from "./DayItem";
 import { appStyle } from "@styles/appStyle";
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
+import moment from 'moment/min/moment-with-locales'
 
-export default function Calendar({ chosenDate }) {
-    const [viewedYear, setViewedYear] = useState(new Date(2026, 2, 17).getFullYear())
-    const [viewedMonth, setViewedMonth] = useState(new Date(2026, 2, 17).getMonth())
 
+import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
 
-    // Change of the week index to have weeks starting with monday
-    const correctedDayIndex = (index) => {
-        if (index === 0) return 6
-        else return index - 1
+export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
+    moment.locale('fr')
+
+    const [viewedDate, setViewedDate] = useState(chosenDate)
+    const viewedYear = viewedDate.getFullYear()
+    const viewedMonth = viewedDate.getMonth()
+
+    const daysItems = useMemo(() => getMonthDays(viewedYear, viewedMonth), [viewedYear, viewedMonth])
+
+    const updateViewedDate = (increment) => {
+        if (increment) setViewedDate(new Date(viewedYear, viewedMonth + 1))
+        else setViewedDate(new Date(viewedYear, viewedMonth - 1))
     }
 
-    const isDisabled = (date) => {
-        if (new Date() - date < 0) return true
-        else return false
-    }
+    const monthName = moment(viewedDate).format("MMMM YYYY")
+    const formattedMonthName = monthName.slice(0, 1).toUpperCase() + monthName.slice(1)
 
-    const getMonthDays = (viewedYear, viewedMonth) => {
-        const firstDayOfMonth = new Date(viewedYear, viewedMonth, 1)
-        const firstDayOfMonthIndex = correctedDayIndex(firstDayOfMonth.getDay())
-
-        const daysInViewedMonth = new Date(viewedYear, viewedMonth + 1, 0).getDate()
-        const daysInPrevMonth = new Date(viewedYear, viewedMonth, 0).getDate()
-
-        const days = []
-
-        // Add days of the previous month
-        for (let i = firstDayOfMonthIndex ; i > 0 ; i--){
-            const date = new Date(viewedYear, viewedMonth - 1, daysInPrevMonth - i)
-
-            days.push({
-                date,
-                currentMonth : false,
-                disabled : isDisabled(date)
-            })
+    const daysName = useMemo(() => {
+        const daysName = []
+        for (let i = 1; i <= 7; i++) {
+            const name = moment().day(i).format("dd")
+            const formattedName = name.slice(0, 1).toUpperCase() + name.slice(1)
+            daysName.push(formattedName)
         }
-
-        // Add days for the current month 
-        for (let i = 1 ; i <= daysInViewedMonth ; i++ ){
-            const date = new Date(viewedYear, viewedMonth, i)
-
-            days.push({
-                date,
-                currentMonth : false,
-                disabled : isDisabled(date)
-            })
-        }
-
-        
-        const lastDayOfMonthIndex = correctedDayIndex(days[days.length -1].date.getDay())
-
-         console.log("lastDayOfMonthIndex :", lastDayOfMonthIndex)
-
-        // RAJOUTER WEEK INDEX
-        // RAJOUTER USEMEMO ??
-
-        return days
-    }
-
-    const daysItems = getMonthDays(viewedYear, viewedMonth)
-
-    const days = daysItems.map((e,i)=> <DayItem key={i} dayNumber={e.date.getDate()} />)
+        return daysName
+    },[])
 
 
     return (
         <View style={styles.mainContainer} >
-            {days}
+            <MaterialDesignIcons name="close" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.8) : 32} style={styles.closeIcon} onPress={() => setCalendarVisible(false)} />
+
+            <View style={styles.monthHeader}>
+                <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(false)} />
+
+                <Text style={styles.monthText}>
+                    {formattedMonthName}
+                </Text>
+
+                <FontAwesome5 name="chevron-right" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(true)} />
+            </View>
+
+            <View style={styles.daysNameContainer} >
+                {daysName.map((e, i) => <Text style={styles.dayName} key={i}>{e}</Text>)}
+            </View>
+
+            <View style={styles.daysContainer} key={`${viewedYear}-${viewedMonth}`}>
+                {daysItems.map((e, i) => <DayItem key={i} {...e} chosenDate={chosenDate} setChosenDate={setChosenDate} updateViewedDate={updateViewedDate} />)}
+            </View>
         </View>
     )
 }
@@ -78,8 +67,50 @@ export default function Calendar({ chosenDate }) {
 const styles = StyleSheet.create({
     mainContainer: {
         ...appStyle.card,
-        flexDirection : "row",
-        flexWrap : "wrap",
-        width : RPW(90),
+        width: phoneDevice ? RPW(90) : appStyle.regularItemWidth,
+        paddingTop: phoneDevice ? RPW(5.7) : 35,
+        paddingBottom: phoneDevice ? RPW(6.5) : 30,
     },
+    closeIcon: {
+        position: "absolute",
+        zIndex: 10,
+        top: phoneDevice ? RPW(1.2) : 7,
+        right: phoneDevice ? RPW(1) : 6,
+    },
+    monthHeader: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        height: phoneDevice ? RPW(10) : 60,
+    },
+    monthText: {
+        ...appStyle.pageSubtitle,
+        color: appStyle.fontColorDarkBg,
+        fontWeight: "700",
+    },
+    daysNameContainer: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        columnGap: "2.66%",
+        height: phoneDevice ? RPW(8) : 50,
+        marginTop: phoneDevice ? RPW(1.8) : 19,
+    },
+    dayName: {
+        ...appStyle.regularText,
+        color: appStyle.fontColorDarkBg,
+        width: "12%",
+        textAlign: "center",
+    },
+    daysContainer: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        flexWrap: "wrap",
+        columnGap: "2.66%",
+        rowGap: phoneDevice ? RPW(1.5) : 10,
+        marginTop: phoneDevice ? RPW(1.8) : 19,
+    }
 })
