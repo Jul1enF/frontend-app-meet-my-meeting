@@ -4,7 +4,8 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loadUsers } from "@reducers/users";
 import useSortUsers from "@components/pages/user-pages/useSortUsers";
 
 import UserItem from "@components/pages/user-pages/UserItem";
@@ -14,27 +15,28 @@ import MaterialDesignIcons from "@react-native-vector-icons/material-design-icon
 
 export default function UsersPage() {
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const users = useSelector((state)=> state.users.value)
     const [warning, setWarning] = useState({})
-    const [allUsers, setAllUsers] = useState(null)
     const [searchText, setSearchText] = useState("")
     const [selectedRole, setSelectedRole] = useState("allUsersRoles")
 
+    const dispatch = useDispatch()
+
     // LOAD USERS FUNCTION AND USEEFFECT
-    const loadUsers = async (clearEtag) => {
+    const fetchUsers = async (clearEtag) => {
         const data = await request({ path: "pros/get-all-users", jwtToken, clearEtag, setWarning })
         if (data) {
-            console.log("DATA !!!")
-            setAllUsers(data.allUsers)
+            dispatch(loadUsers(data.allUsers))
         }
     }
  
     useEffect(() => {
-        loadUsers(true)
+        fetchUsers(true)
     }, [])
   
 
     // Users sorted by roles
-    const usersByRoles = useSortUsers(allUsers, searchText)
+    const usersByRoles = useSortUsers(users, searchText)
 
     // USERS FLATLIST SET UP
 
@@ -47,7 +49,7 @@ export default function UsersPage() {
     const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
         setIsRefreshing(true)
         setTimeout(() => setIsRefreshing(false), 1000)
-        loadUsers()
+        fetchUsers()
     }} />
 
     const usersListHeader = () => {

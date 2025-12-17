@@ -8,10 +8,17 @@ import useIsAppObsolete from "@hooks/useIsAppObsolete";
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import user from '@reducers/user'
+import users from '@reducers/users'
 
+// METTRE USERS EN BLACKLIST DANS PERSIST CONFIG
+//  const persistConfig = {
+//   key: 'root',
+//   storage: AsyncStorage,
+//   blacklist: ['users'],
+// }
 
 const store = configureStore({
-    reducer: { user },
+    reducer: { user, users },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ serializableCheck: false })
 })
