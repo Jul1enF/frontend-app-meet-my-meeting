@@ -10,7 +10,6 @@ import ForcedUpdateModal from "./ForcedUpdateModal";
 import SearchModal from "./SearchModal";
 
 import { useState } from 'react'
-import { useSelector } from "react-redux";
 import useLayoutSpaces from "@hooks/useLayoutSpaces"
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
@@ -20,7 +19,6 @@ import { appStyle } from "@styles/appStyle";
 export default function Header({appObsolete}) {
 
     const [menuVisible, setMenuVisible] = useState(false)
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
 
     const segments = useSegments();
     const tabBar = segments[0] === "(tabs)"
@@ -60,7 +58,7 @@ export default function Header({appObsolete}) {
                 
                 <SearchModal screenHeight={screenHeight} screenWidth={screenWidth} modalOffsetTop={modalOffsetTop} searchVisible={searchVisible} setSearchVisible={setSearchVisible} />
 
-                <LateralMenu menuVisible={menuVisible} setMenuVisible={setMenuVisible} screenHeight={screenHeight} screenWidth={screenWidth} modalOffsetTop={modalOffsetTop} freeHeight={freeHeight} jwtToken={jwtToken} />
+                <LateralMenu menuVisible={menuVisible} setMenuVisible={setMenuVisible} screenHeight={screenHeight} screenWidth={screenWidth} modalOffsetTop={modalOffsetTop} freeHeight={freeHeight} />
 
 
                 <ForcedUpdateModal screenHeight={screenHeight} screenWidth={screenWidth} appObsolete={appObsolete} freeHeight={freeHeight} modalOffsetTop={modalOffsetTop} />

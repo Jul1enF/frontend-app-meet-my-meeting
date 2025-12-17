@@ -59,7 +59,7 @@ export default function Signup({ setSignForm }) {
 
         if (data) {
             dispatch(login(data.user))
-            router.push("/(tabs)/pages")
+            router.push("/home")
         }
     }
 
@@ -130,7 +130,7 @@ export default function Signup({ setSignForm }) {
                                 secureTextEntry={!passwordVisible}>
                             </TextInput>
                             <FontAwesome
-                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.passwordIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
+                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
                             </FontAwesome>
                         </View>
 
@@ -147,13 +147,13 @@ export default function Signup({ setSignForm }) {
                                 secureTextEntry={!confirmedPasswordVisible}>
                             </TextInput>
                             <FontAwesome
-                                name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.passwordIconSize} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)}>
+                                name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)}>
                             </FontAwesome>
                         </View>
 
                         <Button text="S'inscrire" func={signupClick} />
 
-                        <Text style={[appStyle.warning, warning?.success ? appStyle.success : appStyle.error, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
+                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
                             {warning?.text}
                         </Text>
 
@@ -187,28 +187,22 @@ const styles = StyleSheet.create({
         marginTop: phoneDevice ? RPW(2) : 15,
     },
     input: {
-        ...appStyle.regularItem,
-        ...appStyle.lightGreyBorder,
-        ...appStyle.regularText,
-        ...appStyle.input,
+        ...appStyle.input.base,
         color: appStyle.fontColorDarkBg,
     },
     passwordInputContainer: {
+        ...appStyle.input.base,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        ...appStyle.regularItem,
-        ...appStyle.lightGreyBorder,
     },
     passwordInput: {
-        ...appStyle.regularText,
-        ...appStyle.inputWithIcon,
+        ...appStyle.input.withIcon,
         color: appStyle.fontColorDarkBg,
     },
     signupButton: {
+        ...appStyle.button,
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
         marginTop: phoneDevice ? RPW(1) : 10,
     }
 });

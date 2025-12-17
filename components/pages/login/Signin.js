@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
 
-export default function Signin({setSignForm}) {
+export default function Signin({ setSignForm }) {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -28,21 +28,21 @@ export default function Signin({setSignForm}) {
     const signinClick = async () => {
 
         if (!email || !password) {
-            setWarning({text : "Erreur : tous les champs ne sont pas remplis"})
+            setWarning({ text: "Erreur : tous les champs ne sont pas remplis" })
             return
         }
 
         const data = await request({
-            path: "users/signin", method: "POST", ref: signinRef, setWarning, 
+            path: "users/signin", method: "POST", ref: signinRef, setWarning,
             body: {
                 email,
                 password,
             }
         })
 
-        if (data){
+        if (data) {
             dispatch(login(data.user))
-            router.push("/(tabs)/pages")
+            router.push("/home")
         }
 
     }
@@ -88,18 +88,18 @@ export default function Signin({setSignForm}) {
                                 secureTextEntry={!passwordVisible}>
                             </TextInput>
                             <FontAwesome
-                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.passwordIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
+                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
                             </FontAwesome>
                         </View>
 
                         <Button text="Se connecter" func={signinClick} />
 
-                        <Text style={[appStyle.warning, warning?.success ? appStyle.success : appStyle.error, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
+                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
                             {warning?.text}
                         </Text>
 
                         <TouchableOpacity activeOpacity={0.5} style={{ width: "100%", alignItems: "center", marginTop: phoneDevice ? RPW(5) : 40 }} onPress={() => setSignForm("signup")}>
-                            <Text style={[ appStyle.smallText, { color: appStyle.fontColorDarkBg }]}>
+                            <Text style={[appStyle.smallText, { color: appStyle.fontColorDarkBg }]}>
                                 Pas encore de compte ?
                             </Text>
 
@@ -125,28 +125,22 @@ export default function Signin({setSignForm}) {
 
 const styles = StyleSheet.create({
     input: {
-        ...appStyle.regularItem,
-        ...appStyle.lightGreyBorder,
-        ...appStyle.regularText,
-        ...appStyle.input,
+        ...appStyle.input.base,
         color: appStyle.fontColorDarkBg,
     },
     passwordInputContainer: {
+        ...appStyle.input.base,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        ...appStyle.regularItem,
-        ...appStyle.lightGreyBorder,
     },
     passwordInput: {
-        ...appStyle.regularText,
-        ...appStyle.inputWithIcon,
+        ...appStyle.input.withIcon,
         color: appStyle.fontColorDarkBg,
     },
     signupButton: {
+        ...appStyle.button,
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
         marginTop: phoneDevice ? RPW(1) : 10,
     }
 });

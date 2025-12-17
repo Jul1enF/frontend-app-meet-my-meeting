@@ -6,7 +6,7 @@ import Button from "@components/ui/Button";
 import { RPH, RPW, phoneDevice } from '@utils/dimensions.js'
 import { appStyle } from '@styles/appStyle.js';
 
-export default function ConfirmationModal({visible, closeModal, confirmationText, confirmationBtnText, confirmationFunc, warning, cancelBtnText}) {
+export default function ConfirmationModal({ visible, closeModal, confirmationText, confirmationBtnText, confirmationFunc, warning, cancelBtnText }) {
 
     const { screenHeight, screenWidth } = useLayoutSpaces()
 
@@ -30,10 +30,11 @@ export default function ConfirmationModal({visible, closeModal, confirmationText
                     {confirmationText}
                 </Text>
                 <View style={styles.line} />
-                
-                 <Button func={closeModal} text={cancelBtnText} marginTop={0} />
+
+                <Button func={closeModal} text={cancelBtnText} marginTop={0} />
                 <Button func={confirmationFunc} text={confirmationBtnText} />
-                <Text style={[appStyle.warning, warning?.success ? appStyle.success : appStyle.error, !warning?.text ? {height : 0} : {marginTop : phoneDevice ? RPW(3) : 30}]}>
+
+                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
                     {warning?.text}
                 </Text>
             </View>

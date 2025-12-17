@@ -1,4 +1,4 @@
-export default async function request({path, method = "GET", body, params, jwtToken, ref, setWarning, setModalVisible, setUploading}) {
+export default async function request({path, method = "GET", body, params, jwtToken, ref, setWarning, setModalVisible, setUploading, clearEtag}) {
 
     const warning = typeof setWarning === "function" ? true : false
     const modal = typeof setModalVisible === "function" ? true : false
@@ -24,6 +24,8 @@ export default async function request({path, method = "GET", body, params, jwtTo
         const headers = jwtToken ? { Authorization: `Bearer ${jwtToken}` } : {};
         const options = { method, headers };
 
+        if (clearEtag) headers["If-None-Match"] = ""
+
         if (body) {
             if (body instanceof FormData) {
                 options.body = body;
@@ -44,7 +46,10 @@ export default async function request({path, method = "GET", body, params, jwtTo
             displayWarning(data.error)
         } else if (!data.result) {
             displayWarning()
-        } else {
+        } else if (data.notModified){
+            return
+        }
+        else {
             data.successMsg && displayWarning(data.successMsg, true)
             return data
         }

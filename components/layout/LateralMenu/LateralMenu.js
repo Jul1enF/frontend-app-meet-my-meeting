@@ -5,19 +5,23 @@ import LateralMenuItem from "./LateralMenuItem"
 import { appStyle } from "@styles/appStyle"
 
 import { logout } from "@reducers/user";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
-export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight, screenWidth, modalOffsetTop, freeHeight, jwtToken }) {
+export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight, screenWidth, modalOffsetTop, freeHeight }) {
 
+    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const role = useSelector((state) => state.user.value.role)
     const dispatch = useDispatch()
     const logoutUser = () => dispatch(logout())
 
     const sectionsArray = [
-        { sectionName: "Accueil", link: "/(tabs)/pages" },
-        { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/(tabs)/pages" : "/(tabs)/pages/login", func: jwtToken ? logoutUser : null },
+        { sectionName: "Accueil", link: "/home" },
+        { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/home" : "/login", func: jwtToken ? logoutUser : null },
     ]
-    // user.is_admin && sectionsArray.push({ sectionName: "Écrire / Modifier un article", link: "/redaction" })
+
+    role === "owner" && sectionsArray.push({ sectionName: "Liste des utilisateurs", link: "/users" })
+
 
     return (
         <Modal
@@ -38,7 +42,7 @@ export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight,
                         return <LateralMenuItem {...item} setMenuVisible={setMenuVisible} index={index} key={index} />
                     }}
                     showsVerticalScrollIndicator={false}
-                    style={{flex : 1}}
+                    style={{ flex: 1 }}
                 />
             </View>
         </Modal>

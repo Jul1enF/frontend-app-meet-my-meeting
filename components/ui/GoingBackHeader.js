@@ -25,22 +25,21 @@ const leftBtnPress = ()=>{
 
 const styles = StyleSheet.create({
     headerBody: {
-        backgroundColor: appStyle.strongBlack,
+        backgroundColor: appStyle.strongRed,
         height: appStyle.secondHeaderHeight,
         width: "100%",
-        borderBottomColor: appStyle.brightGrey,
-        borderBottomWidth: phoneDevice ? 0.5 : 1,
+        ...appStyle.secondHeaderBorderBottom,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal : phoneDevice ? RPW(4) : 30,
+        paddingHorizontal : appStyle.secondHeaderHorizPadd,
     },
     buttonContainer: {
         flexDirection: "row",
         alignItems: "center"
     },
     buttonText: {
-        ...appStyle.regularText,
+        ...appStyle.secondHeaderText,
         fontWeight : "600",
         letterSpacing : phoneDevice ? RPW(0.2) : 1.5,
         color: appStyle.fontColorDarkBg,

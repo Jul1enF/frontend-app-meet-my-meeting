@@ -40,7 +40,7 @@ export default function SearchModal({ searchVisible, setSearchVisible, screenWid
             >
                 <View style={styles.searchInputContainer}>
                     <TextInput
-                        style={[styles.search, appStyle.input, { color: appStyle.darkWhite }]}
+                        style={[styles.search, appStyle.inputVertPadding, { color: appStyle.darkWhite }]}
                         placeholder="Rechercher..."
                         onChangeText={(e) => setSearchText(e)}
                         value={searchText}

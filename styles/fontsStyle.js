@@ -21,6 +21,12 @@ export const fontsStyle = {
         lineHeight: phoneDevice ? RPW(5.5) : 35,
         fontWeight: "400",
     },
+    secondHeaderText: {
+        color: strongBlack,
+        fontSize: phoneDevice ? RPW(4.15) : 30,
+        lineHeight: phoneDevice ? RPW(5) : 35,
+        fontWeight : "500",
+    },
     inputLabelText: {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(4) : 25,
@@ -37,8 +43,6 @@ export const fontsStyle = {
         fontWeight: "500",
         textAlign: "center",
         width: "100%",
-    },
-    error: {
         color: strongRed,
     },
     success: {
