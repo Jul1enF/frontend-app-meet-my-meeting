@@ -5,6 +5,7 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector, useDispatch } from "react-redux";
+import { usersSelectors } from "@reducers/users";
 import { loadUsers } from "@reducers/users";
 import useSortUsers from "@components/pages/user-pages/useSortUsers";
 
@@ -15,7 +16,7 @@ import MaterialDesignIcons from "@react-native-vector-icons/material-design-icon
 
 export default function UsersPage() {
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
-    const users = useSelector((state)=> state.users.value)
+    const users = useSelector(usersSelectors.selectAll)
     const [warning, setWarning] = useState({})
     const [searchText, setSearchText] = useState("")
     const [selectedRole, setSelectedRole] = useState("allUsersRoles")
@@ -28,13 +29,12 @@ export default function UsersPage() {
         if (data) {
             dispatch(loadUsers(data.allUsers))
         }
-    }
- 
+    } 
+   
     useEffect(() => {
         fetchUsers(true)
     }, [])
   
-
     // Users sorted by roles
     const usersByRoles = useSortUsers(users, searchText)
 
@@ -115,6 +115,8 @@ export default function UsersPage() {
                 style={{ flex: 1 }}
                 contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom }}
             />
+
+            
 
         </View>
     )

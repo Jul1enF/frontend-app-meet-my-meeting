@@ -5,11 +5,12 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { RPH, RPW, phoneDevice } from '@utils/dimensions.js'
 import { appStyle } from '@styles/appStyle.js';
 
-export default function GoingBackHeader({ previousPage, previousPageName, leftFunction }) {
+export default function GoingBackHeader({ back, previousPage, previousPageName, leftFunction }) {
 const router = useRouter()
 
 const leftBtnPress = ()=>{
     typeof leftFunction === "function" && leftFunction
+    back && router.back()
     previousPage && router.navigate(previousPage)
 }
 

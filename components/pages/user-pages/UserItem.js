@@ -1,4 +1,5 @@
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { router } from "expo-router";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -9,7 +10,7 @@ import { roleTranslation } from "constants/translations";
 export default function UserItem(props) {
 
     return (
-        <TouchableOpacity style={styles.mainContainer} >
+        <TouchableOpacity style={styles.mainContainer} onPress={()=>router.push(`/users/${props._id}`)} >
 
             <View style={styles.fullRow} >
 
