@@ -27,6 +27,7 @@ export const colorsStyle = {
     strongRed: "rgba(182, 11, 11, 1)",
 
     lightGreen: "rgba(0, 173, 0, 1)",
+    strongGreen : "rgba(0, 140, 0, 1)",
 
     blueLink: "rgb(1, 1, 224)",
 }

@@ -10,6 +10,7 @@ import moment from 'moment/min/moment-with-locales'
 
 
 import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
+import { upperCaseInitial } from "@utils/timeFunctions";
 
 export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
     moment.locale('fr')
@@ -25,15 +26,13 @@ export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible
         else setViewedDate(new Date(viewedYear, viewedMonth - 1))
     }
 
-    const monthName = moment(viewedDate).format("MMMM YYYY")
-    const formattedMonthName = monthName.slice(0, 1).toUpperCase() + monthName.slice(1)
+    const monthName = upperCaseInitial(moment(viewedDate).format("MMMM YYYY"))
 
     const daysName = useMemo(() => {
         const daysName = []
         for (let i = 1; i <= 7; i++) {
-            const name = moment().day(i).format("dd")
-            const formattedName = name.slice(0, 1).toUpperCase() + name.slice(1)
-            daysName.push(formattedName)
+            const name = upperCaseInitial(moment().day(i).format("dd"))
+            daysName.push(name)
         }
         return daysName
     },[])
@@ -47,7 +46,7 @@ export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible
                 <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(false)} />
 
                 <Text style={styles.monthText}>
-                    {formattedMonthName}
+                    {monthName}
                 </Text>
 
                 <FontAwesome5 name="chevron-right" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(true)} />

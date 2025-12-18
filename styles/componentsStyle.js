@@ -9,7 +9,7 @@ const regularItemWidth = phoneDevice ? RPW(67) : 510
 const regularItemHeight = phoneDevice ? RPW(9) : 55
 const regularItemBorderRadius = phoneDevice ? RPW(2.5) : 18
 
-const largeItemWidth = phoneDevice ? RPW(92) : 716
+const largeItemWidth = phoneDevice ? RPW(92) : 700
 const largeItemHeight = phoneDevice ? RPW(12) : 78
 
 const cardLateralPadding = phoneDevice ? RPW(5) : 30
@@ -55,6 +55,7 @@ export const componentsStyle = {
     secondHeaderHeight: phoneDevice ? RPW(10) : 62,
     secondHeaderHorizPadd: phoneDevice ? RPW(4) : 30,
     inputIconSize: phoneDevice ? RPW(5.2) : 35,
+    largeMarginTop : phoneDevice ? RPW(9.5) : 70,
 
     // Components Style
     pageBody: {

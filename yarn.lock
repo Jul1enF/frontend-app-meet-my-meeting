@@ -4115,6 +4115,11 @@ react-native-svg@^15.15.1:
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
+react-native-timer-picker@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-timer-picker/-/react-native-timer-picker-2.4.0.tgz#883aa6e976d3fdfabd6c29f809d9127b6d3c9822"
+  integrity sha512-jjllLDTF1Z79EbylDxt3imqfd52U8vncctPkBe10YUc6sQeXF7ZvCuXHaGEOHa4HZbrqburkaAWWXrbMlhrIBA==
+
 react-native@0.79.6:
   version "0.79.6"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.79.6.tgz#ee95428f67da2f62ede473eaa6e8a2f4ee40e272"

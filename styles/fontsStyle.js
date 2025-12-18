@@ -4,14 +4,14 @@ const { strongBlack, strongRed, darkWhite2, lightGreen } = colorsStyle
 
 export const fontsStyle = {
     pageTitle: {
-        fontSize: phoneDevice ? RPW(6) : 40,
+        fontSize: phoneDevice ? RPW(6.2) : 42,
         letterSpacing: phoneDevice ? RPW(0.45) : 2.5,
         fontWeight: '500',
         color: strongBlack,
         textAlign: "center",
     },
     pageSubtitle: {
-        fontSize: phoneDevice ? RPW(5) : 32,
+        fontSize: phoneDevice ? RPW(5) : 34,
         letterSpacing: phoneDevice ? RPW(0.4) : 3,
         fontWeight: '500',
         color: strongBlack,

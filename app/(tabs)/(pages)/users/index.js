@@ -5,17 +5,18 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector } from "react-redux";
-import useSortUsers from "@components/pages/user-pages/useSortUsers";
+import useSortUsers from "@components/pages/user-pages/owner-side/useSortUsers";
 
-import UserItem from "@components/pages/user-pages/UserItem";
+import UserItem from "@components/pages/user-pages/owner-side/UserItem";
 import HorizontalMenu from "@components/ui/HorizontalMenu";
+import GoingBackHeader from "@components/ui/GoingBackHeader";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
 
 import useLayoutSpaces from "@hooks/useLayoutSpaces"
 import Modal from "react-native-modal"
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
-import UserStatus from "@components/pages/user-pages/UserStatus";
+import UserStatus from "@components/pages/user-pages/owner-side/UserStatus";
 
 export default function UsersPage() {
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
@@ -122,7 +123,8 @@ export default function UsersPage() {
 
                 <Modal
                     isVisible={userModalVisible}
-                    style={styles.modal}
+                    style={[styles.modal, { maxHeight: freeHeight, top: 0, width: "100%" }]}
+                    coverScreen={false}
                     backdropColor="transparent"
                     animationIn="slideInRight"
                     animationOut="slideOutRight"
@@ -131,11 +133,13 @@ export default function UsersPage() {
                     deviceHeight={screenHeight}
                 >
                     <AutocompleteDropdownContextProvider>
-                        <View style={[styles.userStatusContainer, { height: freeHeight, top: modalOffsetTop + 0.5 }]} >
-                            <ScrollView style={{ flex: 1 }}>
-                                <UserStatus selectedUser={selectedUser} setUserModalVisible={setUserModalVisible} />
-                            </ScrollView>
-                        </View>
+
+                        <GoingBackHeader previousPageName="Liste des utilisateurs" leftFunction={() => setUserModalVisible(false)} />
+
+                        <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" >
+                            <UserStatus selectedUser={selectedUser} setUserModalVisible={setUserModalVisible} />
+                        </ScrollView>
+
                     </AutocompleteDropdownContextProvider>
                 </Modal>
 
@@ -167,10 +171,5 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         justifyContent: "flex-start",
         margin: 0,
-    },
-    userStatusContainer: {
-        width: "100%",
-        backgroundColor: appStyle.pageBody.backgroundColor,
-        position: "absolute",
     },
 })

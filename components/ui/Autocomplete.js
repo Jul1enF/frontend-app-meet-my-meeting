@@ -7,8 +7,8 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
 export default function Autocomplete({ data, setSelectedItem, placeholderText, width, height, initialValue }) {
-    const inputWidth = width ? width : appStyle.largeItemWidth
-    const inputHeight = height ? height : appStyle.largeItemHeight
+    const inputWidth = width ?? appStyle.largeItemWidth
+    const inputHeight = height ?? appStyle.largeItemHeight
 
     return (
         <AutocompleteDropdown
@@ -83,11 +83,12 @@ const styles = StyleSheet.create({
     autoCompleteInput: {
         ...appStyle.regularText,
         color: appStyle.fontColorDarkBg,
+        fontWeight : "700",
         paddingBottom: 0,
         paddingTop: 0,
     },
     suggestionsListContainer: {
-        backgroundColor: appStyle.darkGrey,
+        backgroundColor: appStyle.strongGrey2,
         borderRadius: appStyle.regularItemBorderRadius,
     },
     suggestionsListItem: {

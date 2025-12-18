@@ -3,8 +3,10 @@ import { useState, useLayoutEffect} from "react";
 
 import GoingBackHeader from "@components/ui/GoingBackHeader";
 import Autocomplete from "@components/ui/Autocomplete";
+import UserSchedule from "../schedule/UserSchedule";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
+import { userDefaultSchedule } from "constants/userDefaultSchedule";
 
 import moment from 'moment/min/moment-with-locales'
 
@@ -22,20 +24,28 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
 
     const index = rolesData.findIndex(e=>e.role === user.role)
     const [newRole, setNewRole]=useState(rolesData[index])
+    
+    const oldSchedule = user.working_hours ?? userDefaultSchedule;
+    const [newSchedule, setNewSchedule] = useState(oldSchedule)
+    const scheduleArray = Object.values(newSchedule)
 
+    console.log("enabled", newSchedule["0"].enabled)
 
     return (
         <>
-            <GoingBackHeader previousPageName="Liste des utilisateurs" leftFunction={() => setUserModalVisible(false)} />
             <View style={appStyle.pageBody}>
 
                 <Text style={appStyle.pageTitle}>
-                    Utilisateur :
+                    Utilisateur
                 </Text>
 
-                <View style={[appStyle.card, {width : phoneDevice ? RPW(95) : 650}]}>
+                <View style={[appStyle.card, {width : appStyle.largeItemWidth, paddingBottom : phoneDevice ? RPW(12) : 80}]}>
 
-                    <View style={styles.row}>
+                    <Text style={[appStyle.pageSubtitle, {color : appStyle.fontColorDarkBg, fontSize : appStyle.pageSubtitle.fontSize * 1.05 }]}>
+                        Informations :
+                    </Text>
+
+                    <View style={[styles.row, { marginTop : appStyle.regularItem.marginTop * 2 }]}>
 
                         <View style={styles.col}>
                             <View style={styles.labelContainer}>
@@ -65,7 +75,7 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
                     </View>
 
 
-                    <View style={styles.row}>
+                    <View style={[styles.row, {marginBottom : 0}]}>
 
                         <View style={styles.col}>
                             <View style={styles.labelContainer}>
@@ -94,7 +104,13 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
 
                     </View>
 
-                    <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={appStyle.regularItemWidth} height={appStyle.regularItemHeight} initialValue={newRole} />
+                    <Text style={[appStyle.pageSubtitle, {color : appStyle.fontColorDarkBg, marginTop : appStyle.largeMarginTop}]}>
+                        Statut :
+                    </Text>
+
+                    <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} />
+
+                    {(newRole?.role && newRole?.role !== "client") && <UserSchedule scheduleArray={scheduleArray} setNewSchedule={setNewSchedule} newSchedule={newSchedule} />  }
 
                 </View>
 
@@ -109,21 +125,21 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         flexWrap: "wrap",
         width: "100%",
-        rowGap: phoneDevice ? RPW(3.8) : 26,
-        marginBottom: phoneDevice ? RPW(4.8) : 28,
+        rowGap: phoneDevice ? RPW(6) : 45,
+        marginBottom: phoneDevice ? RPW(6) : 45,
     },
     col: {
         alignItems: "flex-start",
         minWidth: "50%",
         maxWidth: "100%",
-        rowGap: phoneDevice ? RPW(2) : 13,
+        rowGap: phoneDevice ? RPW(3) : 15,
         paddingRight : phoneDevice ? RPW(1) : 8,
     },
     label: {
         ...appStyle.largeText,
         fontWeight: "700",
         color: appStyle.fontColorDarkBg,
-        paddingBottom : phoneDevice ? RPW(0.8) : 6,
+        paddingBottom : phoneDevice ? RPW(1) : 6,
     },
     labelContainer: {
         borderBottomColor: appStyle.darkWhite,

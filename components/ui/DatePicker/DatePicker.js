@@ -43,6 +43,7 @@ export default function DatePicker({ chosenDate, setChosenDate }) {
                 deviceHeight={screenHeight}
                 onBackButtonPress={() => setCalendarVisible(false)}
                 onBackdropPress={() => setCalendarVisible(false)}
+                useNativeDriverForBackdrop={true}
             >
                 <Calendar chosenDate={chosenDate} setChosenDate={setChosenDate} setCalendarVisible={setCalendarVisible} />
             </Modal>

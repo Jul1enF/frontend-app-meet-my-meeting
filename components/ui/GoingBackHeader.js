@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
         backgroundColor: appStyle.strongRed,
         height: appStyle.secondHeaderHeight,
         width: "100%",
+        minWidth : "100%",
         ...appStyle.secondHeaderBorderBottom,
         flexDirection: "row",
         alignItems: "center",
