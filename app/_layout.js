@@ -4,21 +4,14 @@ import * as ScreenOrientation from 'expo-screen-orientation'
 import { phoneDevice } from "../utils/dimensions"
 import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
+import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import user from '@reducers/user'
-import users from '@reducers/users'
-
-// METTRE USERS EN BLACKLIST DANS PERSIST CONFIG
-//  const persistConfig = {
-//   key: 'root',
-//   storage: AsyncStorage,
-//   blacklist: ['users'],
-// }
 
 const store = configureStore({
-    reducer: { user, users },
+    reducer: { user },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ serializableCheck: false })
 })
@@ -38,12 +31,14 @@ export default function RootLayout() {
 
     return (
         <Provider store={store}>
-            <Stack screenOptions={{
-                header: (props) => <Header {...props} appObsolete={appObsolete} />,
-            }} >
-                <Stack.Screen name="index" />
-                <Stack.Screen name="(tabs)" />
-            </Stack>
+            <AutocompleteDropdownContextProvider >
+                <Stack screenOptions={{
+                    header: (props) => <Header {...props} appObsolete={appObsolete} />,
+                }} >
+                    <Stack.Screen name="index" />
+                    <Stack.Screen name="(tabs)" />
+                </Stack>
+            </AutocompleteDropdownContextProvider>
         </Provider>
     )
 }

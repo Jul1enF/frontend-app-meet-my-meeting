@@ -9,7 +9,7 @@ export default function GoingBackHeader({ back, previousPage, previousPageName, 
 const router = useRouter()
 
 const leftBtnPress = ()=>{
-    typeof leftFunction === "function" && leftFunction
+    typeof leftFunction === "function" && leftFunction()
     back && router.back()
     previousPage && router.navigate(previousPage)
 }

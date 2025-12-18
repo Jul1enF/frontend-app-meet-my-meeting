@@ -1,18 +1,18 @@
 import { useMemo } from "react";
 
 
-export default function useSortUsers(users, searchText) {
+export default function useSortUsers(allUsers, searchText) {
 
     // USERS SORTING
     
     // Sort by searched text
     const searchSortedUsers = useMemo(() => {
-        if (!users) return []
+        if (!allUsers) return []
         const regex = new RegExp(searchText, 'i')
-        return users.filter(e => {
+        return allUsers.filter(e => {
             return e.first_name.match(regex) || e.last_name.match(regex) || e.email.match(regex)
         })
-    }, [users, searchText])
+    }, [allUsers, searchText])
 
     const roleStatus = { owner: { name: "Gérants", priority: 9 }, admin: { name: "Administrateurs", priority: 8 }, employee: { name: "Employés", priority: 7 }, client: { name: "Clients", priority: 6 } }
 

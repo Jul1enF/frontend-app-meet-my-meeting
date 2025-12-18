@@ -5,15 +5,22 @@ const { strongBlack, strongRed, darkWhite2, lightGreen } = colorsStyle
 export const fontsStyle = {
     pageTitle: {
         fontSize: phoneDevice ? RPW(6) : 40,
-        letterSpacing: phoneDevice ? RPW(0.6) : 3,
+        letterSpacing: phoneDevice ? RPW(0.45) : 2.5,
         fontWeight: '500',
         color: strongBlack,
+        textAlign: "center",
     },
     pageSubtitle: {
         fontSize: phoneDevice ? RPW(5) : 32,
         letterSpacing: phoneDevice ? RPW(0.4) : 3,
         fontWeight: '500',
         color: strongBlack,
+        textAlign: "center",
+    },
+    largeText: {
+        color: strongBlack,
+        fontSize: phoneDevice ? RPW(4.65) : 30,
+        fontWeight: "500",
     },
     regularText: {
         color: strongBlack,
@@ -25,9 +32,9 @@ export const fontsStyle = {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(4.15) : 30,
         lineHeight: phoneDevice ? RPW(5) : 35,
-        fontWeight : "500",
+        fontWeight: "500",
     },
-    inputLabelText: {
+    labelText: {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(4) : 25,
         fontWeight: "500",

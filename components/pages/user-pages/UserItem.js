@@ -1,5 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { router } from "expo-router";
+import { View, StyleSheet, Text } from "react-native";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -10,7 +9,7 @@ import { roleTranslation } from "constants/translations";
 export default function UserItem(props) {
 
     return (
-        <TouchableOpacity style={styles.mainContainer} onPress={()=>router.push(`/users/${props._id}`)} >
+        <View style={styles.mainContainer} >
 
             <View style={styles.fullRow} >
 
@@ -59,7 +58,7 @@ export default function UserItem(props) {
             </View>
              </View>
          
-        </TouchableOpacity>
+        </View>
     )
 }
 
@@ -100,6 +99,6 @@ const styles = StyleSheet.create({
     userInfo: {
         ...appStyle.regularText,
         maxWidth : "82%",
-        paddingRight : phoneDevice ? RPW(0.1) : 5,
+        paddingRight : phoneDevice ? RPW(1) : 8,
     }
 })
