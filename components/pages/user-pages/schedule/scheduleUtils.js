@@ -1,47 +1,44 @@
-const updateDay = (index, partialDay, setNewSchedule) => {
-  setNewSchedule(prev => ({
-    ...prev,
-    [index]: {
-      ...prev[index],
-      ...partialDay,
-    },
-  }));
-};
-
-const updateBreak = (index, partialBreak, setNewSchedule) => {
-  setNewSchedule(prev => ({
-    ...prev,
-    [index]: {
-      ...prev[index],
-      break: {
-        ...prev[index].break,
-        ...partialBreak,
+export const createScheduleActions = (setNewSchedule) => {
+  const updateDay = (index, partialDay) => {
+    setNewSchedule(prev => ({
+      ...prev,
+      [index]: {
+        ...prev[index],
+        ...partialDay,
       },
-    },
-  }));
+    }));
+  };
+
+  const updateBreak = (index, partialBreak) => {
+    setNewSchedule(prev => ({
+      ...prev,
+      [index]: {
+        ...prev[index],
+        break: {
+          ...prev[index].break,
+          ...partialBreak,
+        },
+      },
+    }));
+  };
+
+  return {
+    toggleEnabled: (day, index) =>
+      updateDay(index, { enabled: !day.enabled }),
+
+    changeStart: (value, index) =>
+      updateDay(index, { start: value }),
+
+    changeEnd: (value, index) =>
+      updateDay(index, { end: value }),
+
+    toggleBreak: (day, index) =>
+      updateBreak(index, { enabled: !day.break.enabled }),
+
+    changeBreakStart: (value, index) =>
+      updateBreak(index, { start: value }),
+
+    changeBreakEnd: (value, index) =>
+      updateBreak(index, { end: value }),
+  };
 };
-
-
-  export const toggleEnabled = (day, index, setNewSchedule) => {
-    updateDay(index, { enabled: !day.enabled }, setNewSchedule);
-  };
-
-  export const changeStart = (value, index, setNewSchedule) => {
-    updateDay(index, { start: value }, setNewSchedule);
-  };
-
-  export const changeEnd = (value, index, setNewSchedule) => {
-    updateDay(index, { end: value }, setNewSchedule);
-  };
-
-  export const toggleBreak = (day, index, setNewSchedule) => {
-    updateBreak(index, { enabled: !day.break.enabled }, setNewSchedule);
-  };
-
-  export const changeBreakStart = (value, index, setNewSchedule) => {
-    updateBreak(index, { start: value }, setNewSchedule);
-  };
-
-  export const changeBreakEnd = (value, index, setNewSchedule) => {
-    updateBreak(index, { end: value }, setNewSchedule);
-  };

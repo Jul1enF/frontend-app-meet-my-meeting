@@ -5,9 +5,9 @@ import { appStyle } from "@styles/appStyle"
 
 import DaySchedule from "./DaySchedule";
 
-export default function UserSchedule({ scheduleArray, setNewSchedule }) {
+export default function UserSchedule({ scheduleArray, scheduleActions }) {
 
-    const workingHours = scheduleArray.map((e, i)=> <DaySchedule index={i} key={i} setNewSchedule={setNewSchedule} day={e} /> )
+    const workingHours = scheduleArray.map((e, i)=> <DaySchedule index={i} key={i} scheduleActions={scheduleActions} day={e} /> )
 
     return (
      <View style={{width : "100%", marginTop : appStyle.largeMarginTop }}>

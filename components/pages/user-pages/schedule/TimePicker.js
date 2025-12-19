@@ -11,7 +11,6 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 
 export default function TimePicker({time, changeTime}) {
-    moment.locale('fr')
 
     const hours = time.slice(0,2)
     const minutes = time.slice(3)

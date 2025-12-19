@@ -13,7 +13,6 @@ import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
 import { upperCaseInitial } from "@utils/timeFunctions";
 
 export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
-    moment.locale('fr')
 
     const [viewedDate, setViewedDate] = useState(chosenDate)
     const viewedYear = viewedDate.getFullYear()

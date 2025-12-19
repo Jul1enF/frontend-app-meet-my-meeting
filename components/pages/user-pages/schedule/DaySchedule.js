@@ -10,11 +10,9 @@ import {toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, ch
 
 import moment from 'moment/min/moment-with-locales'
 
-export default memo(function DaySchedule({ day, index, setNewSchedule }) {
-
-    moment.locale('fr')
-    moment.weekdays(true)
-
+export default memo(function DaySchedule({ day, index, scheduleActions}) {
+    const {toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd} = scheduleActions
+    
     const dayName = upperCaseInitial(moment().weekday(index).format("dddd"))
     const activeDay = day.enabled
     const activeBreak = day.break.enabled
@@ -26,7 +24,7 @@ export default memo(function DaySchedule({ day, index, setNewSchedule }) {
     return (
         <View style={styles.mainContainer}>
 
-            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: mediumMarginTop }} leftFunction={()=> toggleEnabled(day, index, setNewSchedule )} />
+            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: mediumMarginTop }} leftFunction={()=> toggleEnabled(day, index )} />
 
             <View style={[styles.underline, { marginTop: mediumMarginTop}]}>
                 <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight : "700"  }]}>
@@ -43,7 +41,7 @@ export default memo(function DaySchedule({ day, index, setNewSchedule }) {
                             Début :
                         </Text>
 
-                        <TimePicker time={day.start} changeTime={(time)=> changeStart(time, index, setNewSchedule)} />
+                        <TimePicker time={day.start} changeTime={(time)=> changeStart(time, index)} />
 
                     </View>
 
@@ -52,7 +50,7 @@ export default memo(function DaySchedule({ day, index, setNewSchedule }) {
                             Fin :
                         </Text>
 
-                        <TimePicker time={day.end} changeTime={(time)=> changeEnd(time, index, setNewSchedule)} />
+                        <TimePicker time={day.end} changeTime={(time)=> changeEnd(time, index)} />
 
                     </View>
 
@@ -63,7 +61,7 @@ export default memo(function DaySchedule({ day, index, setNewSchedule }) {
                         Pause :
                     </Text>
 
-                    <Switch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={()=>toggleBreak(day, index, setNewSchedule)} />
+                    <Switch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={()=>toggleBreak(day, index )} />
                 </View>
 
 
@@ -74,7 +72,7 @@ export default memo(function DaySchedule({ day, index, setNewSchedule }) {
                             Début :
                         </Text>
 
-                        <TimePicker time={day.break.start} changeTime={(time)=> changeBreakStart(time, index, setNewSchedule)} />
+                        <TimePicker time={day.break.start} changeTime={(time)=> changeBreakStart(time, index )} />
                     </View>
 
                     <View style={styles.row}>
@@ -82,7 +80,7 @@ export default memo(function DaySchedule({ day, index, setNewSchedule }) {
                             Fin :
                         </Text>
 
-                        <TimePicker time={day.break.end} changeTime={(time)=> changeBreakEnd(time, index, setNewSchedule)} />
+                        <TimePicker time={day.break.end} changeTime={(time)=> changeBreakEnd(time, index )} />
                     </View>
 
                 </View>

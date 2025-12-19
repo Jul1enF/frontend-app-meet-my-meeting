@@ -16,7 +16,7 @@ import MaterialDesignIcons from "@react-native-vector-icons/material-design-icon
 import useLayoutSpaces from "@hooks/useLayoutSpaces"
 import Modal from "react-native-modal"
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
-import UserStatus from "@components/pages/user-pages/owner-side/UserStatus";
+import UserProfile from "@components/pages/user-pages/owner-side/UserProfile";
 
 export default function UsersPage() {
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
@@ -137,7 +137,7 @@ export default function UsersPage() {
                         <GoingBackHeader previousPageName="Liste des utilisateurs" leftFunction={() => setUserModalVisible(false)} />
 
                         <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" >
-                            <UserStatus selectedUser={selectedUser} setUserModalVisible={setUserModalVisible} />
+                            <UserProfile selectedUser={selectedUser} />
                         </ScrollView>
 
                     </AutocompleteDropdownContextProvider>
