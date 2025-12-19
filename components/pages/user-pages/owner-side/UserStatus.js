@@ -29,7 +29,6 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
     const [newSchedule, setNewSchedule] = useState(oldSchedule)
     const scheduleArray = Object.values(newSchedule)
 
-    console.log("enabled", newSchedule["0"].enabled)
 
     return (
         <>

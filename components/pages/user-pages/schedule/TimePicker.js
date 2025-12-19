@@ -7,11 +7,14 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 import moment from 'moment/min/moment-with-locales'
 
-import { RPH, RPW, phoneDevice } from "modules/dimensions"
-import { appStyle } from "styles/appStyle";
+import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { appStyle } from "@styles/appStyle";
 
-export default function TimePicker({date, changeDate}) {
+export default function TimePicker({time, changeTime}) {
     moment.locale('fr')
+
+    const hours = time.slice(0,2)
+    const minutes = time.slice(3)
 
     const [showPicker, setShowPicker] = useState(false)
 
@@ -22,17 +25,15 @@ export default function TimePicker({date, changeDate}) {
     const closePicker = () => {
         setShowPicker(false)
         const {hours, minutes} = pickerRef.current.latestDuration
-        let newDate = new Date(date)
-        newDate.setMinutes(minutes.current)
-        newDate.setHours(hours.current)
-
-        updateSelectedDate(newDate)
+        const hoursFormatted = hours.current > 9 ? hours.current : "0" + hours.current.toString()
+        const minutesFormatted = minutes.current > 9 ? minutes.current : "0" + minutes.current.toString()
+        changeTime(`${hoursFormatted}:${minutesFormatted}`)
     }
 
     return (
         <View>
-            <TouchableOpacity style={styles.dateTimeContainer} activeOpacity={0.6} onPress={() => setShowPicker(true)}>
-                <Text style={styles.dateTimeText} >{moment(date).format("HH : mm")}</Text>
+            <TouchableOpacity style={styles.timeContainer} activeOpacity={0.6} onPress={() => setShowPicker(true)}>
+                <Text style={styles.timeText} >{time}</Text>
             </TouchableOpacity>
 
             <Modal
@@ -47,25 +48,27 @@ export default function TimePicker({date, changeDate}) {
                 deviceHeight={screenHeight}
                 onBackButtonPress={() => closePicker()}
                 onBackdropPress={() => closePicker()}
+                useNativeDriverForBackdrop={true}
             >
                 <View style={styles.pickerContainer} onLayout={() => setTimeout(() => {
-                    pickerRef.current.setValue({ hours: Number(moment(date).format("HH")), minutes: Number(moment(date).format("mm")), seconds: 0 }, { animated: false })
+                    pickerRef.current.setValue({ hours, minutes}, { animated: false })
                 }, 10)}>
                     <TimerPicker
                         ref={pickerRef}
                         aggressivelyGetLatestDuration={true}
                         hideSeconds={true}
                         hourLimit={{ max: 23, min: 0 }}
-                        hourLabel={"H"}
+                        hourLabel={"  :"}
                         minuteLabel={""}
                         padHoursWithZero={true}
                         padMinutesWithZero={true}
                         LinearGradient={LinearGradient}
 
+                        // Style for the container of all the numbers
                         pickerContainerProps={{
-                            width: phoneDevice ? RPW(60) : 400,
-                            height: phoneDevice ? RPW(50) : 300,
-                            justifyContent: "space-around",
+                            height: phoneDevice ? RPW(45) : 225,
+                            // borderColor : "red",
+                            // borderWidth : 5,
                             alignItems: "center",
                             borderRadius: appStyle.regularItemBorderRadius,
                             marginLeft: phoneDevice ? RPW(4) : 30,
@@ -77,14 +80,23 @@ export default function TimePicker({date, changeDate}) {
                             text: {
                                 fontSize: phoneDevice ? RPW(5.5) : 35,
                                 letterSpacing: phoneDevice ? 1 : 1.5,
-                                fontFamily: 'Inter-600',
+                                fontWeight : "500",
                                 color: appStyle.brightGrey,
                             },
                             pickerLabelContainer: {
-                                right: phoneDevice ? -RPW(6) : -65,
+                                // display : "none"
                             },
+
+                            // Settings to have the separator right in the middle :
+                            pickerLabel : {
+                                fontWeight : "800",
+                                letterSpacing : phoneDevice ? RPW(1.2) : 12,
+                                fontSize : phoneDevice ? RPW(7) : 45,
+                                paddingTop : phoneDevice ? RPW(0.8) : 7,
+                            },
+                            // Style for container of the numbers column
                             pickerItemContainer: {
-                                height: phoneDevice ? RPW(10) : 75,
+                                height: phoneDevice ? RPW(12) : 75,
                             },
                         }}
                     />
@@ -104,20 +116,15 @@ export default function TimePicker({date, changeDate}) {
 
 }
 const styles = StyleSheet.create({
-    dateTimeContainer: {
-        height: appStyle.largeItemHeight,
-        width: appStyle.largeItemWidth * 0.47,
+     timeContainer: {
+        marginLeft: phoneDevice ? RPW(2) : 15,
+        backgroundColor: appStyle.strongGrey,
+        padding: phoneDevice ? RPW(2) : 15,
         borderRadius: appStyle.regularItemBorderRadius,
-        backgroundColor: appStyle.darkGrey,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: appStyle.largeItem.marginTop,
     },
-    dateTimeText: {
+    timeText: {
         ...appStyle.regularText,
-        textAlign: "center",
-        width: "100%",
+        color: appStyle.fontColorDarkBg,
     },
     modal: {
         alignItems: "center",
@@ -126,23 +133,23 @@ const styles = StyleSheet.create({
     },
     pickerContainer: {
         ...appStyle.card,
+        width : phoneDevice ? RPW(72) : 460,
         alignItems: "center",
-        paddingTop: phoneDevice ? RPW(8) : 80,
-        paddingBottom: phoneDevice ? RPW(8) : 80,
+        paddingTop : phoneDevice ? RPW(3) : 40
     },
     selectionButton: {
-        ...appStyle.regularItem,
+        borderRadius : appStyle.regularItemBorderRadius,
         ...appStyle.button,
         ...appStyle.lightGreyBorder,
         flexDirection: "row",
-        marginTop: phoneDevice ? RPW(8) : 80,
-        width: phoneDevice ? RPW(60) : 400,
-        height : phoneDevice ? RPW(12) : 70
+        marginTop: phoneDevice ? RPW(3) : 55,
+        width: phoneDevice ? RPW(50) : 330,
+        height : phoneDevice ? RPW(11) : 70
     },
     selectionButtonText: {
-        fontSize: phoneDevice ? RPW(4.8) : 28,
         letterSpacing: phoneDevice ? 1 : 1.5,
-        fontFamily: 'Inter-600',
-        color: appStyle.brightGrey,
+        ...appStyle.regularText,
+        color : appStyle.fontColorDarkBg,
+        fontWeight : "500"
     }
 })

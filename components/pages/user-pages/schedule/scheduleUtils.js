@@ -26,11 +26,11 @@ const updateBreak = (index, partialBreak, setNewSchedule) => {
     updateDay(index, { enabled: !day.enabled }, setNewSchedule);
   };
 
-  export const changeStart = (value) => {
+  export const changeStart = (value, index, setNewSchedule) => {
     updateDay(index, { start: value }, setNewSchedule);
   };
 
-  export const changeEnd = (value) => {
+  export const changeEnd = (value, index, setNewSchedule) => {
     updateDay(index, { end: value }, setNewSchedule);
   };
 
@@ -38,10 +38,10 @@ const updateBreak = (index, partialBreak, setNewSchedule) => {
     updateBreak(index, { enabled: !day.break.enabled }, setNewSchedule);
   };
 
-  export const changeBreakStart = (value) => {
+  export const changeBreakStart = (value, index, setNewSchedule) => {
     updateBreak(index, { start: value }, setNewSchedule);
   };
 
-  export const changeBreakEnd = (value) => {
+  export const changeBreakEnd = (value, index, setNewSchedule) => {
     updateBreak(index, { end: value }, setNewSchedule);
   };

@@ -4,6 +4,7 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { upperCaseInitial } from "@utils/timeFunctions";
 import Switch from "./Switch";
+import TimePicker from "./TimePicker";
 import {toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd} from "./scheduleUtils";
 
 import moment from 'moment/min/moment-with-locales'
@@ -41,11 +42,8 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
                             Début :
                         </Text>
 
-                        <TouchableOpacity style={styles.timeContainer} activeOpacity={0.5} >
-                            <Text style={styles.timeText} >
-                                {day.start}
-                            </Text>
-                        </TouchableOpacity>
+                        <TimePicker time={day.start} changeTime={(time)=> changeStart(time, index, setNewSchedule)} />
+
                     </View>
 
                     <View style={styles.row}>
@@ -53,11 +51,8 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
                             Fin :
                         </Text>
 
-                        <TouchableOpacity style={styles.timeContainer} activeOpacity={0.5} >
-                            <Text style={styles.timeText} >
-                                {day.end}
-                            </Text>
-                        </TouchableOpacity>
+                        <TimePicker time={day.end} changeTime={(time)=> changeEnd(time, index, setNewSchedule)} />
+
                     </View>
 
                 </View>
@@ -78,11 +73,7 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
                             Début :
                         </Text>
 
-                        <TouchableOpacity style={styles.timeContainer} activeOpacity={0.5} >
-                            <Text style={styles.timeText} >
-                                {day.break.start}
-                            </Text>
-                        </TouchableOpacity>
+                        <TimePicker time={day.break.start} changeTime={(time)=> changeBreakStart(time, index, setNewSchedule)} />
                     </View>
 
                     <View style={styles.row}>
@@ -90,11 +81,7 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
                             Fin :
                         </Text>
 
-                        <TouchableOpacity style={styles.timeContainer} activeOpacity={0.5} >
-                            <Text style={styles.timeText} >
-                                {day.break.end}
-                            </Text>
-                        </TouchableOpacity>
+                        <TimePicker time={day.break.end} changeTime={(time)=> changeBreakEnd(time, index, setNewSchedule)} />
                     </View>
 
                 </View>
