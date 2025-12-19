@@ -44,7 +44,7 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
                         Informations :
                     </Text>
 
-                    <View style={[styles.row, { marginTop : appStyle.regularItem.marginTop * 2 }]}>
+                    <View style={styles.row}>
 
                         <View style={styles.col}>
                             <View style={styles.labelContainer}>
@@ -74,7 +74,7 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
                     </View>
 
 
-                    <View style={[styles.row, {marginBottom : 0}]}>
+                    <View style={styles.row}>
 
                         <View style={styles.col}>
                             <View style={styles.labelContainer}>
@@ -109,7 +109,7 @@ export default function UserStatus({ selectedUser: user, setUserModalVisible }) 
 
                     <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} />
 
-                    {(newRole?.role && newRole?.role !== "client") && <UserSchedule scheduleArray={scheduleArray} setNewSchedule={setNewSchedule} newSchedule={newSchedule} />  }
+                    {(newRole?.role && newRole?.role !== "client") && <UserSchedule scheduleArray={scheduleArray} setNewSchedule={setNewSchedule} />  }
 
                 </View>
 
@@ -124,15 +124,15 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         flexWrap: "wrap",
         width: "100%",
-        rowGap: phoneDevice ? RPW(6) : 45,
-        marginBottom: phoneDevice ? RPW(6) : 45,
+        rowGap: phoneDevice ? RPW(8) : 45,
+        marginTop: phoneDevice ? RPW(8) : 45,
     },
     col: {
         alignItems: "flex-start",
         minWidth: "50%",
         maxWidth: "100%",
-        rowGap: phoneDevice ? RPW(3) : 15,
-        paddingRight : phoneDevice ? RPW(1) : 8,
+        rowGap: phoneDevice ? RPW(3.7) : 15,
+        paddingRight : phoneDevice ? RPW(1.6) : 8,
     },
     label: {
         ...appStyle.largeText,

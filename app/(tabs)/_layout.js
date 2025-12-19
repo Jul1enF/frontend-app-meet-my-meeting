@@ -5,9 +5,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import moment from 'moment/min/moment-with-locales'
 
 
 export default function TabsLayout() {
+  moment.locale('fr')
+  moment.weekdays(true)
 
   // Offset bottom for the navigations bar (the ios ones are not well calculated)
   const tabbarPaddingBottom = Platform.OS === "ios" ? useSafeAreaInsets().bottom / 2 : useSafeAreaInsets().bottom
@@ -19,7 +22,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        headerShown : false,
+        headerShown: false,
         keyboardHidesTabBar: true,
 
         tabBarIcon: ({ focused }) => {

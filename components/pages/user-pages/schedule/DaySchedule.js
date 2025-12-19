@@ -1,4 +1,5 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
+import { memo } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -9,7 +10,7 @@ import {toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, ch
 
 import moment from 'moment/min/moment-with-locales'
 
-export default function DaySchedule({ day, index, setNewSchedule }) {
+export default memo(function DaySchedule({ day, index, setNewSchedule }) {
 
     moment.locale('fr')
     moment.weekdays(true)
@@ -20,10 +21,10 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
 
 
     const mediumMarginTop = phoneDevice ? RPW(5.5) : 35
-    const largeMargintTop = phoneDevice ? RPW(6.5) : 42
+    const largeMarginTop = phoneDevice ? RPW(8) : 50
 
     return (
-        <View style={[styles.mainContainer, {paddingBottom : largeMargintTop}]}>
+        <View style={styles.mainContainer}>
 
             <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: mediumMarginTop }} leftFunction={()=> toggleEnabled(day, index, setNewSchedule )} />
 
@@ -33,7 +34,7 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
                 </Text>
             </View>
 
-            <View style={[{ width: "100%", marginTop: mediumMarginTop }, !activeDay && { display: "none" }]}>
+            <View style={[{ width: "100%", marginTop: largeMarginTop }, !activeDay && { display: "none" }]}>
 
                 <View style={styles.fullRow}>
 
@@ -57,7 +58,7 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
 
                 </View>
 
-                <View style={{ width: "100%", alignItems: "center", marginTop: largeMargintTop }}>
+                <View style={{ width: "100%", alignItems: "center", marginTop: largeMarginTop }}>
                     <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                         Pause :
                     </Text>
@@ -66,7 +67,7 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
                 </View>
 
 
-                <View style={[styles.fullRow, {marginTop: mediumMarginTop}, !activeBreak && {display : "none"}]}>
+                <View style={[styles.fullRow, {marginTop: largeMarginTop}, !activeBreak && {display : "none"}]}>
 
                     <View style={styles.row}>
                         <Text style={styles.label}>
@@ -89,7 +90,7 @@ export default function DaySchedule({ day, index, setNewSchedule }) {
             </View>
         </View>
     )
-}
+})
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -97,8 +98,9 @@ const styles = StyleSheet.create({
         borderRadius: appStyle.regularItemBorderRadius,
         minWidth: "100%",
         paddingHorizontal: appStyle.regularItem.paddingHorizontal,
-        marginTop: appStyle.regularItem.marginTop,
+        marginTop: appStyle.regularItem.marginTop * (phoneDevice ? 2 : 1.3),
         alignItems: "center",
+        paddingBottom : appStyle.largeMarginTop,
     },
     underline: {
         borderBottomColor: appStyle.darkWhite,
