@@ -1,3 +1,7 @@
+
+
+// LOGIC TO MODIFY THE SCHEDULE OF A DAY
+
 export const createScheduleActions = (setNewSchedule) => {
   const updateDay = (index, partialDay) => {
     setNewSchedule(prev => ({
@@ -42,3 +46,44 @@ export const createScheduleActions = (setNewSchedule) => {
       updateBreak(index, { end: value }),
   };
 };
+
+
+
+// LOGIC TO VALIDATE THE VALUES OF A DAY
+
+import moment from "moment";
+
+const compareHours = (timeBefore, timeAfter) => moment(timeBefore, "HH:mm").isBefore(moment(timeAfter, "HH:mm"))
+
+export const dayValidation = (day, finalCheck = false) => {
+  
+  const one = finalCheck ? "un " : "";
+  const ofDay = finalCheck ? "de journée est " : "";
+  const ofBreak = finalCheck ? "de pause est " : "";
+  const inDay = finalCheck ? "d'une " : "de la ";
+
+  let dayError = null;
+  let breakError = null;
+
+  if (!day.enabled) return { dayError, breakError }
+
+  if (!compareHours(day.start, day.end)) {
+    dayError = `Erreur : ${one}horaire de début ${ofDay}supérieur à celui de fin !`;
+  }
+
+  if (!day.break.enabled) return { dayError, breakError }
+
+
+  if (!compareHours(day.break.start, day.break.end)) {
+    breakError = `Erreur : ${one}horaire de début ${ofBreak}supérieur à celui de fin !`;
+  } else if (
+    !compareHours(day.start, day.break.start) ||
+    !compareHours(day.break.end, day.end)
+  ) {
+    breakError = `Erreur : horaires de pause mal insérés dans ceux ${inDay}journée !`;
+  }
+
+
+  return { dayError, breakError };
+};
+

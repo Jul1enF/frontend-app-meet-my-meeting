@@ -94,7 +94,7 @@ export default function Signin({ setSignForm }) {
 
                         <Button text="Se connecter" func={signinClick} />
 
-                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
+                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
                             {warning?.text}
                         </Text>
 

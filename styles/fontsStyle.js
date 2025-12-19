@@ -45,12 +45,14 @@ export const fontsStyle = {
         fontWeight: "400",
     },
     warning: {
-        fontSize: phoneDevice ? RPW(4) : 26,
-        letterSpacing: phoneDevice ? 0.5 : 1,
+        fontSize: phoneDevice ? RPW(4.3) : 29,
+        letterSpacing: phoneDevice ? 1.5 : 2.5,
         fontWeight: "500",
         textAlign: "center",
         width: "100%",
         color: strongRed,
+        marginTop: phoneDevice ? RPW(3) : 30,
+        lineHeight : phoneDevice ? RPW(6) : 38,
     },
     success: {
         color: lightGreen,

@@ -68,7 +68,7 @@ export default function UsersPage() {
                     Liste des utilisateurs
                 </Text>
 
-                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
+                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
                     {warning?.text}
                 </Text>
             </View>

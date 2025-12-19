@@ -24,6 +24,7 @@ export default function ConfirmationModal({ visible, closeModal, confirmationTex
             onBackButtonPress={() => closeModal()}
             onBackdropPress={() => closeModal()}
             style={{ alignItems: "center", justifyContent: "center", margin: 0 }}
+            useNativeDriverForBackdrop={true}
         >
             <View style={styles.modalBody}>
                 <Text style={styles.confirmationText}>
@@ -34,7 +35,7 @@ export default function ConfirmationModal({ visible, closeModal, confirmationTex
                 <Button func={closeModal} text={cancelBtnText} marginTop={0} />
                 <Button func={confirmationFunc} text={confirmationBtnText} />
 
-                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
+                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
                     {warning?.text}
                 </Text>
             </View>

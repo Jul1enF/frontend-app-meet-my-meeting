@@ -153,7 +153,7 @@ export default function Signup({ setSignForm }) {
 
                         <Button text="S'inscrire" func={signupClick} />
 
-                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text ? { height: 0 } : { marginTop: phoneDevice ? RPW(3) : 30 }]}>
+                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
                             {warning?.text}
                         </Text>
 

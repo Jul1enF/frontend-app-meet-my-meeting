@@ -1,22 +1,24 @@
 import { View, StyleSheet, Text } from "react-native";
-import { memo } from "react";
+import { memo, use } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { upperCaseInitial } from "@utils/timeFunctions";
+import useScheduleError from "./useScheduleError";
 import Switch from "./Switch";
 import TimePicker from "./TimePicker";
-import {toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd} from "./scheduleUtils";
 
 import moment from 'moment/min/moment-with-locales'
 
-export default memo(function DaySchedule({ day, index, scheduleActions}) {
-    const {toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd} = scheduleActions
-    
+export default memo(function DaySchedule({ day, index, scheduleActions }) {
+
+    const { toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd } = scheduleActions
+
     const dayName = upperCaseInitial(moment().weekday(index).format("dddd"))
     const activeDay = day.enabled
     const activeBreak = day.break.enabled
 
+    const { dayError, breakError } = useScheduleError(day)
 
     const mediumMarginTop = phoneDevice ? RPW(5.5) : 35
     const largeMarginTop = phoneDevice ? RPW(8) : 50
@@ -24,10 +26,10 @@ export default memo(function DaySchedule({ day, index, scheduleActions}) {
     return (
         <View style={styles.mainContainer}>
 
-            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: mediumMarginTop }} leftFunction={()=> toggleEnabled(day, index )} />
+            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: mediumMarginTop }} leftFunction={() => toggleEnabled(day, index)} />
 
-            <View style={[styles.underline, { marginTop: mediumMarginTop}]}>
-                <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight : "700"  }]}>
+            <View style={[styles.underline, { marginTop: mediumMarginTop }]}>
+                <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                     {dayName} :
                 </Text>
             </View>
@@ -41,7 +43,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions}) {
                             Début :
                         </Text>
 
-                        <TimePicker time={day.start} changeTime={(time)=> changeStart(time, index)} />
+                        <TimePicker time={day.start} changeTime={(time) => changeStart(time, index)} />
 
                     </View>
 
@@ -50,29 +52,33 @@ export default memo(function DaySchedule({ day, index, scheduleActions}) {
                             Fin :
                         </Text>
 
-                        <TimePicker time={day.end} changeTime={(time)=> changeEnd(time, index)} />
+                        <TimePicker time={day.end} changeTime={(time) => changeEnd(time, index)} />
 
                     </View>
 
                 </View>
+
+                <Text style={[appStyle.warning, !dayError && { height: 0, marginTop: 0 }]}>
+                    {dayError}
+                </Text>
 
                 <View style={{ width: "100%", alignItems: "center", marginTop: largeMarginTop }}>
                     <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                         Pause :
                     </Text>
 
-                    <Switch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={()=>toggleBreak(day, index )} />
+                    <Switch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={() => toggleBreak(day, index)} />
                 </View>
 
 
-                <View style={[styles.fullRow, {marginTop: largeMarginTop}, !activeBreak && {display : "none"}]}>
+                <View style={[styles.fullRow, { marginTop: largeMarginTop }, !activeBreak && { display: "none" }]}>
 
                     <View style={styles.row}>
                         <Text style={styles.label}>
                             Début :
                         </Text>
 
-                        <TimePicker time={day.break.start} changeTime={(time)=> changeBreakStart(time, index )} />
+                        <TimePicker time={day.break.start} changeTime={(time) => changeBreakStart(time, index)} />
                     </View>
 
                     <View style={styles.row}>
@@ -80,10 +86,14 @@ export default memo(function DaySchedule({ day, index, scheduleActions}) {
                             Fin :
                         </Text>
 
-                        <TimePicker time={day.break.end} changeTime={(time)=> changeBreakEnd(time, index )} />
+                        <TimePicker time={day.break.end} changeTime={(time) => changeBreakEnd(time, index)} />
                     </View>
 
                 </View>
+
+                <Text style={[appStyle.warning, !breakError && { height: 0, marginTop: 0 }]}>
+                    {breakError}
+                </Text>
 
             </View>
         </View>
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: appStyle.regularItem.paddingHorizontal,
         marginTop: appStyle.regularItem.marginTop * (phoneDevice ? 2 : 1.3),
         alignItems: "center",
-        paddingBottom : appStyle.largeMarginTop,
+        paddingBottom: appStyle.largeMarginTop,
     },
     underline: {
         borderBottomColor: appStyle.darkWhite,
