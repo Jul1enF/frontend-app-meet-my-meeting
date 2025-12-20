@@ -24,7 +24,7 @@ export default function ConfirmationModal({ visible, closeModal, confirmationTex
             onBackButtonPress={() => closeModal()}
             onBackdropPress={() => closeModal()}
             style={{ alignItems: "center", justifyContent: "center", margin: 0 }}
-            useNativeDriverForBackdrop={true}
+            useNativeDriverForBackdrop={false}
         >
             <View style={styles.modalBody}>
                 <Text style={styles.confirmationText}>

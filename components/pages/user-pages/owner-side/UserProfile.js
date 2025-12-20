@@ -9,12 +9,17 @@ import { appStyle } from "@styles/appStyle"
 import { userDefaultSchedule } from "constants/userDefaultSchedule";
 import { createScheduleActions, dayValidation } from "../schedule/scheduleUtils";
 import request from "@utils/request";
+import useSessionExpired from "@hooks/useSessionExpired";
 
 import Button from "@components/ui/Button";
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 
 
 export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers }) {
+
+    // HOOKS TO LOGOUT IF SESSION EXPIRED
+    const [sessionExpired, setSessionExpired] = useState(false)
+    useSessionExpired(sessionExpired, setSessionExpired)
 
     const rolesData = [
         { id: "1", title: "Gérant", role: "owner" },
@@ -68,23 +73,23 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers 
 
     const updateUserRef = useRef(true)
 
-    const updateUserPress =async () => {
+    const updateUserPress = async () => {
+        const { role } = newRole
         const body = {
-            _id : user._id,
-            userToSave : {
-                role : newRole,
-                working_hours : newRole === "client" ? null : newSchedule,
+            _id: user._id,
+            userToSave: {
+                role,
+                working_hours: role === "client" ? null : newSchedule,
             }
         }
 
-        const data = await request({path : "pros/update-user", method : "PUT", body, jwtToken, updateUserRef, setWarning : setFetchWarning, setModalVisible, })
+        const data = await request({ path: "pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, updateUserRef, setWarning: setFetchWarning, setModalVisible })
 
-        if (data){
-            console.log("DATA :", data)
-            setAllUsers(prev => prev.map(e=> {
-                if (e._id === user._id){
+        if (data) {
+            setAllUsers(prev => prev.map(e => {
+                if (e._id === user._id) {
                     return data.userSaved
-                }else{
+                } else {
                     return e
                 }
             }))
@@ -121,7 +126,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers 
 
                 </View>
 
-                < ConfirmationModal visible={modalVisible} closeModal={()=>setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUserPress} />
+                < ConfirmationModal visible={modalVisible} closeModal={() => setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUserPress} />
 
             </View>
         </>

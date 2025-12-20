@@ -50,6 +50,7 @@ export const fontsStyle = {
         fontWeight: "500",
         textAlign: "center",
         width: "100%",
+        maxWidth : "100%",
         color: strongRed,
         marginTop: phoneDevice ? RPW(3) : 30,
         lineHeight : phoneDevice ? RPW(6) : 38,

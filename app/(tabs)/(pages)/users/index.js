@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, FlatList, RefreshControl, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -14,6 +14,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
 
 import useLayoutSpaces from "@hooks/useLayoutSpaces"
+import useSessionExpired from "@hooks/useSessionExpired";
 import Modal from "react-native-modal"
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import UserProfile from "@components/pages/user-pages/owner-side/UserProfile";
@@ -25,9 +26,13 @@ export default function UsersPage() {
     const [searchText, setSearchText] = useState("")
     const [selectedRole, setSelectedRole] = useState("allUsersRoles")
 
+    // HOOKS TO LOGOUT IF SESSION EXPIRED
+    const [sessionExpired, setSessionExpired]=useState(false)
+    useSessionExpired(sessionExpired, setSessionExpired)
+
     // LOAD USERS FUNCTION AND USEEFFECT
     const fetchUsers = async (clearEtag) => {
-        const data = await request({ path: "pros/get-all-users", jwtToken, clearEtag, setWarning })
+        const data = await request({ path: "pros/get-all-users", jwtToken, setSessionExpired, clearEtag, setWarning })
         if (data) {
             setAllUsers(data.allUsers)
         }
@@ -131,6 +136,7 @@ export default function UsersPage() {
                     onBackButtonPress={() => setUserModalVisible(false)}
                     deviceWidth={screenWidth}
                     deviceHeight={screenHeight}
+                    useNativeDriverForBackdrop={true}
                 >
                     <AutocompleteDropdownContextProvider>
 

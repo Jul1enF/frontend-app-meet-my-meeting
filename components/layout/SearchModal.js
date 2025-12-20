@@ -5,12 +5,13 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Modal from "react-native-modal"
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 
 export default function SearchModal({ searchVisible, setSearchVisible, screenWidth, screenHeight, modalOffsetTop }) {
 
     const [searchText, setSearchText] = useState('')
+    const router = useRouter()
 
     // Function called when a search is submitted
 

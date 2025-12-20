@@ -2,9 +2,11 @@ import { Text, TouchableOpacity, FlatList, View, StyleSheet } from "react-native
 import { useRef, useEffect } from "react";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 export default function HorizontalMenu({ data, menuBelow, func, name, chosenItem, setChosenItem, categoryType, countProp, length }) {
+
+    const router  = useRouter()
 
     const dataArray = Array.isArray(data) ? data :
         length ? Object.values(data).sort((a, b) => b[countProp].length - a[countProp].length) :

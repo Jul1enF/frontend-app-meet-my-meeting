@@ -7,13 +7,14 @@ import Button from '@components/ui/Button';
 import { useDispatch } from 'react-redux';
 import { login } from 'reducers/user'
 import request from '@utils/request';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
 
 export default function Signup({ setSignForm }) {
+    const router  = useRouter()
 
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -48,7 +49,7 @@ export default function Signup({ setSignForm }) {
         }
 
         const data = await request({
-            path: "users/signup", method: "POST", ref: signupRef, setWarning, 
+            path: "users/signup", method: "POST", functionRef: signupRef, setWarning, 
             body: {
                 email,
                 password,

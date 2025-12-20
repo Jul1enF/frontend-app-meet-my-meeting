@@ -1,19 +1,25 @@
-export default async function request({path, method = "GET", body, params, jwtToken, ref, setWarning, setModalVisible, setUploading, clearEtag}) {
+export default async function request({ path, method = "GET", body, params, jwtToken, setSessionExpired, functionRef, setWarning, setModalVisible, setUploading, clearEtag }) {
 
-    const warning = typeof setWarning === "function" ? true : false
-    const modal = typeof setModalVisible === "function" ? true : false
-    const uploading = typeof setUploading === "function" ? true : false
+    const warning = typeof setWarning === "function"
+    const modal = typeof setModalVisible === "function"
+    const uploading = typeof setUploading === "function"
+    const session = typeof setSessionExpired === "function"
+
+    let warningText
+    let sessionExpired
+
+    const readingTime = (text) => text ? Math.round(text.length * 53) : 0
 
     const displayWarning = (message, success) => {
         if (warning) {
-            setWarning({ text : message ? message : "Erreur : Problème de connexion", success : success ? success : false})
-            setTimeout(() => setWarning({}), 4500);
+            warningText = message ?? "Erreur : Problème de connexion"
+            setWarning({ text: warningText, success: success ?? false })
         }
     }
 
-    if (ref) {
-        if (!ref.current) return;
-        ref.current = false;
+    if (functionRef) {
+        if (!functionRef.current) return;
+        functionRef.current = false;
     }
     try {
         warning && setWarning({})
@@ -42,15 +48,15 @@ export default async function request({path, method = "GET", body, params, jwtTo
         const response = await fetch(`${url}/${path}${urlParams}`, options);
         const data = await response.json()
 
-        if (data.error) {
-            displayWarning(data.error)
-        } else if (!data.result) {
-            displayWarning()
-        } else if (data.notModified){
+        if (!data.result) {
+            displayWarning(data.errorText ?? null)
+            sessionExpired = data.sessionExpired
+        }
+        else if (data.notModified) {
             return
         }
         else {
-            data.successMsg && displayWarning(data.successMsg, true)
+            data.successText && displayWarning(data.successText, true)
             return data
         }
     }
@@ -59,8 +65,17 @@ export default async function request({path, method = "GET", body, params, jwtTo
         displayWarning()
     }
     finally {
-        if (ref) ref.current = true;
+        if (functionRef) functionRef.current = true;
         uploading && setUploading(false)
-        modal && setTimeout(() => setModalVisible(false), 4500)
+
+        if (modal || warningText) setTimeout(() => {
+            modal && setModalVisible(false)
+            warningText && setWarning({})
+        }, readingTime(warningText))
+
+        if (session && sessionExpired){
+            const delay = readingTime(warningText) + (modal ? 400 : 0)
+            setTimeout(()=> setSessionExpired(true), delay)
+        }
     }
 }
