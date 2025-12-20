@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text } from "react-native";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 
 import Autocomplete from "@components/ui/Autocomplete";
 import UserInformations from "./UserInformations";
@@ -8,12 +8,13 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { userDefaultSchedule } from "constants/userDefaultSchedule";
 import { createScheduleActions, dayValidation } from "../schedule/scheduleUtils";
+import request from "@utils/request";
 
 import Button from "@components/ui/Button";
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 
 
-export default function UserProfile({ selectedUser: user, }) {
+export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers }) {
 
     const rolesData = [
         { id: "1", title: "Gérant", role: "owner" },
@@ -63,8 +64,31 @@ export default function UserProfile({ selectedUser: user, }) {
         } else setModalVisible(true)
     }
 
-    const updateUser = ()=>{
-        console.log("Hello")
+
+
+    const updateUserRef = useRef(true)
+
+    const updateUserPress =async () => {
+        const body = {
+            _id : user._id,
+            userToSave : {
+                role : newRole,
+                working_hours : newRole === "client" ? null : newSchedule,
+            }
+        }
+
+        const data = await request({path : "pros/update-user", method : "PUT", body, jwtToken, updateUserRef, setWarning : setFetchWarning, setModalVisible, })
+
+        if (data){
+            console.log("DATA :", data)
+            setAllUsers(prev => prev.map(e=> {
+                if (e._id === user._id){
+                    return data.userSaved
+                }else{
+                    return e
+                }
+            }))
+        }
     }
 
 
@@ -97,7 +121,7 @@ export default function UserProfile({ selectedUser: user, }) {
 
                 </View>
 
-                < ConfirmationModal visible={modalVisible} closeModal={()=>setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUser} />
+                < ConfirmationModal visible={modalVisible} closeModal={()=>setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUserPress} />
 
             </View>
         </>

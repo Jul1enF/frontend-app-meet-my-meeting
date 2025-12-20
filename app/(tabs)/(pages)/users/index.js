@@ -36,11 +36,11 @@ export default function UsersPage() {
     useEffect(() => {
         fetchUsers(true)
     }, [])
-
+ 
 
     // USER MODAL SET UP
 
-    const { modalOffsetTop, freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
+    const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
     const [userModalVisible, setUserModalVisible] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
 
@@ -137,7 +137,7 @@ export default function UsersPage() {
                         <GoingBackHeader previousPageName="Liste des utilisateurs" leftFunction={() => setUserModalVisible(false)} />
 
                         <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" >
-                            <UserProfile selectedUser={selectedUser} />
+                            <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setAllUsers={setAllUsers} />
                         </ScrollView>
 
                     </AutocompleteDropdownContextProvider>
