@@ -44,7 +44,7 @@ export default async function request({ path, method = "GET", body, params, jwtT
         const urlParams = params
             ? "/" + (Array.isArray(params) ? params.join("/") : params)
             : "";
-
+       
         const response = await fetch(`${url}/${path}${urlParams}`, options);
         const data = await response.json()
 

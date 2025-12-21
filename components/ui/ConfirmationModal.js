@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     line: {
         width: "40%",
         ...appStyle.horizontalLine,
-        marginVertical: phoneDevice ? RPW(7) : 50,
+        marginVertical: appStyle.mediumMarginTop,
     },
 })

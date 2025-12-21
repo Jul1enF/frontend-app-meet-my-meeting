@@ -6,26 +6,29 @@ import { appStyle } from "@styles/appStyle"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
-export default function Autocomplete({ data, setSelectedItem, placeholderText, width, height, initialValue }) {
+export default function Autocomplete({ data, setSelectedItem, placeholderText, width, height, initialValue, emptyText, inputStyle, suggestionTextStyle, canCreate }) {
     const inputWidth = width ?? appStyle.largeItemWidth
     const inputHeight = height ?? appStyle.largeItemHeight
-
+    
     return (
         <AutocompleteDropdown
             dataSet={data}
             clearOnFocus={false}
             closeOnBlur={true}
             closeOnSubmit={true}
-            emptyResultText="Aucun résultat"
+            emptyResultText={emptyText}
             initialValue={initialValue ? initialValue : {}}
             onSelectItem={(item) => setSelectedItem(item)}
             onClear={() => setSelectedItem(null)}
+            onChangeText={(e)=> canCreate && setSelectedItem({ title: e })}
             onSubmit={(e) => {
-                data.map(
-                    (f) =>
-                        f.title.toLowerCase() === e.nativeEvent.text.toLowerCase() &&
-                        setSelectedItem(f)
-                );
+                const text = e.nativeEvent.text.toLowerCase()
+                const foundItem = data.find( elem => elem.title.toLowerCase() === text )
+                if (foundItem) {
+                    setSelectedItem(foundItem)
+                } else if (canCreate) {
+                    setSelectedItem({ title: e.nativeEvent.text })
+                }
             }}
             suggestionsListMaxHeight={phoneDevice ? RPW(65) : 300}
             inputContainerStyle={[styles.inputContainer, { height: inputHeight, width: inputWidth }]}
@@ -34,7 +37,7 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, w
                 autoCorrect: false,
                 autoCapitalize: "none",
                 placeholderTextColor: appStyle.placeholderColor,
-                style: styles.autoCompleteInput,
+                style: !inputStyle ? styles.autoCompleteInput : { ...styles.autoCompleteInput, ...inputStyle },
             }}
             containerStyle={{ width: inputWidth }}
             suggestionsListContainerStyle={{
@@ -43,12 +46,12 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, w
             }}
             renderItem={(item) => (
                 <View style={[styles.suggestionsListItem, { height: inputHeight }]}>
-                    <Text style={styles.suggestionsListText}>{item.title}</Text>
+                    <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle]}>{item.title}</Text>
                 </View>
             )}
             EmptyResultComponent={() => (
                 <View style={[styles.suggestionsListItem, { height: inputHeight }]}>
-                    <Text style={styles.suggestionsListText}>Aucun résultat</Text>
+                    <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle]}>{emptyText}</Text>
                 </View>
             )}
             ChevronIconComponent={
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
     autoCompleteInput: {
         ...appStyle.regularText,
         color: appStyle.fontColorDarkBg,
-        fontWeight : "700",
+        fontWeight: "700",
         paddingBottom: 0,
         paddingTop: 0,
     },

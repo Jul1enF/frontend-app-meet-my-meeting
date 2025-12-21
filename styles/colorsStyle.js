@@ -1,6 +1,6 @@
 export const colorsStyle = {
     // Custom placeholder color
-    placeholderColor: "rgba(255,255,255,0.85)",
+    placeholderColor: "rgba(183, 183, 183, 0.85)",
 
     // Main colors of the app
     brightWhite: "rgba(250, 248, 252, 1)",

@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         width: "100%",
         backgroundColor: appStyle.darkWhite,
-        paddingTop: appStyle.pagePaddingTop,
+        paddingTop: appStyle.mediumMarginTop,
         paddingHorizontal : 15,
     },
     obsoleteText: {

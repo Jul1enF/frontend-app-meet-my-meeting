@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         flexWrap: "wrap",
         width: "100%",
-        rowGap: phoneDevice ? RPW(7.5) : 45,
-        marginTop: phoneDevice ? RPW(7.5) : 45,
+        rowGap: appStyle.mediumMarginTop,
+        marginTop: appStyle.mediumMarginTop,
     },
     col: {
         alignItems: "flex-start",
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     },
     status: {
         ...appStyle.regularText,
+        letterSpacing : 0,
         color: appStyle.fontColorDarkBg,
     }
 })

@@ -21,12 +21,14 @@ export const fontsStyle = {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(4.65) : 30,
         fontWeight: "500",
+        letterSpacing: phoneDevice ? RPW(0.1) : 1,
     },
     regularText: {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(4.3) : 28,
         lineHeight: phoneDevice ? RPW(5.5) : 35,
         fontWeight: "400",
+        letterSpacing: phoneDevice ? RPW(0.15) : 1,
     },
     secondHeaderText: {
         color: strongBlack,

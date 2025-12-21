@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, RefreshControl, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { View, StyleSheet, Text, FlatList, RefreshControl, TextInput, TouchableOpacity } from "react-native";
 import { useEffect, useState, useRef } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
@@ -9,14 +9,12 @@ import useSortUsers from "@components/pages/user-pages/owner-side/useSortUsers";
 
 import UserItem from "@components/pages/user-pages/owner-side/UserItem";
 import HorizontalMenu from "@components/ui/HorizontalMenu";
+import ModalPageWrapper from "@components/layout/ModalPageWrapper";
 import GoingBackHeader from "@components/ui/GoingBackHeader";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
 
-import useLayoutSpaces from "@hooks/useLayoutSpaces"
 import useSessionExpired from "@hooks/useSessionExpired";
-import Modal from "react-native-modal"
-import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import UserProfile from "@components/pages/user-pages/owner-side/UserProfile";
 
 export default function UsersPage() {
@@ -27,7 +25,7 @@ export default function UsersPage() {
     const [selectedRole, setSelectedRole] = useState("allUsersRoles")
 
     // HOOKS TO LOGOUT IF SESSION EXPIRED
-    const [sessionExpired, setSessionExpired]=useState(false)
+    const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
 
     // LOAD USERS FUNCTION AND USEEFFECT
@@ -41,16 +39,25 @@ export default function UsersPage() {
     useEffect(() => {
         fetchUsers(true)
     }, [])
- 
+
 
     // USER MODAL SET UP
 
-    const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
     const [userModalVisible, setUserModalVisible] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
 
     // Users sorted by roles
     const usersByRoles = useSortUsers(allUsers, searchText)
+
+    // useEffect to display all the users if the current selected role categorie disappear
+    useEffect(() => {
+        if (!usersByRoles[selectedRole]) {
+            setSelectedRole(Object.keys(usersByRoles)[0]);
+        }
+    }, [usersByRoles]);
+
+
+
 
     // USERS FLATLIST SET UP
 
@@ -68,12 +75,12 @@ export default function UsersPage() {
 
     const usersListHeader = () => {
         return (
-            <View style={{ paddingTop: appStyle.pagePaddingTop }}>
+            <View style={{ paddingTop: appStyle.mediumMarginTop }}>
                 <Text style={appStyle.pageTitle}>
                     Liste des utilisateurs
                 </Text>
 
-                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
+                <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
                     {warning?.text}
                 </Text>
             </View>
@@ -81,6 +88,7 @@ export default function UsersPage() {
     }
 
     const usersToDisplay = usersByRoles[selectedRole]?.users ?? [];
+
 
     return (
         <>
@@ -112,7 +120,7 @@ export default function UsersPage() {
                         usersFlatlistRef.current.scrollToIndex({ animated: false, index: event.index })
                     }}
                     ListHeaderComponent={usersListHeader}
-                    ListHeaderComponentStyle={{ marginBottom: phoneDevice ? RPW(7) : 45 }}
+                    ListHeaderComponentStyle={{ marginBottom: appStyle.mediumMarginTop }}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => item._id}
                     renderItem={({ item, index }) => <TouchableOpacity
@@ -126,28 +134,12 @@ export default function UsersPage() {
                     contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom }}
                 />
 
-                <Modal
-                    isVisible={userModalVisible}
-                    style={[styles.modal, { maxHeight: freeHeight, top: 0, width: "100%" }]}
-                    coverScreen={false}
-                    backdropColor="transparent"
-                    animationIn="slideInRight"
-                    animationOut="slideOutRight"
-                    onBackButtonPress={() => setUserModalVisible(false)}
-                    deviceWidth={screenWidth}
-                    deviceHeight={screenHeight}
-                    useNativeDriverForBackdrop={true}
-                >
-                    <AutocompleteDropdownContextProvider>
 
-                        <GoingBackHeader previousPageName="Liste des utilisateurs" leftFunction={() => setUserModalVisible(false)} />
+                <ModalPageWrapper visible={userModalVisible} setVisible={setUserModalVisible} backHeaderText="Liste des utilisateurs" >
 
-                        <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" >
-                            <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setAllUsers={setAllUsers} />
-                        </ScrollView>
+                    <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setAllUsers={setAllUsers} setSessionExpired={setSessionExpired} />
 
-                    </AutocompleteDropdownContextProvider>
-                </Modal>
+                </ModalPageWrapper>
 
             </View>
         </>

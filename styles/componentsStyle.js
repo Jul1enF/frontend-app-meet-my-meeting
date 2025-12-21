@@ -14,7 +14,7 @@ const largeItemHeight = phoneDevice ? RPW(12) : 78
 
 const cardLateralPadding = phoneDevice ? RPW(5) : 30
 
-const pagePaddingTop = phoneDevice ? RPW(7) : 50
+const mediumMarginTop = phoneDevice ? RPW(7) : 50
 const pagePaddingBottom = phoneDevice ? RPW(15) : 120
 
 
@@ -25,7 +25,7 @@ const regularItem = {
     width: regularItemWidth,
     borderRadius: regularItemBorderRadius,
     marginTop: phoneDevice ? RPW(3) : 25,
-    paddingHorizontal: phoneDevice ? RPW(2) : 20,
+    paddingHorizontal: phoneDevice ? RPW(3) : 20,
 }
 
 const largeItem = {
@@ -33,7 +33,7 @@ const largeItem = {
     width: largeItemWidth,
     borderRadius: regularItemBorderRadius,
     marginTop: phoneDevice ? RPW(3) : 25,
-    paddingHorizontal: phoneDevice ? RPW(2) : 20,
+    paddingHorizontal: phoneDevice ? RPW(3) : 20,
 }
 
 const inputVertPadding = {
@@ -61,7 +61,7 @@ export const componentsStyle = {
     pageBody: {
         flex: 1,
         backgroundColor: darkWhite,
-        paddingTop: pagePaddingTop,
+        paddingTop: mediumMarginTop,
         paddingBottom: pagePaddingBottom,
         alignItems: "center",
     },
@@ -70,7 +70,7 @@ export const componentsStyle = {
         paddingBottom: phoneDevice ? RPW(6.5) : 50,
         paddingHorizontal: cardLateralPadding,
         borderRadius: regularItemBorderRadius,
-        marginTop: phoneDevice ? RPW(6) : 40,
+        marginTop: mediumMarginTop,
         alignItems: "center",
         width: (cardLateralPadding * 2) + regularItemWidth,
         backgroundColor: darkGrey,
@@ -119,7 +119,7 @@ export const componentsStyle = {
     largeItemHeight,
     cardLateralPadding,
     pagePaddingBottom,
-    pagePaddingTop,
+    mediumMarginTop,
 
     regularItem,
     largeItem,

@@ -15,11 +15,7 @@ import Button from "@components/ui/Button";
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 
 
-export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers }) {
-
-    // HOOKS TO LOGOUT IF SESSION EXPIRED
-    const [sessionExpired, setSessionExpired] = useState(false)
-    useSessionExpired(sessionExpired, setSessionExpired)
+export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers, setSessionExpired }) {
 
     const rolesData = [
         { id: "1", title: "Gérant", role: "owner" },
@@ -31,7 +27,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers 
     const index = rolesData.findIndex(e => e.role === user.role)
     const [newRole, setNewRole] = useState(rolesData[index])
 
-    const oldSchedule = user.working_hours ?? userDefaultSchedule;
+    const oldSchedule = user.schedule ?? userDefaultSchedule;
     const [newSchedule, setNewSchedule] = useState(oldSchedule)
     const scheduleArray = Object.values(newSchedule)
 
@@ -79,11 +75,11 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers 
             _id: user._id,
             userToSave: {
                 role,
-                working_hours: role === "client" ? null : newSchedule,
+                schedule: role === "client" ? null : newSchedule,
             }
         }
 
-        const data = await request({ path: "pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, updateUserRef, setWarning: setFetchWarning, setModalVisible })
+        const data = await request({ path: "pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, functionRef : updateUserRef, setWarning: setFetchWarning, setModalVisible })
 
         if (data) {
             setAllUsers(prev => prev.map(e => {
@@ -114,7 +110,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers 
                         Statut :
                     </Text>
 
-                    <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} />
+                    <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} emptyText="Aucun résultat" />
 
                     {(newRole?.role && newRole?.role !== "client") && <UserSchedule scheduleArray={scheduleArray} scheduleActions={scheduleActions} />}
 
