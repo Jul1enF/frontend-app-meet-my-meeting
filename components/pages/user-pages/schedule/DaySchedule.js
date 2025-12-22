@@ -15,6 +15,9 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
     const { toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd } = scheduleActions
 
     const dayName = upperCaseInitial(moment().weekday(index).format("dddd"))
+//     const dayName = DateTime.now()
+//   .set({ weekday: index + 1 })
+//   .toFormat("cccc");
     const activeDay = day.enabled
     const activeBreak = day.break.enabled
 

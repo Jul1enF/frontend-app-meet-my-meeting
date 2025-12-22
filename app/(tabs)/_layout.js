@@ -34,7 +34,7 @@ export default function TabsLayout() {
             case 'date-picker':
               iconName = 'square-outline'
               break;
-            case 'tab2':
+            case 'appointment':
               iconName = 'triangle-outline'
               break;
           }
@@ -64,8 +64,8 @@ export default function TabsLayout() {
       <Tabs.Screen name="date-picker" options={{
         title: "Date Picker",
       }} />
-      <Tabs.Screen name="tab2" options={{
-        title: "Tab 2",
+      <Tabs.Screen name="appointment" options={{
+        title: "Rendez-vous",
       }} />
       <Tabs.Screen name="(pages)" options={{
         tabBarItemStyle: { display: "none" },
