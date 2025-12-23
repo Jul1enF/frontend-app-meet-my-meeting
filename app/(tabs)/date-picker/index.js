@@ -5,11 +5,12 @@ import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import DatePicker from '@components/ui/DatePicker/DatePicker';
+import { DateTime } from 'luxon';
 
 export default function DatePickerPage() {
-
-  const [chosenDate, setChosenDate] = useState(new Date())
-
+  // ALL DATES ARE IN LOCALE TO BE RELEAVANT TO USER TIMEZONE
+  const [chosenDate, setChosenDate] = useState(DateTime.now())
+  
   return (
     <View style={styles.body}>
       <StatusBar translucent={true} backgroundColor="transparent" barStyle="light" />

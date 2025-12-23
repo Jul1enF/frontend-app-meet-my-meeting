@@ -5,8 +5,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import Modal from "react-native-modal"
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
-import moment from 'moment/min/moment-with-locales'
-
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 

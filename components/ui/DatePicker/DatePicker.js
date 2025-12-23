@@ -10,7 +10,6 @@ import Modal from "react-native-modal"
 import Button from "../Button";
 import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import moment from 'moment'
 
 export default function DatePicker({ chosenDate, setChosenDate }) {
     const { height: screenHeight, width: screenWidth } = useSafeAreaFrame()
@@ -19,14 +18,16 @@ export default function DatePicker({ chosenDate, setChosenDate }) {
     const [calendarVisible, setCalendarVisible] = useState(false)
     const updateCalendarVisible = () => setCalendarVisible(!calendarVisible)
 
-
     return (
         <View>
 
             <View style={{ justifyContent: "center" }} >
 
                 <FontAwesome6 name="calendar-days" size={phoneDevice ? RPW(5) : 30} color={appStyle.fontColorDarkBg} style={styles.calendarIcon} onPress={updateCalendarVisible} />
-                <Button func={updateCalendarVisible} text={moment(chosenDate).format("DD / MM / YYYY")} />
+
+                <Button func={updateCalendarVisible} 
+                text={chosenDate.toFormat("dd / MM / yyyy")}
+                />
 
             </View>
 

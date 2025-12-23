@@ -6,6 +6,11 @@ import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 
+import { Settings } from "luxon";
+import * as Localization from "expo-localization";
+const locale = Localization.getLocales()?.[0]?.languageTag ?? Localization.getLocales()?.[0]?.languageCode ?? "fr"
+Settings.defaultLocale = locale;
+
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import user from '@reducers/user'

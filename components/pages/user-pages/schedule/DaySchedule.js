@@ -8,16 +8,13 @@ import useScheduleError from "./useScheduleError";
 import Switch from "./Switch";
 import TimePicker from "./TimePicker";
 
-import moment from 'moment/min/moment-with-locales'
+import { DateTime } from "luxon";
 
 export default memo(function DaySchedule({ day, index, scheduleActions }) {
 
     const { toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd } = scheduleActions
 
-    const dayName = upperCaseInitial(moment().weekday(index).format("dddd"))
-//     const dayName = DateTime.now()
-//   .set({ weekday: index + 1 })
-//   .toFormat("cccc");
+    const dayName = upperCaseInitial( DateTime.utc().set({weekday : index + 1}).toFormat("cccc") )
     const activeDay = day.enabled
     const activeBreak = day.break.enabled
 

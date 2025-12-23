@@ -6,31 +6,30 @@ import { appStyle } from "@styles/appStyle";
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
-import moment from 'moment/min/moment-with-locales'
+import { DateTime } from "luxon";
 
 
 import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
 import { upperCaseInitial } from "@utils/timeFunctions";
 
 export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
-
+    // ALL DATES ARE IN LOCALE TO BE RELEAVANT TO USER TIMEZONE
     const [viewedDate, setViewedDate] = useState(chosenDate)
-    const viewedYear = viewedDate.getFullYear()
-    const viewedMonth = viewedDate.getMonth()
+    const viewedYear = viewedDate.year
+    const viewedMonth = viewedDate.month
 
     const daysItems = useMemo(() => getMonthDays(viewedYear, viewedMonth), [viewedYear, viewedMonth])
 
     const updateViewedDate = (increment) => {
-        if (increment) setViewedDate(new Date(viewedYear, viewedMonth + 1))
-        else setViewedDate(new Date(viewedYear, viewedMonth - 1))
+        setViewedDate(prev => increment ? prev.plus({months : 1}) : prev.minus({months : 1}))
     }
 
-    const monthName = upperCaseInitial(moment(viewedDate).format("MMMM YYYY"))
-
+    const monthName = upperCaseInitial( viewedDate.toFormat("MMMM yyyy") )
+    
     const daysName = useMemo(() => {
         const daysName = []
         for (let i = 1; i <= 7; i++) {
-            const name = upperCaseInitial(moment().day(i).format("dd"))
+            const name= DateTime.now().set({weekday : i}).toFormat("ccc").slice(0,3)
             daysName.push(name)
         }
         return daysName

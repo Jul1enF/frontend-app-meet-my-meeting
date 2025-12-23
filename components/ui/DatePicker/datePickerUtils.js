@@ -1,26 +1,22 @@
-// Change of the week index to have weeks starting with monday
-const correctedDayIndex = (index) => {
-    if (index === 0) return 6
-    else return index - 1
-}
+import { DateTime } from "luxon"
 
 export const getMonthDays = (viewedYear, viewedMonth) => {
-    const firstDayOfMonth = new Date(viewedYear, viewedMonth, 1)
-    const firstDayOfMonthIndex = correctedDayIndex(firstDayOfMonth.getDay())
+    const firstDayOfMonth = DateTime.now().set({ year : viewedYear, month : viewedMonth, day : 1})
+    const firstDayOfMonthIndex = firstDayOfMonth.weekday
 
-    const daysInViewedMonth = new Date(viewedYear, viewedMonth + 1, 0).getDate()
-    const daysInPrevMonth = new Date(viewedYear, viewedMonth, 0).getDate()
+    const daysInViewedMonth = firstDayOfMonth.daysInMonth
 
     const days = []
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    const setToMidnight = (date) => date.set({ hour : 0, minute : 0, second : 0, millisecond : 0})
 
-    const isDisabled = (date) => today - date > 0
+    const today = setToMidnight(DateTime.now())
+
+    const isDisabled = (date) => date < today
 
     // Add days of the previous month
-    for (let i = firstDayOfMonthIndex; i > 0; i--) {
-        const date = new Date(viewedYear, viewedMonth - 1, daysInPrevMonth - i)
+    for (let i = firstDayOfMonthIndex - 1; i > 0; i--) {
+        const date = firstDayOfMonth.minus({days : i})
 
         days.push({
             date,
@@ -31,8 +27,8 @@ export const getMonthDays = (viewedYear, viewedMonth) => {
     }
 
     // Add days for the current month 
-    for (let i = 1; i <= daysInViewedMonth; i++) {
-        const date = new Date(viewedYear, viewedMonth, i)
+    for (let i = 0; i < daysInViewedMonth; i++) {
+        const date = firstDayOfMonth.plus({days : i})
 
         days.push({
             date,
@@ -46,7 +42,7 @@ export const getMonthDays = (viewedYear, viewedMonth) => {
 
     let nextMonthDay = 1
     while (days.length % 7 !== 0) {
-        const date = new Date(viewedYear, viewedMonth + 1, nextMonthDay)
+        const date = DateTime.now().set({ year : viewedYear, month : viewedMonth + 1, day : nextMonthDay})
 
         days.push({
             date,
@@ -58,16 +54,4 @@ export const getMonthDays = (viewedYear, viewedMonth) => {
     }
 
     return days
-}
-
-
-
-export function isSameDay(dateA, dateB) {
-    if (!dateA || !dateB) return false
-
-    return (
-        dateA.getFullYear() === dateB.getFullYear() &&
-        dateA.getMonth() === dateB.getMonth() &&
-        dateA.getDate() === dateB.getDate()
-    )
 }
