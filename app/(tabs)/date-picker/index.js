@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 export default function DatePickerPage() {
   // ALL DATES ARE IN LOCALE TO BE RELEAVANT TO USER TIMEZONE
   const [chosenDate, setChosenDate] = useState(DateTime.now())
-  
+
   return (
     <View style={styles.body}>
       <StatusBar translucent={true} backgroundColor="transparent" barStyle="light" />

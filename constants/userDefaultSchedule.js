@@ -1,3 +1,5 @@
+// 0 = Monday
+
 export const userDefaultSchedule = {
     "0": {
         enabled: true,

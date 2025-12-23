@@ -51,9 +51,15 @@ export const createScheduleActions = (setNewSchedule) => {
 
 // LOGIC TO VALIDATE THE VALUES OF A DAY
 
-import moment from "moment";
+import { DateTime } from "luxon";
 
-const compareHours = (timeBefore, timeAfter) => moment(timeBefore, "HH:mm").isBefore(moment(timeAfter, "HH:mm"))
+
+const isTimeBefore = (timeBefore, timeAfter) => {
+  if ( !timeBefore || !timeAfter) return
+  const timeA = DateTime.fromFormat(timeBefore, "HH:mm");
+  const timeB = DateTime.fromFormat(timeAfter, "HH:mm");
+  return timeA < timeB
+}
 
 export const dayValidation = (day, finalCheck = false) => {
   
@@ -67,18 +73,18 @@ export const dayValidation = (day, finalCheck = false) => {
 
   if (!day.enabled) return { dayError, breakError }
 
-  if (!compareHours(day.start, day.end)) {
+  if (!isTimeBefore(day.start, day.end)) {
     dayError = `Erreur : ${one}horaire de début ${ofDay}supérieur à celui de fin !`;
   }
 
   if (!day.break.enabled) return { dayError, breakError }
 
 
-  if (!compareHours(day.break.start, day.break.end)) {
+  if (!isTimeBefore(day.break.start, day.break.end)) {
     breakError = `Erreur : ${one}horaire de début ${ofBreak}supérieur à celui de fin !`;
   } else if (
-    !compareHours(day.start, day.break.start) ||
-    !compareHours(day.break.end, day.end)
+    !isTimeBefore(day.start, day.break.start) ||
+    !isTimeBefore(day.break.end, day.end)
   ) {
     breakError = `Erreur : horaires de pause mal insérés dans ceux ${inDay}journée !`;
   }

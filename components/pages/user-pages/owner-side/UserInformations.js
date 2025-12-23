@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native"
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
-import moment from 'moment/min/moment-with-locales'
+import { DateTime } from "luxon"
 
 export default function UserInformations({ user }) {
 
@@ -65,7 +65,7 @@ export default function UserInformations({ user }) {
                     </View>
 
                     <Text style={styles.status}>
-                        {moment(user?.createdAt).format("DD / MM / YYYY")}
+                        {DateTime.fromJSDate(new Date(user?.createdAt)).toFormat("dd / MM / yyyy")}
                     </Text>
                 </View>
 
