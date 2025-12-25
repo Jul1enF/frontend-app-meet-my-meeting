@@ -8,6 +8,8 @@ export const colorsStyle = {
     darkWhite: "rgba(246, 241, 254, 1)",
     darkWhite2: "rgba(238, 231, 232, 1)",
 
+    veryBrightGrey : "rgba(228, 228, 228, 1)",
+
     brightGrey: "rgb(211, 211, 211)",
 
     lightGrey3: "rgba(172, 172, 172, 1)",
