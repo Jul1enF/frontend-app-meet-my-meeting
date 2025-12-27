@@ -30,3 +30,17 @@ export function isSameDay(dateA, dateB, dtDates) {
         )
     }
 }
+
+const toDtUTC = (date) => {
+    if (date instanceof Date) return DateTime.fromJSDate(date,{ zone: "utc" })
+    else if (typeof date === "string") return DateTime.fromISO(date,{ zone: "utc" })
+    else if (typeof date === "object") return date.toUTC()
+}
+
+// Functions to know if dates are before or after
+export function isBefore (dateBefore, dateAfter) {
+    const utcDateBefore = toDtUTC(dateBefore)
+    const utcDateAfter = toDtUTC(dateAfter)
+
+    return utcDateBefore < utcDateAfter
+}
