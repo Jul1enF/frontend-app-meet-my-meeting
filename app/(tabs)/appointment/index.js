@@ -15,7 +15,7 @@ export default function AppointmentPage() {
   const [selectedAppointmentType, setSelectedAppointmentType] = useState("none")
   const [selectedEmployees, setSelectedEmployees] = useState(null)
   
-  const{ appointmentTypes, events, closures, absences, appointmentGap} = appointmentInfos
+  const{ appointmentTypes, events, closures, absences, appointmentGapMs} = appointmentInfos
 
   // LOAD APPOINTMENTS INFORMATIONS FUNCTION AND USEEFFECT
   const getAppointmentInformations = async (clearEtag) => {
@@ -33,9 +33,17 @@ export default function AppointmentPage() {
 
   // Get the free appointments slots depending on events informations
 
-  const now = DateTime.now().setZone("Europe/Paris") 
+  const now = DateTime.now().setZone("Europe/Paris").plus({days : 2}) 
+
+  const appointmentDuration = selectedAppointmentType?.default_duration
   
-  const freeSlots = useFreeAppointmentSlots(now, selectedEmployees, events, closures, absences, appointmentGap)
+  const freeSlots = useFreeAppointmentSlots(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+
+  // console.log("FREE SLOTS :", freeSlots)
+  // (freeSlots && freeSlots.lenght) && freeSlots.forEach(e=> console.log(e.slice(11, 13)))
+  if (freeSlots && freeSlots.length){
+    freeSlots.forEach( e => console.log(e) )
+  }
   
   return (
     <View style={[appStyle.pageBody, {paddingBottom : 0, paddingTop : 0}]}>

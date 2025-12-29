@@ -13,34 +13,38 @@ export const LocaleDayIndex = (date) => {
     return index - 1
 }
 
+
+// Convert to dtUTC whatever the entring format is
+const toDtUTC = (date) => {
+    if (date instanceof Date) return DateTime.fromJSDate(date).toUTC()
+    else if (typeof date === "string") return DateTime.fromISO(date).toUTC()
+    else if (DateTime.isDateTime(date)) return date.toUTC()
+}
+
+
 // Function to compare date without the time
-export function isSameDay(dateA, dateB, dtDates) {
+export function isSameDay(dateA, dateB) {
     if (!dateA || !dateB) return false
 
-    if (dtDates) {
-        return (
-            dateA.year === dateB.year && dateA.month === dateB.month && dateA.day === dateB.day
-        )
-    }
-    else {
-        return (
-            dateA.getFullYear() === dateB.getFullYear() &&
-            dateA.getMonth() === dateB.getMonth() &&
-            dateA.getDate() === dateB.getDate()
-        )
-    }
+    const utcDateA = toDtUTC(dateA)
+    const utcDateB = toDtUTC(dateB)
+
+    return utcDateA.hasSame(utcDateB, "day")
 }
 
-const toDtUTC = (date) => {
-    if (date instanceof Date) return DateTime.fromJSDate(date,{ zone: "utc" })
-    else if (typeof date === "string") return DateTime.fromISO(date,{ zone: "utc" })
-    else if (typeof date === "object") return date.toUTC()
-}
-
-// Functions to know if dates are before or after
-export function isBefore (dateBefore, dateAfter) {
+// Function to know if dates are before or after
+export function isBefore (dateBefore, dateAfter, canBeEquals) {
     const utcDateBefore = toDtUTC(dateBefore)
     const utcDateAfter = toDtUTC(dateAfter)
 
-    return utcDateBefore < utcDateAfter
+    return canBeEquals ? utcDateBefore <= utcDateAfter : utcDateBefore < utcDateAfter
+}
+
+// Function to know if a date is in between two other
+export function isBetween (dateBefore, dateBetween, dateAfter) {
+    const utcDateBefore = toDtUTC(dateBefore)
+    const utcDateBetween = toDtUTC(dateBetween)
+    const utcDateAfter = toDtUTC(dateAfter)
+
+    return utcDateBefore <= utcDateBetween && utcDateBetween < utcDateAfter
 }

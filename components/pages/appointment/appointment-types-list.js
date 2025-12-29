@@ -78,11 +78,9 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
                 <View style={[styles.selectedAppointmentContainer]}>
 
                     {selectedAppointmentType.sub_category &&
-                        <View style={styles.underline} >
-                            <Text style={[styles.selectedAppointmentText, { fontWeight: phoneDevice ? "800" : "700", paddingBottom: phoneDevice ? RPW(0.6) : 8, }]}>
-                                {selectedAppointmentType.sub_category} :
-                            </Text>
-                        </View>
+                        <Text style={styles.selectedAppointmentTitle}>
+                            {selectedAppointmentType.sub_category} :
+                        </Text>
                     }
 
                     <Text style={styles.selectedAppointmentText}>{selectedAppointmentType.title}</Text>
@@ -125,12 +123,15 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         rowGap: phoneDevice ? RPW(1.5) : 10,
         justifyContent: "space-evenly",
-        alignItems: "flex-start",
+        alignItems: "center",
         flexWrap: "wrap",
     },
+    selectedAppointmentTitle : {
+        ...(phoneDevice ? appStyle.pageSubtitle : appStyle.largeText),
+        fontWeight : phoneDevice ? "900" : "700"
+    },
     selectedAppointmentText: {
-        fontSize: appStyle.regularText.fontSize * (phoneDevice ? 1.08 : 1),
-        letterSpacing: appStyle.regularText.letterSpacing,
+        ...appStyle.largeText,
         textAlign: "center",
         fontWeight: "500",
         color: appStyle.strongBlack,

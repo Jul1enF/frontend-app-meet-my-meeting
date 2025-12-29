@@ -11,8 +11,8 @@ export default function DayItem({ date, currentMonth, nextMonth, previousMonth, 
 
 const today = useMemo(()=> DateTime.now(), [])
 
-const isToday = isSameDay(date, today, true)
-const isSelected = isSameDay(date, chosenDate, true)
+const isToday = isSameDay(date, today)
+const isSelected = isSameDay(date, chosenDate)
 
 const opacity = disabled ? 0.1 :
 !currentMonth ? 0.5 : 1

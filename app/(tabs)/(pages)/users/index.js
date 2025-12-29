@@ -10,9 +10,8 @@ import useSortUsers from "@components/pages/user-pages/owner-side/useSortUsers";
 import UserItem from "@components/pages/user-pages/owner-side/UserItem";
 import HorizontalMenu from "@components/ui/HorizontalMenu";
 import ModalPageWrapper from "@components/layout/ModalPageWrapper";
-import GoingBackHeader from "@components/ui/GoingBackHeader";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import useSessionExpired from "@hooks/useSessionExpired";
 import UserProfile from "@components/pages/user-pages/owner-side/UserProfile";
@@ -109,7 +108,7 @@ export default function UsersPage() {
                         <FontAwesome name="search" size={appStyle.inputIconSize} color={appStyle.strongBlack} />
                     </View>
 
-                    <MaterialDesignIcons name="backspace" size={appStyle.inputIconSize} color={appStyle.strongBlack} onPress={() => setSearchText("")} />
+                    <MaterialCommunityIcons name="backspace" size={appStyle.inputIconSize} color={appStyle.strongBlack} onPress={() => setSearchText("")} />
                 </View>
 
                 <FlatList

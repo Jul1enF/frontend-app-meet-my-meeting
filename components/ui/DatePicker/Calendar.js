@@ -5,7 +5,7 @@ import DayItem from "./DayItem";
 import { appStyle } from "@styles/appStyle";
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons"
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DateTime } from "luxon";
 
 
@@ -38,7 +38,7 @@ export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible
 
     return (
         <View style={styles.mainContainer} >
-            <MaterialDesignIcons name="close" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.8) : 32} style={styles.closeIcon} onPress={() => setCalendarVisible(false)} />
+            <MaterialCommunityIcons name="close" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.8) : 32} style={styles.closeIcon} onPress={() => setCalendarVisible(false)} />
 
             <View style={styles.monthHeader}>
                 <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(false)} />
