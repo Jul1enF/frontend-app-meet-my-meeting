@@ -7,7 +7,7 @@ import request from '@utils/request';
 import { DateTime } from 'luxon';
 
 import AppointmentTypesList from '@components/pages/appointment/appointment-types-list';
-import useFreeAppointmentSlots from '@components/pages/appointment/useFreeAppointmentsSlots';
+import useDayEventsSchedule from '@components/pages/appointment/useDayEventsSchedule';
 
 export default function AppointmentPage() {
   const [warning, setWarning]=useState({})
@@ -37,12 +37,14 @@ export default function AppointmentPage() {
 
   const appointmentDuration = selectedAppointmentType?.default_duration
   
-  const freeSlots = useFreeAppointmentSlots(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+  const {appointmentsSlots , concernedEvents} = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
-  // console.log("FREE SLOTS :", freeSlots)
-  // (freeSlots && freeSlots.lenght) && freeSlots.forEach(e=> console.log(e.slice(11, 13)))
-  if (freeSlots && freeSlots.length){
-    freeSlots.forEach( e => console.log(e) )
+  // const freeSlots = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+
+  // freeSlots && console.log(typeof freeSlots)
+
+  if (appointmentsSlots && appointmentsSlots.length){
+    appointmentsSlots.forEach( e => console.log(e) )
   }
   
   return (
