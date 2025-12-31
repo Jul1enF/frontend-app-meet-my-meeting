@@ -31,7 +31,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         let minWorkingHour
         let maxWorkingHour
         const employeesAvailable = []
-        const lunchBreaks = []
+        const defaultLunchBreaks = []
 
         // Loop to determine schedule and availability for each employee
         selectedEmployeesArray.forEach((employee) => {
@@ -51,12 +51,12 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             // No return has been made, the employee is available
             employeesAvailable.push(employee)
 
-            // Registeration of the lunch break
-            employeeDay.break.enabled && lunchBreaks.push({
+            // Registration of the lunch break
+            employeeDay.break.enabled && defaultLunchBreaks.push({
                 start: datefromStringHour(employeeDay.break.start, dtDay),
                 end: datefromStringHour(employeeDay.break.end, dtDay),
                 employee: employee._id.toString(),
-                type: "defaultLunchBreak",
+                category: "defaultLunchBreak",
             })
 
             // Comparison of the schedule hours
@@ -83,7 +83,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             return 0;
         })
 
-        return { employeesAvailable, lunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour }
+        return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour }
 
     }, [selectedEmployeesArray, dtDay])
 
@@ -120,18 +120,18 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         const concernedEvents = []
         const appointmentsSlots = []
 
-        if (!dtDay || !events || !appointmentGapMs || !appointmentDuration || noAppointmentsAvailable) return { appointmentsSlots, concernedEvents }
+        if (!dtDay || !events || !appointmentGapMs || !appointmentDuration || noAppointmentsAvailable) return { appointmentsSlots, concernedEvents, employeesAvailable : null }
 
 
-        const { minWorkingHour, maxWorkingHour, employeesAvailable, lunchBreaks } = selectedEmployeesAvailabilities
+        const { minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
 
-        if (!minWorkingHour || !maxWorkingHour || !employeesAvailable?.length || !lunchBreaks) return { appointmentsSlots, concernedEvents }
+        if (!minWorkingHour || !maxWorkingHour || !employeesAvailable?.length || !defaultLunchBreaks) return { appointmentsSlots, concernedEvents, employeesAvailable : null }
 
         const occupiedSlots = new Map()
 
         const fiveMinutesInMs = 1000 * 60 * 5
 
-        // Array to register events representing a modified lunch break
+        // Array to register pontentials events representing a modified lunch break
         const lunchBreaksEvents = []
 
 
@@ -166,7 +166,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 setOccupiedSlots(event.start, event.end, event.employee.toString())
 
                 // If the event is a modified lunch break for this day
-                event.description === eventTranslation.lunchBreak && lunchBreaksEvents.push(event)
+                event.category === "lunchBreak" && lunchBreaksEvents.push(event)
             }
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
             else if (concernedEvents.length) {
@@ -175,7 +175,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         }
 
         // Add the default lunck breaks if they have not been modified
-        for (let lunchBreak of lunchBreaks) {
+        for (let lunchBreak of defaultLunchBreaks) {
 
             if (!lunchBreaksEvents.length || !lunchBreaksEvents.some(e => e.employee.toString() === lunchBreak.employee)) {
 

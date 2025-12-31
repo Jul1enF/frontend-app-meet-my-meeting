@@ -5,7 +5,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-export default memo(function AppointmentTypes({ title, types, selected, setSelectedSubcategory, index, setSelectedAppointmentType, setCategoriesListVisible }) {
+export default memo(function AppointmentTypes({ title, types, selected, setSelectedCategory, index, setSelectedAppointmentType, setCategoriesListVisible }) {
 
     const typesItems = types.map((e, i) =>
         <TouchableOpacity key={i} style={styles.typeContainer} onPress={() => {
@@ -26,7 +26,7 @@ export default memo(function AppointmentTypes({ title, types, selected, setSelec
         <View style={[styles.mainContainer, phoneDevice && { width: "100%" }, index === 0 && phoneDevice && { marginTop: appStyle.regularMarginTop * 1.5 }]}>
 
             <TouchableOpacity style={[styles.titleContainer, selected && { borderBottomColor: appStyle.darkGrey, borderBottomWidth: 0.5 }]} activeOpacity={0.5} onPress={() => {
-                setSelectedSubcategory(prev => prev === title ? null : title)
+                setSelectedCategory(prev => prev === title ? null : title)
             }} >
                 <Text style={[appStyle.regularText, { fontWeight: "500", textAlign: "center" }]}>
                     {title}

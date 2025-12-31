@@ -7,11 +7,11 @@ import AppointmentsTypesInputs from "./AppointmentTypeInputs"
 import Button from "@components/ui/Button"
 import ConfirmationModal from "@components/ui/ConfirmationModal"
 import request from "@utils/request"
-import { sortBySubcategory } from "./AppointmentTypesUtils"
+import { sortByCategory } from "./AppointmentTypesUtils"
 
-export default function AppointmentTypeRedaction({ selectedType, setSelectedType, jwtToken, setTypes, setSessionExpired, subcategories, setTypeModalVisible }) {
+export default function AppointmentTypeRedaction({ selectedType, setSelectedType, jwtToken, setTypes, setSessionExpired, categories, setTypeModalVisible }) {
 
-    const [subCategory, setSubcategory] = useState(null)
+    const [category, setCategory] = useState(null)
     const [title, setTitle] = useState("")
     const [defaultDuration, setDefaultDuration] = useState("")
     const [price, setPrice] = useState("")
@@ -23,7 +23,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
     // useEffect to set the input fields if an already exisant appointment type is selected for modifications
     useEffect(() => {
         if (selectedType) {
-            setSubcategory(selectedType.sub_category ?? null)
+            setCategory(selectedType.category ?? null)
             setTitle(selectedType.title)
             setDefaultDuration((selectedType.default_duration).toString())
             setPrice((selectedType.price).toString())
@@ -44,25 +44,24 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
     const appointmentTypesModificationRef = useRef(true)
 
     const appointmentTypesModification = async () => {
-        const eventTypeToSave = {
-            category: 'appointment',
-            sub_category: subCategory?.title ?? null,
+        const appointmentTypeToSave = {
+            category: category?.title ?? null,
             title,
             default_duration: defaultDuration,
             price,
         }
 
-        const newEventType = selectedType ? false : true
+        const newAppointmentType = selectedType ? false : true
 
-        const _id = !newEventType ? selectedType._id : null
+        const _id = !newAppointmentType ? selectedType._id : null
 
-        const body = { eventTypeToSave, newEventType, _id }
+        const body = { appointmentTypeToSave, newAppointmentType, _id }
 
         const data = await request({ path: "pros/appointment-types-modification", method: "PUT", body, jwtToken, setSessionExpired, functionRef: appointmentTypesModificationRef, setWarning: setFetchWarning, setModalVisible: setConfirmationModalVisible })
 
         if (data) {
             const { appointmentTypeSaved } = data
-            if (newEventType) setTypes(prev => sortBySubcategory([...prev, appointmentTypeSaved]))
+            if (newAppointmentType) setTypes(prev => sortByCategory([...prev, appointmentTypeSaved]))
             else {
                 setTypes(prev => prev.map(e => {
                     if (e._id === selectedType._id) return appointmentTypeSaved
@@ -93,7 +92,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
             <View style={[appStyle.card, { paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
 
-                <AppointmentsTypesInputs subcategories={subcategories} setSubcategory={setSubcategory} title={title} setTitle={setTitle} defaultDuration={defaultDuration} setDefaultDuration={setDefaultDuration} price={price} setPrice={setPrice} setWarning={setWarning} selectedType={selectedType} />
+                <AppointmentsTypesInputs categories={categories} setCategory={setCategory} title={title} setTitle={setTitle} defaultDuration={defaultDuration} setDefaultDuration={setDefaultDuration} price={price} setPrice={setPrice} setWarning={setWarning} selectedType={selectedType} />
 
                 <Text style={[appStyle.warning, !warning && { height: 0, marginTop: 0 }]}>
                     {warning}

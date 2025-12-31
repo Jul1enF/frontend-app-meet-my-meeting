@@ -37,15 +37,15 @@ export default function AppointmentPage() {
 
   const appointmentDuration = selectedAppointmentType?.default_duration
   
-  const {appointmentsSlots , concernedEvents} = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+  const {appointmentsSlots , employeesAvailable} = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
   // const freeSlots = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
   // freeSlots && console.log(typeof freeSlots)
 
-  // if (appointmentsSlots && appointmentsSlots.length){
-  //   appointmentsSlots.forEach( e => console.log(e) )
-  // }
+  if (appointmentsSlots && appointmentsSlots.length){
+    appointmentsSlots.forEach( e => console.log(e.start) )
+  }
   
   return (
     <View style={[appStyle.pageBody, {paddingBottom : 0, paddingTop : 0}]}>

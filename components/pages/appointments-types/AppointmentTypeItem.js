@@ -11,13 +11,13 @@ export default function AppointmentTypeItem(props) {
 
             <View style={styles.fullRow} >
 
-                {props.sub_category && <View style={styles.row}>
+                {props.category && <View style={styles.row}>
                     <View style={styles.labelContainer}>
                         <Text style={styles.label}>Catégorie :</Text>
                     </View>
 
                     <Text style={styles.typeInfo}>
-                        {props.sub_category}
+                        {props.category}
                     </Text>
                 </View>}
 
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         flexWrap: "wrap",
         width: "100%",
-        rowGap: phoneDevice ? RPW(2) : 15,
-        marginBottom: phoneDevice ? RPW(2) : 15,
+        rowGap: phoneDevice ? RPW(3) : 15,
+        marginBottom: phoneDevice ? RPW(3) : 15,
     },
     row: {
         flexDirection: "row",

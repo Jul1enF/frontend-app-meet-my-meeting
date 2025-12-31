@@ -5,7 +5,7 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
 
-export default function AppointmentsTypesInputs({ subcategories, setSubcategory, title, setTitle, defaultDuration, setDefaultDuration, price, setPrice, setWarning, selectedType}) {
+export default function AppointmentsTypesInputs({ categories, setCategory, title, setTitle, defaultDuration, setDefaultDuration, price, setPrice, setWarning, selectedType}) {
 
     return (
         <>
@@ -14,7 +14,7 @@ export default function AppointmentsTypesInputs({ subcategories, setSubcategory,
                     Catégorie :
                 </Text>
 
-                <Autocomplete data={subcategories} setSelectedItem={setSubcategory} placeholderText="Catégorie..." emptyText="Aucun résultat" height={appStyle.regularItemHeight} width={appStyle.regularItemWidth} inputStyle={{ fontWeight: "400", paddingLeft: 0 }} canCreate={true} initialValue={selectedType?.sub_category && {title : selectedType.sub_category, id : selectedType._id} } />
+                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" height={appStyle.regularItemHeight} width={appStyle.regularItemWidth} inputStyle={{ fontWeight: "400", paddingLeft: 0 }} canCreate={true} initialValue={selectedType?.category && {title : selectedType.category, id : selectedType._id} } />
             </View>
 
             <View style={styles.column}>

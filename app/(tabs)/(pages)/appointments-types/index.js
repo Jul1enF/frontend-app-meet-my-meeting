@@ -6,7 +6,7 @@ import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector } from "react-redux";
 import useSessionExpired from "@hooks/useSessionExpired";
-import { sortBySubcategory } from "@components/pages/appointments-types/AppointmentTypesUtils";
+import { sortByCategory } from "@components/pages/appointments-types/AppointmentTypesUtils";
 
 import ModalPageWrapper from "@components/layout/ModalPageWrapper";
 import AppointmentTypeItem from "@components/pages/appointments-types/AppointmentTypeItem";
@@ -28,7 +28,7 @@ export default function AppointmentsTypesPage() {
     const getTypes = async () => {
         const data = await request({ path: "pros/get-appointments-types", jwtToken, setSessionExpired, setWarning })
         if (data) {
-            setTypes(sortBySubcategory(data.appointmentsTypes))
+            setTypes(sortByCategory(data.appointmentsTypes))
         }
     }
 
@@ -36,15 +36,15 @@ export default function AppointmentsTypesPage() {
         getTypes()
     }, [])
 
-    // SUBCATEGORIES LOGIC (IF THERE ARE ONES)
-    const subcategories = useMemo(() => {
-        const subcategoriesObject = types.reduce((acc, type) => {
-            const key = type.sub_category
+    // CATEGORIES LOGIC (IF THERE ARE ONES)
+    const categories = useMemo(() => {
+        const categoriesObject = types.reduce((acc, type) => {
+            const key = type.category
             if (key && !acc[key]) acc[key] = { title: key, id: type._id }
             return acc
         }, {})
-        const subcategoriesArray = Object.values(subcategoriesObject)
-        return subcategoriesArray
+        const categoriesArray = Object.values(categoriesObject)
+        return categoriesArray
     }, [types])
 
 
@@ -118,7 +118,7 @@ export default function AppointmentsTypesPage() {
 
             <ModalPageWrapper visible={typeModalVisible} setVisible={setTypeModalVisible} backHeaderText="Liste des modèles de RDV" >
 
-                <AppointmentTypeRedaction selectedType={selectedType} setSelectedType={setSelectedType} jwtToken={jwtToken} setTypes={setTypes} setSessionExpired={setSessionExpired} subcategories={subcategories} setTypeModalVisible={setTypeModalVisible} />
+                <AppointmentTypeRedaction selectedType={selectedType} setSelectedType={setSelectedType} jwtToken={jwtToken} setTypes={setTypes} setSessionExpired={setSessionExpired} categories={categories} setTypeModalVisible={setTypeModalVisible} />
 
             </ModalPageWrapper>
         </View>
