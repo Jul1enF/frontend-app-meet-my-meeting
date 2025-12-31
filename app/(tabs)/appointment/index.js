@@ -43,9 +43,9 @@ export default function AppointmentPage() {
 
   // freeSlots && console.log(typeof freeSlots)
 
-  if (appointmentsSlots && appointmentsSlots.length){
-    appointmentsSlots.forEach( e => console.log(e) )
-  }
+  // if (appointmentsSlots && appointmentsSlots.length){
+  //   appointmentsSlots.forEach( e => console.log(e) )
+  // }
   
   return (
     <View style={[appStyle.pageBody, {paddingBottom : 0, paddingTop : 0}]}>
