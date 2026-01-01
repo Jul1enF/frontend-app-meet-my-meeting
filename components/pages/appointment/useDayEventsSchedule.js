@@ -120,12 +120,12 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         const concernedEvents = []
         const appointmentsSlots = []
 
-        if (!dtDay || !events || !appointmentGapMs || !appointmentDuration || noAppointmentsAvailable) return { appointmentsSlots, concernedEvents, employeesAvailable : null }
+        if (!dtDay || !events || !appointmentGapMs || !appointmentDuration || noAppointmentsAvailable) return { appointmentsSlots, concernedEvents }
 
 
         const { minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
 
-        if (!minWorkingHour || !maxWorkingHour || !employeesAvailable?.length || !defaultLunchBreaks) return { appointmentsSlots, concernedEvents, employeesAvailable : null }
+        if (!minWorkingHour || !maxWorkingHour || !employeesAvailable?.length || !defaultLunchBreaks) return { appointmentsSlots, concernedEvents }
 
         const occupiedSlots = new Map()
 
@@ -247,7 +247,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             dtAppointmentStart = dtAppointmentStart.plus({ milliseconds: appointmentGapMs })
         }
 
-        return { appointmentsSlots, concernedEvents, employeesAvailable }
+        return { appointmentsSlots, concernedEvents }
 
     }, [noAppointmentsAvailable, selectedEmployeesAvailabilities, events, dtDay, appointmentGapMs, appointmentDuration])
 

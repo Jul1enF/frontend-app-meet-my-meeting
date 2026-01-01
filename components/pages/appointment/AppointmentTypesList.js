@@ -1,11 +1,11 @@
-import { Text, View, ScrollView, StyleSheet, Platform } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { useMemo, useState } from 'react';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import AppointmentTypes from './appointment-types';
+import AppointmentTypes from "./AppointmentTypes"
 
 export default function AppointmentTypesList({ appointmentTypes, selectedAppointmentType, setSelectedAppointmentType, warning }) {
     const [selectedCategory, setSelectedCategory] = useState(null)
@@ -39,7 +39,7 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
     })
 
     return (
-        <ScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center", paddingVertical : appStyle.mediumMarginTop}} >
+        <View style={{ width: "100%", alignItems: "center", paddingTop : appStyle.mediumMarginTop, paddingBottom : selectedAppointmentType ? 0 : appStyle.mediumMarginTop }} >
 
             <View style={{
                 borderBottomColor: appStyle.strongBlack,
@@ -61,7 +61,7 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
                     name={categoriesListVisible ? "chevron-up" : "chevron-down"}
                     color={appStyle.fontColorDarkBg}
                     size={phoneDevice ? RPW(4.2) : 23}
-                    style={[styles.chevronIcon, selectedAppointmentType === "none" && { display: "none" }]}
+                    style={styles.chevronIcon}
                     onPress={() => {
                         setSelectedCategory(null)
                         setCategoriesListVisible(!categoriesListVisible)
@@ -70,11 +70,11 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
             </View>
 
 
-            {(selectedAppointmentType === "none" || categoriesListVisible) && cats}
+            {categoriesListVisible && cats}
 
 
-            {(selectedAppointmentType && selectedAppointmentType !== "none") &&
-                <View style={[styles.selectedAppointmentContainer]}>
+            {selectedAppointmentType &&
+                <View style={styles.selectedAppointmentContainer}>
 
                     {selectedAppointmentType.category &&
                         <Text style={styles.selectedAppointmentTitle}>
@@ -86,7 +86,7 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
 
                 </View>}
 
-        </ScrollView>
+        </View>
     )
 }
 

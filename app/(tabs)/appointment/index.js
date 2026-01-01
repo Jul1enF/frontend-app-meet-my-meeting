@@ -1,21 +1,25 @@
-import { Text, View } from 'react-native';
-import { useEffect, useState, useMemo } from 'react';
+import { ScrollView } from 'react-native';
+import { useEffect, useState} from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 import request from '@utils/request';
 import { DateTime } from 'luxon';
 
-import AppointmentTypesList from '@components/pages/appointment/appointment-types-list';
+import AppointmentTypesList from '@components/pages/appointment/AppointmentTypesList';
+import AgendaContainer from '@components/pages/appointment/AgendaContainer';
 import useDayEventsSchedule from '@components/pages/appointment/useDayEventsSchedule';
 
 export default function AppointmentPage() {
   const [warning, setWarning]=useState({})
   const [appointmentInfos, setAppointmentInfos] = useState({})
-  const [selectedAppointmentType, setSelectedAppointmentType] = useState("none")
+  const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
   const [selectedEmployees, setSelectedEmployees] = useState(null)
+  const [employeesAutocompleteList, setEmployeesAutocompleteList]=useState([])
+  const [selectedAppointmentSlot, setSelectedAppointmentSlot] = useState(null)
+
   
-  const{ appointmentTypes, events, closures, absences, appointmentGapMs} = appointmentInfos
+  const{ appointmentTypes, events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees} = appointmentInfos
 
   // LOAD APPOINTMENTS INFORMATIONS FUNCTION AND USEEFFECT
   const getAppointmentInformations = async (clearEtag) => {
@@ -23,6 +27,15 @@ export default function AppointmentPage() {
     if (data) {
       setAppointmentInfos(data.informations)
       setSelectedEmployees(data.informations.employees)
+
+      setEmployeesAutocompleteList(data.informations.employees.reduce((acc, e)=>{
+        acc.push({
+          title : e.first_name,
+          id : e._id,
+          employee : e,
+        })
+        return acc
+      }, [{title : "Sans préférence", id : "all", employees : data.informations.employees}]))
     }
   }
 
@@ -39,20 +52,20 @@ export default function AppointmentPage() {
   
   const {appointmentsSlots , employeesAvailable} = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
-  // const freeSlots = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+  const agendaUtils = {employeesAutocompleteList, selectedEmployees, setSelectedEmployees, selectedAppointmentSlot, setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, appointmentDuration}
 
-  // freeSlots && console.log(typeof freeSlots)
-
-  if (appointmentsSlots && appointmentsSlots.length){
-    appointmentsSlots.forEach( e => console.log(e.start) )
-  }
+  // if (appointmentsSlots && appointmentsSlots.length){
+  //   appointmentsSlots.forEach( e => console.log(e.start) )
+  // }
   
   return (
-    <View style={[appStyle.pageBody, {paddingBottom : 0, paddingTop : 0}]}>
+    <ScrollView style={{ flex : 1}} contentContainerStyle={{ backgroundColor : appStyle.pageBody.backgroundColor, minWidth : "100%", minHeight : "100%"}} bounces={false} overScrollMode="never">
 
-      {<AppointmentTypesList appointmentTypes={appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} warning={warning} />}
+      <AppointmentTypesList appointmentTypes={appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} warning={warning} />
 
-    </View>
+      {selectedAppointmentType && <AgendaContainer agendaUtils={agendaUtils} /> }
+
+    </ScrollView>
   );
 }
 

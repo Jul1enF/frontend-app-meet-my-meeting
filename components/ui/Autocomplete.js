@@ -6,7 +6,7 @@ import { appStyle } from "@styles/appStyle"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
-export default function Autocomplete({ data, setSelectedItem, placeholderText, width, height, initialValue, emptyText, inputStyle, suggestionTextStyle, canCreate }) {
+export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, suggestionTextStyle, iconColor, canCreate }) {
     const inputWidth = width ?? appStyle.largeItemWidth
     const inputHeight = height ?? appStyle.largeItemHeight
     
@@ -31,12 +31,12 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, w
                 }
             }}
             suggestionsListMaxHeight={phoneDevice ? RPW(65) : 300}
-            inputContainerStyle={[styles.inputContainer, { height: inputHeight, width: inputWidth }]}
+            inputContainerStyle={[styles.inputContainer, { height: inputHeight, width: inputWidth }, inputContainerStyle ?? {}]}
             textInputProps={{
                 placeholder: placeholderText,
                 autoCorrect: false,
                 autoCapitalize: "none",
-                placeholderTextColor: appStyle.placeholderColor,
+                placeholderTextColor: placeholderColor ?? appStyle.placeholderColor,
                 style: !inputStyle ? styles.autoCompleteInput : { ...styles.autoCompleteInput, ...inputStyle },
             }}
             containerStyle={{ width: inputWidth }}
@@ -57,14 +57,14 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, w
             ChevronIconComponent={
                 <FontAwesome5
                     name="chevron-down"
-                    color={appStyle.brightGrey}
+                    color={iconColor ?? appStyle.brightGrey}
                     size={phoneDevice ? RPW(4.2) : 23}
                 />
             }
             ClearIconComponent={
                 <Feather
                     name="x-circle"
-                    color={appStyle.brightGrey}
+                    color={iconColor ?? appStyle.brightGrey}
                     size={phoneDevice ? RPW(4.2) : 23}
                     style={{ position: "relative", width: phoneDevice ? RPW(6) : 50 }}
                 />
