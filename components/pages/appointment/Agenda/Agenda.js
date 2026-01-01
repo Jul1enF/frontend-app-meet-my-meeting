@@ -13,7 +13,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 export default memo(function Agenda({ agendaUtils }) {
 
-    const { employeesAutocompleteList, selectedEmployees, setSelectedEmployees, maxFuturDays, ...dayColumnUtils } = agendaUtils
+    const { employeesAutocompleteList, selectedEmployees, setSelectedEmployees, maxFuturDays } = agendaUtils
 
     const [startColumnIndex, setStartColumnIndex] = useState(0)
 
@@ -36,10 +36,8 @@ export default memo(function Agenda({ agendaUtils }) {
             startColumnIndex + i < maxFuturDays && columns.push(
                 <DayColumn
                     dtDay={i === 0 ? firstDate : firstDate.plus({ days: i }).startOf('day')}
-                    dayColumnUtils={dayColumnUtils}
+                    agendaUtils={agendaUtils}
                     width={columnWidth}
-                    selectedEmployees={selectedEmployees}
-                    employeesAutocompleteList={employeesAutocompleteList}
                     key={i}
                 />
             )
@@ -47,7 +45,7 @@ export default memo(function Agenda({ agendaUtils }) {
 
         return columns
 
-    }, [columnNumber, maxFuturDays, firstDate, dayColumnUtils, columnWidth, setSelectedEmployees])
+    }, [columnNumber, maxFuturDays, firstDate, agendaUtils, columnWidth])
 
     const maxDaysReached = startColumnIndex + columnNumber >= maxFuturDays
 

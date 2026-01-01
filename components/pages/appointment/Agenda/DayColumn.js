@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useState, memo, useMemo, useCallback, useEffect } from 'react';
+import { useState, memo, useMemo, useCallback, useLayoutEffect } from 'react';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -8,9 +8,9 @@ import useDayEventsSchedule from './useDayEventsSchedule';
 import AppointmentSlot from './AppointmentSlot';
 import { slotPressed } from './agendaUtils';
 
-export default memo(function DayColumn({ dayColumnUtils, width, dtDay, selectedEmployees, employeesAutocompleteList }) {
+export default memo(function DayColumn({ agendaUtils, width, dtDay }) {
 
-    const { selectedAppointmentSlot, setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration } = dayColumnUtils
+    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, employeesAutocompleteList } = agendaUtils
 
     const { appointmentsSlots, concernedEvents } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
@@ -35,7 +35,7 @@ export default memo(function DayColumn({ dayColumnUtils, width, dtDay, selectedE
     const [isOverflowing, setIsOverflowing] = useState(false)
 
     // Reset the list status when the slots changes
-    useEffect(() => {
+    useLayoutEffect(() => {
         setIsOverflowing(false)
         setEntireListVisible(true)
     }, [appointmentsSlots])

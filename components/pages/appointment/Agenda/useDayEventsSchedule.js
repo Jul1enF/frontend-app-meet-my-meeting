@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { DateTime } from "luxon";
 import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeFunctions";
-import { eventTranslation } from "constants/translations";
 
 
 export default function useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration) {

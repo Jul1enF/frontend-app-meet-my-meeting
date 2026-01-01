@@ -4,8 +4,3 @@ export const roleTranslation = {
     employee : "Employé",
     client : "Client"
 }
-
-export const eventTranslation = {
-    lunchBreak : "Pause déjeuner",
-    "Pause déjeuner" : "lunchBreak",
-}
