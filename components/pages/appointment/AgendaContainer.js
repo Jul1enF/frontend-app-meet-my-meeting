@@ -9,7 +9,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Agenda from './Agenda/Agenda';
 
 
-export default function AgendaContainer({ agendaUtils }) {
+export default function AgendaContainer({ agendaContext }) {
 
     const [agendaVisible, setAgendaVisible] = useState(true)
 
@@ -33,7 +33,7 @@ export default function AgendaContainer({ agendaUtils }) {
                 />
             </View>
 
-            {agendaVisible && <Agenda agendaUtils={agendaUtils} /> }
+            {agendaVisible && <Agenda agendaContext={agendaContext} /> }
 
         </View>
     )

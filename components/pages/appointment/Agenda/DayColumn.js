@@ -8,9 +8,9 @@ import useDayEventsSchedule from './useDayEventsSchedule';
 import AppointmentSlot from './AppointmentSlot';
 import { slotPressed } from './agendaUtils';
 
-export default memo(function DayColumn({ agendaUtils, width, dtDay }) {
+export default memo(function DayColumn({ agendaContext, width, dtDay }) {
 
-    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, employeesAutocompleteList } = agendaUtils
+    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, employeesAutocompleteList } = agendaContext
 
     const { appointmentsSlots, concernedEvents } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
@@ -48,6 +48,7 @@ export default memo(function DayColumn({ agendaUtils, width, dtDay }) {
         if (isOverflowing) return
 
         const { height } = e.nativeEvent.layout
+
         if (height > maxHeight) {
             setEntireListVisible(false)
             setIsOverflowing(true)
@@ -72,6 +73,7 @@ export default memo(function DayColumn({ agendaUtils, width, dtDay }) {
 
             <View
                 style={[{ width: "100%", alignItems: "center", overflow: "hidden" }, !entireListVisible && { maxHeight }]}
+                key={dtDay.toISODate()}
                 onLayout={onLayoutColumn}
             >
 

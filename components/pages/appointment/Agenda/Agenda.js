@@ -11,9 +11,9 @@ import useLayoutSpaces from '@hooks/useLayoutSpaces';
 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default memo(function Agenda({ agendaUtils }) {
+export default memo(function Agenda({ agendaContext }) {
 
-    const { employeesAutocompleteList, selectedEmployees, setSelectedEmployees, maxFuturDays } = agendaUtils
+    const { employeesAutocompleteList, selectedEmployees, setSelectedEmployees, maxFuturDays } = agendaContext
 
     const [startColumnIndex, setStartColumnIndex] = useState(0)
 
@@ -36,7 +36,7 @@ export default memo(function Agenda({ agendaUtils }) {
             startColumnIndex + i < maxFuturDays && columns.push(
                 <DayColumn
                     dtDay={i === 0 ? firstDate : firstDate.plus({ days: i }).startOf('day')}
-                    agendaUtils={agendaUtils}
+                    agendaContext={agendaContext}
                     width={columnWidth}
                     key={i}
                 />
@@ -45,7 +45,7 @@ export default memo(function Agenda({ agendaUtils }) {
 
         return columns
 
-    }, [columnNumber, maxFuturDays, firstDate, agendaUtils, columnWidth])
+    }, [columnNumber, maxFuturDays, firstDate, agendaContext, columnWidth])
 
     const maxDaysReached = startColumnIndex + columnNumber >= maxFuturDays
 
@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
         top: phoneDevice ? RPW(7.5) : 55,
     },
     chevronLeft: {
-        left: phoneDevice ? RPW(1) : 10,
+        left: phoneDevice ? RPW(2) : 20,
     },
     chevronRight: {
-        right: phoneDevice ? RPW(1) : 10,
+        right: phoneDevice ? RPW(2) : 20,
     }
 })

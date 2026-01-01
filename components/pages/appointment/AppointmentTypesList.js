@@ -121,13 +121,14 @@ const styles = StyleSheet.create({
         borderColor: appStyle.strongBlack,
         flexDirection: "row",
         rowGap: phoneDevice ? RPW(1.5) : 10,
-        justifyContent: "space-evenly",
+        justifyContent: "flex-start",
         alignItems: "center",
         flexWrap: "wrap",
     },
     selectedAppointmentTitle : {
         ...(phoneDevice ? appStyle.pageSubtitle : appStyle.largeText),
-        fontWeight : phoneDevice ? "900" : "700"
+        fontWeight : phoneDevice ? "900" : "700",
+        marginRight : phoneDevice ? RPW(2) : 10,
     },
     selectedAppointmentText: {
         ...appStyle.largeText,

@@ -15,11 +15,9 @@ export default function AppointmentPage() {
   const [selectedEmployees, setSelectedEmployees] = useState(null)
   const [selectedAppointmentSlot, setSelectedAppointmentSlot] = useState(null)
 
-  // CREATE MEMO INFORMATIONS TO PASS TO CHILDREN
-  const memoAppointmentInfos = useMemo(()=>{
-    const{ events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees} = appointmentInfos
-
-    const employeesAutocompleteList = appointmentInfos.employees ? appointmentInfos.employees.reduce((acc, e)=>{
+  const employeesAutocompleteList = useMemo(()=> {
+    if (!appointmentInfos.employees) return null
+    else return appointmentInfos.employees.reduce((acc, e)=>{
         acc.push({
           title : e.first_name,
           id : e._id,
@@ -27,11 +25,11 @@ export default function AppointmentPage() {
         })
         return acc
       }, [{title : "Sans préférence", id : "all", employees : appointmentInfos.employees}])
-      : null
 
-    return { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, employeesAutocompleteList}
+  },[appointmentInfos.employees])
 
-  },[ appointmentInfos.events, appointmentInfos.closures, appointmentInfos.absences, appointmentInfos.appointmentGapMs, appointmentInfos.maxFuturDays, appointmentInfos.sortFreeEmployees, appointmentInfos.employees])
+  const{ events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees} = appointmentInfos
+
 
   const appointmentDuration = useMemo(()=> selectedAppointmentType?.default_duration,[selectedAppointmentType])
 
@@ -49,15 +47,22 @@ export default function AppointmentPage() {
     getAppointmentInformations(true)
   }, [])
 
-  // Props to pass along children of the agenda
-  const agendaUtils = useMemo(()=> ({ 
+  // Props in useMemo to pass along children of the agenda
+  const agendaContext = useMemo(()=> ({ 
     selectedEmployees, 
     setSelectedEmployees, 
     selectedAppointmentSlot, 
     setSelectedAppointmentSlot, 
-    ...memoAppointmentInfos, 
+    events, 
+    closures, 
+    absences, 
+    appointmentGapMs, 
+    maxFuturDays, 
+    sortFreeEmployees,
+    employeesAutocompleteList,
     appointmentDuration}),
-  [selectedEmployees, selectedAppointmentSlot, memoAppointmentInfos, appointmentDuration])
+  [selectedEmployees, selectedAppointmentSlot, appointmentDuration, appointmentInfos, employeesAutocompleteList])
+  
 
   
   return (
@@ -65,7 +70,7 @@ export default function AppointmentPage() {
 
       <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} warning={warning} />
 
-      {selectedAppointmentType && <AgendaContainer agendaUtils={agendaUtils} /> }
+      {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} /> }
 
     </ScrollView>
   );
