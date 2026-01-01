@@ -4,11 +4,9 @@ import { useEffect, useState} from 'react';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 import request from '@utils/request';
-import { DateTime } from 'luxon';
 
 import AppointmentTypesList from '@components/pages/appointment/AppointmentTypesList';
 import AgendaContainer from '@components/pages/appointment/AgendaContainer';
-import useDayEventsSchedule from '@components/pages/appointment/useDayEventsSchedule';
 
 export default function AppointmentPage() {
   const [warning, setWarning]=useState({})
@@ -46,17 +44,10 @@ export default function AppointmentPage() {
 
   // Get the free appointments slots depending on events informations
 
-  const now = DateTime.now().setZone("Europe/Paris").plus({days : 2}) 
-
   const appointmentDuration = selectedAppointmentType?.default_duration
-  
-  const {appointmentsSlots , employeesAvailable} = useDayEventsSchedule(now, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
   const agendaUtils = {employeesAutocompleteList, selectedEmployees, setSelectedEmployees, selectedAppointmentSlot, setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, appointmentDuration}
 
-  // if (appointmentsSlots && appointmentsSlots.length){
-  //   appointmentsSlots.forEach( e => console.log(e.start) )
-  // }
   
   return (
     <ScrollView style={{ flex : 1}} contentContainerStyle={{ backgroundColor : appStyle.pageBody.backgroundColor, minWidth : "100%", minHeight : "100%"}} bounces={false} overScrollMode="never">

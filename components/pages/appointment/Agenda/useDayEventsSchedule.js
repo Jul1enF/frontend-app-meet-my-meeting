@@ -127,6 +127,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
         if (!minWorkingHour || !maxWorkingHour || !employeesAvailable?.length || !defaultLunchBreaks) return { appointmentsSlots, concernedEvents }
 
+        // Create a map to register the occupied slots
         const occupiedSlots = new Map()
 
         const fiveMinutesInMs = 1000 * 60 * 5
@@ -235,6 +236,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
                 // Check that the employees are available until the end for that appointment slot
                 let slotChecked = dtAppointmentStart.toMillis() + fiveMinutesInMs
+                
                 while (appointmentFreeEmployees.length > 0 && slotChecked < dtAppointmentEndMs) {
                     const slotCheckedOccupied = occupiedSlots.get(slotChecked)
                     if (slotCheckedOccupied) appointmentFreeEmployees = setSlotAvailabilities(slotCheckedOccupied)

@@ -30,7 +30,7 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, p
                     setSelectedItem({ title: e.nativeEvent.text })
                 }
             }}
-            suggestionsListMaxHeight={phoneDevice ? RPW(65) : 300}
+            suggestionsListMaxHeight={phoneDevice ? RPW(65) : 350}
             inputContainerStyle={[styles.inputContainer, { height: inputHeight, width: inputWidth }, inputContainerStyle ?? {}]}
             textInputProps={{
                 placeholder: placeholderText,

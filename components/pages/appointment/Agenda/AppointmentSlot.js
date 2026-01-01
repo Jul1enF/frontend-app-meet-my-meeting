@@ -1,20 +1,19 @@
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useState, memo } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { memo } from 'react';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import { DateTime } from 'luxon';
 
 
 export default memo(function AppointmentSlot({ start, employees }) {
 
     return (
-        <TouchableOpacity activeOpacity={0.6} style={styles.mainContainer} >
+        <View style={styles.mainContainer} >
             <Text style={styles.hourText}>
                 {start.toFormat("HH:mm")}
             </Text>
-        </TouchableOpacity>
+        </View>
     )
 
 })

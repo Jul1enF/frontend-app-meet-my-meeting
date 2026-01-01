@@ -33,7 +33,7 @@ export default function AgendaContainer({ agendaUtils }) {
                 />
             </View>
 
-            <Agenda agendaUtils={agendaUtils} />
+            {agendaVisible && <Agenda agendaUtils={agendaUtils} /> }
 
         </View>
     )

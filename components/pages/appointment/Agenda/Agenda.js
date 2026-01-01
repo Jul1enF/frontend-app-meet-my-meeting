@@ -23,24 +23,31 @@ export default memo(function Agenda({ agendaUtils }) {
             DateTime.now().setZone("Europe/Paris").plus({ days: startColumnIndex }).startOf('day')
     }, [startColumnIndex])
 
+    // Calcul of the number of columns to display 
     const { screenWidth } = useLayoutSpaces()
     const columnWidth = phoneDevice ? RPW(29) : 200
 
     const columnNumber = Math.floor((screenWidth * 0.92) / columnWidth)
 
-    const dayColumns = []
+    const dayColumns = useMemo(() => {
+        const columns = []
 
-    for (let i = 0; i < columnNumber; i++) {
-       startColumnIndex + i < maxFuturDays && dayColumns.push(
-            <DayColumn
-                dtDay={i === 0 ? firstDate : firstDate.plus({ days: i }).startOf('day')}
-                dayColumnUtils={dayColumnUtils} 
-                width={columnWidth}
-                selectedEmployees={selectedEmployees}
-                key={i}
-            />
-        )
-    }
+        for (let i = 0; i < columnNumber; i++) {
+            startColumnIndex + i < maxFuturDays && columns.push(
+                <DayColumn
+                    dtDay={i === 0 ? firstDate : firstDate.plus({ days: i }).startOf('day')}
+                    dayColumnUtils={dayColumnUtils}
+                    width={columnWidth}
+                    selectedEmployees={selectedEmployees}
+                    employeesAutocompleteList={employeesAutocompleteList}
+                    key={i}
+                />
+            )
+        }
+
+        return columns
+
+    }, [columnNumber, maxFuturDays, firstDate, dayColumnUtils, columnWidth, setSelectedEmployees])
 
     const maxDaysReached = startColumnIndex + columnNumber >= maxFuturDays
 
@@ -58,17 +65,18 @@ export default memo(function Agenda({ agendaUtils }) {
         else if (!increment && startColumnIndex !== 0) setStartColumnIndex(prev => prev - columnNumber)
     }
 
+
     return (
         <>
             {employeesAutocompleteList.length > 1 && <Autocomplete data={employeesAutocompleteList} setSelectedItem={updateSelectedEmployees} placeholderText="Choisir votre spécialiste" emptyText="Aucun résultat" inputStyle={{ fontWeight: "600", paddingLeft: 0, color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} inputContainerStyle={{ borderColor: appStyle.strongBlack }} placeholderColor={appStyle.mediumGrey} iconColor={appStyle.strongBlack} />}
 
-            <View style={{width : "100%", flexDirection : "row", justifyContent : "center", paddingBottom : phoneDevice ? RPW(3) : 20}} >
+            <View style={{ width: "100%", flexDirection: "row", justifyContent: "center", paddingBottom: phoneDevice ? RPW(3) : 20 }} >
 
-                <FontAwesome5 name="chevron-left" style={[styles.chevron, styles.chevronLeft]} color={startColumnIndex === 0 ? appStyle.lightGrey2 : appStyle.strongBlack} onPress={()=> changeStartColumnIndex()} />
+                <FontAwesome5 name="chevron-left" style={[styles.chevron, styles.chevronLeft]} color={startColumnIndex === 0 ? appStyle.lightGrey2 : appStyle.strongBlack} onPress={() => changeStartColumnIndex()} />
 
                 {dayColumns}
 
-                <FontAwesome5 name="chevron-right" style={[styles.chevron, styles.chevronRight]} color={maxDaysReached ? appStyle.mediumGrey : appStyle.strongBlack} onPress={()=> changeStartColumnIndex(true)}  />
+                <FontAwesome5 name="chevron-right" style={[styles.chevron, styles.chevronRight]} color={maxDaysReached ? appStyle.mediumGrey : appStyle.strongBlack} onPress={() => changeStartColumnIndex(true)} />
 
             </View>
 
@@ -77,15 +85,15 @@ export default memo(function Agenda({ agendaUtils }) {
 })
 
 const styles = StyleSheet.create({
-    chevron : {
-        fontSize : appStyle.inputIconSize,
-        position : "absolute",
-        top : phoneDevice ? RPW(7.5) : 55,
+    chevron: {
+        fontSize: appStyle.inputIconSize,
+        position: "absolute",
+        top: phoneDevice ? RPW(7.5) : 55,
     },
-    chevronLeft : {
-        left : phoneDevice ? RPW(1) : 10,
+    chevronLeft: {
+        left: phoneDevice ? RPW(1) : 10,
     },
-    chevronRight : {
-        right : phoneDevice ? RPW(1) : 10,
+    chevronRight: {
+        right: phoneDevice ? RPW(1) : 10,
     }
 })
