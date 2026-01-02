@@ -1,61 +1,37 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
 import Agenda from './Agenda/Agenda';
+import StepTitle from './StepTitle';
+import SelectedAppointment from './SelectedAppointment';
 
 
-export default function AgendaContainer({ agendaContext }) {
+export default function AgendaContainer({ agendaContext, selectedAppointmentSlot }) {
 
     const [agendaVisible, setAgendaVisible] = useState(true)
 
+    useEffect(() => {
+        if (!agendaVisible && !selectedAppointmentSlot) setAgendaVisible(true)
+        else if (selectedAppointmentSlot) setAgendaVisible(false)
+    }, [selectedAppointmentSlot])
+
     return (
-        <View style={{ width: "100%", alignItems: "center", marginTop: appStyle.regularMarginTop * 1.5  }} >
+        <View style={{ width: "100%", alignItems: "center", paddingBottom: selectedAppointmentSlot ? 0 : appStyle.mediumMarginTop  }} >
 
-            <View style={[styles.stepContainer, phoneDevice && { width: "100%" }]}>
+            <StepTitle title="2. Choisir votre horaire" chevronUp={agendaVisible} 
+            chevronFunc={()=> setAgendaVisible(prev => !prev)} marginTop={appStyle.regularMarginTop * 1.5} />
 
-                <Text style={styles.stepText}>
-                    2. Choisir votre horaire
-                </Text>
-
-                <FontAwesome5
-                    name={agendaVisible ? "chevron-up" : "chevron-down"}
-                    color={appStyle.fontColorDarkBg}
-                    size={phoneDevice ? RPW(4.2) : 23}
-                    style={styles.chevronIcon}
-                    onPress={() => {
-                        setAgendaVisible(!agendaVisible)
-                    }}
-                />
-            </View>
-
-            {agendaVisible && <Agenda agendaContext={agendaContext} /> }
+            {agendaVisible && <Agenda agendaContext={agendaContext} />}
+            
+            {selectedAppointmentSlot && <SelectedAppointment informationsArray={[
+                {category : "Date", title : selectedAppointmentSlot.start.toFormat("dd/MM/yy")},
+                {category : "Horaire", title : selectedAppointmentSlot.start.toFormat("HH:mm")}, 
+                {category : "Avec", title : selectedAppointmentSlot.employee.first_name}
+                ]} /> }
 
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    stepContainer: {
-        ...appStyle.largeItem,
-        backgroundColor: appStyle.darkGrey,
-        justifyContent: "center",
-        borderRadius: 0,
-        marginTop : 0,
-    },
-    stepText: {
-        ...appStyle.pageSubtitle,
-        textAlign: "left",
-        width: "100%",
-        paddingHorizontal: appStyle.regularLateralPadding,
-        color: appStyle.fontColorDarkBg,
-    },
-    chevronIcon: {
-        position: "absolute",
-        right: appStyle.regularLateralPadding,
-    },
-})

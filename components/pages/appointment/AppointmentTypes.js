@@ -5,10 +5,13 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-export default memo(function AppointmentTypes({ title, types, selected, setSelectedCategory, index, setSelectedAppointmentType, setCategoriesListVisible }) {
+export default memo(function AppointmentTypes({ title, types, selected, setSelectedCategory, index, setSelectedAppointmentType, setCategoriesListVisible, setSelectedAppointmentSlot, selectedAppointmentType }) {
 
     const typesItems = types.map((e, i) =>
         <TouchableOpacity key={i} style={styles.typeContainer} onPress={() => {
+            if (e !== selectedAppointmentType){
+                setSelectedAppointmentSlot(null)
+            }
             setSelectedAppointmentType(e)
             setCategoriesListVisible(false)
         }}>
