@@ -6,28 +6,18 @@ import { appStyle } from '@styles/appStyle';
 
 import useDayEventsSchedule from './useDayEventsSchedule';
 import AppointmentSlot from './AppointmentSlot';
-import { slotPressed } from './agendaUtils';
 
 export default memo(function DayColumn({ agendaContext, width, dtDay }) {
 
-    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, employeesAutocompleteList } = agendaContext
+    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, rolesPriorities } = agendaContext
 
-    const { appointmentsSlots, concernedEvents } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+    const { appointmentsSlots } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
 
-    // Function when a slot is pressed in a useCallBack to be memoised
-    const onSlotPress = useCallback((start, employees) => {
-        slotPressed(start, employees, setSelectedAppointmentSlot, sortFreeEmployees, concernedEvents, employeesAutocompleteList)
-    }, [sortFreeEmployees, concernedEvents, employeesAutocompleteList])
-
-    // useMemo to create a memoised version of the informations that will be passed to the slots
+    // useMemo to create a memoised version of the slots
     const slots = useMemo(() => {
-        return appointmentsSlots.map(e => ({
-            key: e.start.toMillis(),
-            props: e,
-            onPress: () => onSlotPress(e.start, e.employees),
-        }))
-    }, [appointmentsSlots, onSlotPress])
+        return appointmentsSlots.map(e => <AppointmentSlot key={e.start.toMillis()} {...e} setSelectedAppointmentSlot={setSelectedAppointmentSlot} sortFreeEmployees={sortFreeEmployees} rolesPriorities={rolesPriorities} /> )
+    }, [appointmentsSlots])
 
 
     // State for the list status
@@ -77,15 +67,7 @@ export default memo(function DayColumn({ agendaContext, width, dtDay }) {
                 onLayout={onLayoutColumn}
             >
 
-                {slots.map(slot => (
-                    <TouchableOpacity
-                        key={slot.key}
-                        activeOpacity={0.6}
-                        onPress={slot.onPress}
-                    >
-                        <AppointmentSlot {...slot.props} />
-                    </TouchableOpacity>
-                ))}
+                {slots}
 
             </View>
 
