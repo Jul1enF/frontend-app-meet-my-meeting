@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 16.17.4",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": false,
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_BACK_ADDRESS": "https://backend-meet-my-meeting.vercel.app"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+       "ios": {
+        "companyName": "Julien Furic"
+      }
+    }
+  }
+}

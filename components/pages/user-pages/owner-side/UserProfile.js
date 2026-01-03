@@ -9,7 +9,6 @@ import { appStyle } from "@styles/appStyle"
 import { userDefaultSchedule } from "constants/userDefaultSchedule";
 import { createScheduleActions, dayValidation } from "../schedule/scheduleUtils";
 import request from "@utils/request";
-import useSessionExpired from "@hooks/useSessionExpired";
 
 import Button from "@components/ui/Button";
 import ConfirmationModal from "@components/ui/ConfirmationModal";
@@ -30,6 +29,8 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
     const oldSchedule = user.schedule ?? userDefaultSchedule;
     const [newSchedule, setNewSchedule] = useState(oldSchedule)
     const scheduleArray = Object.values(newSchedule)
+
+    const [contractEnd, setContractEnd] = useState(user.contract_end)
 
     const scheduleActions = useMemo(() => {
         return createScheduleActions(setNewSchedule)
@@ -66,7 +67,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
     }
 
 
-
+ 
     const updateUserRef = useRef(true)
 
     const updateUserPress = async () => {
@@ -76,10 +77,12 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
             userToSave: {
                 role,
                 schedule: role === "client" ? null : newSchedule,
+                contract_end: role === "client" ? null : 
+                contractEnd ? contractEnd.toUTC().toJSDate() : null,
             }
         }
 
-        const data = await request({ path: "pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, functionRef : updateUserRef, setWarning: setFetchWarning, setModalVisible })
+        const data = await request({ path: "pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, functionRef: updateUserRef, setWarning: setFetchWarning, setModalVisible })
 
         if (data?.result) {
             setAllUsers(prev => prev.map(e => {
@@ -112,7 +115,11 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
 
                     <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} emptyText="Aucun résultat" />
 
-                    {(newRole?.role && newRole?.role !== "client") && <UserSchedule scheduleArray={scheduleArray} scheduleActions={scheduleActions} />}
+                    {(newRole?.role && newRole?.role !== "client") &&
+                        <UserSchedule scheduleArray={scheduleArray} scheduleActions={scheduleActions}
+                            contractEnd={contractEnd} setContractEnd={setContractEnd}
+                        />
+                    }
 
                     <Text style={[appStyle.warning, !warning && { height: 0, marginTop: 0 }]}>
                         {warning}

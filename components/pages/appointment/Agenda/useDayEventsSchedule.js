@@ -39,6 +39,9 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         selectedEmployeesArray.forEach((employee) => {
             const employeeDay = employee.schedule[dayIndex]
 
+            // The contract of the employee is over
+            if (employee.contract_end && isBefore(employee.contract_end, dtDay)) return
+
             // The employee is not available (day off)
             if (!employeeDay.enabled) return
 
