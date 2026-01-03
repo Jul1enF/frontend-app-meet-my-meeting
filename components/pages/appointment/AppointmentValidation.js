@@ -18,7 +18,7 @@ import GoingBackHeader from '@components/ui/GoingBackHeader';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function AppointmentValidation({ selectedAppointmentType: type, selectedAppointmentSlot: slot, resetAndAddEvent }) {
+export default function AppointmentValidation({ selectedAppointmentType: type, selectedAppointmentSlot: slot, resetAndRenewEvents }) {
 
     const dispatch = useDispatch()
 
@@ -57,11 +57,13 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
             setWarning: setFetchWarning,
             setModalVisible: setConfirmationModalVisible,
         })
-        if (data) {
+        if (data?.result) {
             const { appointmentSaved } = data
             dispatch(addEvent(appointmentSaved))
-            const delay = data.delay + 500
-            setTimeout(()=> resetAndAddEvent(appointmentSaved), delay)
+            setTimeout(()=> resetAndRenewEvents(appointmentSaved), data.delay)
+        }
+        else if (data.delay){
+            setTimeout(()=> resetAndRenewEvents(), data.delay)
         }
     }
 

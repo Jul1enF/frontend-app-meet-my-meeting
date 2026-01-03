@@ -81,7 +81,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
 
         const data = await request({ path: "pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, functionRef : updateUserRef, setWarning: setFetchWarning, setModalVisible })
 
-        if (data) {
+        if (data?.result) {
             setAllUsers(prev => prev.map(e => {
                 if (e._id === user._id) {
                     return data.userSaved

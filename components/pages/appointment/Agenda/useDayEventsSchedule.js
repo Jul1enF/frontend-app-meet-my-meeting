@@ -50,9 +50,13 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             if (isAbsent) return
 
 
-            // No return has been made, the employee is available, we push it without useless infos
+            // No return has been made, the employee is available, we push it without useless infos and with his start and end timing
+            const dtEmployeeStart = datefromStringHour(employeeDay.start, dtDay)
+            const dtEmployeeEnd = datefromStringHour(employeeDay.end, dtDay)
+
             const { __v, schedule, updatedAt, ...employeeInformations } = employee
-            employeesAvailable.push(employeeInformations)
+
+            employeesAvailable.push({ ...employeeInformations, dtEmployeeStart, dtEmployeeEnd })
 
             // Registration of the lunch break
             employeeDay.break.enabled && defaultLunchBreaks.push({
@@ -62,9 +66,8 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 category: "defaultLunchBreak",
             })
 
-            // Comparison of the schedule hours
-            const dtEmployeeStart = datefromStringHour(employeeDay.start, dtDay)
-            const dtEmployeeEnd = datefromStringHour(employeeDay.end, dtDay)
+
+            // Comparison of the schedule hours know when the shop opens and closes
 
             if (!minWorkingHour) minWorkingHour = dtEmployeeStart
             else {
@@ -141,7 +144,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
             let slotStart = toParisDt(start)
             let eventEnd = toParisDt(end)
-    
+
             while (slotStart < eventEnd) {
                 const slotKeyMs = slotStart.toMillis()
 
@@ -155,6 +158,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 slotStart = slotStart.plus({ milliseconds: fiveMinutesInMs })
             }
         }
+
 
         // GET THE EVENTS OF THE CONCERNED DAY, BLOCK SCHEDULES SLOTS WHEN THEY ARE OCCURING AND UPDATE EMPLOYEE STATUS
         for (let event of events) {
@@ -198,14 +202,12 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         }
 
 
-        // SETTINGS FOR A LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
 
+        // SETTINGS FOR A LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
         let dtAppointmentStart = dtDay
         let firstLoop = true
 
-        const employeesNumber = employeesAvailable.length
-
-        // Get the first slot available for an appointment depending on the time of the request and appointments gaps
+        // For the first loop, get the first slot available for an appointment depending on the time of the request and appointments gaps
         const getFirstAppointmentSlot = () => {
             if (isBefore(dtDay, minWorkingHour)) return minWorkingHour
 
@@ -230,6 +232,14 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 firstLoop = false
             }
 
+            // Remove the employee that are not working throughout the entire appointment duration
+            const workingEmployees = employeesAvailable.filter(e => {
+                return  dtAppointmentStart >= e.dtEmployeeStart &&
+                    dtAppointmentStart.plus({ minutes: appointmentDuration }) <= e.dtEmployeeEnd
+            })
+            const employeesNumber = workingEmployees.length
+
+
             const dtAppointmentEndMs = dtAppointmentStart.plus({ minutes: appointmentDuration }).toMillis()
 
             // Check if there is an event registered for the start of the event
@@ -242,10 +252,10 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 // Array to determine the employees that are free during the all appointment
                 let appointmentFreeEmployees = []
 
-                const setSlotAvailabilities = (slot) => employeesAvailable.filter(e => !slot.includes(e._id.toString()))
+                const setSlotAvailabilities = (slot) => workingEmployees.filter(e => !slot.includes(e._id.toString()))
 
                 appointmentFreeEmployees = !slotOccupied ?
-                    employeesAvailable :
+                    workingEmployees :
                     setSlotAvailabilities(slotOccupied)
 
 
@@ -268,12 +278,12 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                         employees.push({ ...e, ...employeeStatus })
                 })
 
-                
+
                 appointmentFreeEmployees.length && appointmentsSlots.push({ start: dtAppointmentStart, employees })
             }
             dtAppointmentStart = dtAppointmentStart.plus({ milliseconds: appointmentGapMs })
         }
-           
+
         return { appointmentsSlots, concernedEvents }
 
     }, [noAppointmentsAvailable, selectedEmployeesAvailabilities, events, dtDay, appointmentGapMs, appointmentDuration])

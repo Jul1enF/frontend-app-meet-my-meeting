@@ -41,7 +41,7 @@ export default function Signin({ setSignForm, func }) {
             }
         })
 
-        if (data) {
+        if (data?.result) {
             dispatch(login(data.user))
             if (typeof func === "function") func()
             else router.push("/home")

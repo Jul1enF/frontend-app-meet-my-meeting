@@ -27,7 +27,7 @@ export default function AppointmentsTypesPage() {
     // LOAD APPOINTMENTS TYPES FUNCTION AND USEEFFECT
     const getTypes = async () => {
         const data = await request({ path: "pros/get-appointments-types", jwtToken, setSessionExpired, setWarning })
-        if (data) {
+        if (data?.result) {
             setTypes(sortByCategory(data.appointmentsTypes))
         }
     }

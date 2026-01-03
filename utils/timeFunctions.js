@@ -52,7 +52,7 @@ export function isBetween(dateBefore, dateBetween, dateAfter) {
 
 // Function to get the duration between two date
 export function getDuration(start, end) {
-    return toParisDt(start).diff(toParisDt(end)).milliseconds
+    return toParisDt(end).diff(toParisDt(start)).milliseconds
 }
 
 

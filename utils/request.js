@@ -51,13 +51,14 @@ export default async function request({ path, method = "GET", body, params, jwtT
         if (!data.result) {
             displayWarning(data.errorText ?? null)
             sessionExpired = data.sessionExpired
+            if (!sessionExpired) return { delay : readingTime(warningText) + 400}
         }
         else if (data.notModified) {
             return
         }
         else {
             data.successText && displayWarning(data.successText, true)
-            data.delay = readingTime(data.successText)
+            data.delay = readingTime(data.successText) + 400
             return data
         }
     }

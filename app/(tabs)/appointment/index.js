@@ -37,7 +37,7 @@ export default function AppointmentPage() {
   // LOAD APPOINTMENTS INFORMATIONS FUNCTION AND USEEFFECT
   const getAppointmentInformations = async (clearEtag) => {
     const data = await request({ path: "appointments/appointment-informations", clearEtag, setWarning })
-    if (data) {
+    if (data?.result) {
       setAppointmentInfos(data.informations)
       setSelectedEmployees(data.informations.employees)
     }
@@ -75,34 +75,42 @@ export default function AppointmentPage() {
     getAppointmentInformations()
   }} />
 
-  
-  // Function for Appointment Validation in case of a successful registration to reset the states and add the event
-  const resetAndAddEvent = (event) => {
-    setSelectedEmployees(appointmentInfos.employees)
-    setSelectedAppointmentType(null)
+
+  // Function for Appointment Validation to reset the selected criteriums and add an event or download fresh datas
+  const resetAndRenewEvents = (event) => {
     setSelectedAppointmentSlot(null)
 
-    const newEvents = [...appointmentInfos.events, event].sort((a, b) => new Date(b.start) - new Date(a.start))
+    // The registration has been successfull, a new event has been retrieved
+    if (event) {
+      setSelectedEmployees(appointmentInfos.employees)
+      setSelectedAppointmentType(null)
 
-    setAppointmentInfos(prev => ({
-      ...prev,
-      events : newEvents,
-    }))
+      const newEvents = [...appointmentInfos.events, event].sort((a, b) => new Date(b.start) - new Date(a.start))
+
+      setAppointmentInfos(prev => ({
+        ...prev,
+        events: newEvents,
+      }))
+    }
+    else {
+      getAppointmentInformations()
+    }
+
   }
 
-    return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems : "center" }} bounces={false} overScrollMode="never" refreshControl={refreshComponent}>
+  return (
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} bounces={false} overScrollMode="never" refreshControl={refreshComponent}>
 
-        <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
+      <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
 
-        {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
+      {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
 
-        {selectedAppointmentType && selectedAppointmentSlot && 
-        <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndAddEvent={resetAndAddEvent} />
+      {selectedAppointmentType && selectedAppointmentSlot &&
+        <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndRenewEvents={resetAndRenewEvents} />
       }
 
-      </ScrollView>
-    )
-  }
+    </ScrollView>
+  )
+}
 
 

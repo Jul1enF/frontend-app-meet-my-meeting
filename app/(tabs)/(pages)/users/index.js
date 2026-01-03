@@ -30,7 +30,7 @@ export default function UsersPage() {
     // LOAD USERS FUNCTION AND USEEFFECT
     const fetchUsers = async (clearEtag) => {
         const data = await request({ path: "pros/get-all-users", jwtToken, setSessionExpired, clearEtag, setWarning })
-        if (data) {
+        if (data?.result) {
             setAllUsers(data.allUsers)
         }
     }

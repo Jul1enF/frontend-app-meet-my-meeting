@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -12,7 +12,16 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [categoriesListVisible, setCategoriesListVisible] = useState(true)
 
-    // Sort of the categories
+    // useEffect to reset categoriesList to visible when the selectedAppointmentType has been cleared
+    useEffect(()=>{
+        if (!selectedAppointmentType && !categoriesListVisible){
+            setCategoriesListVisible(true)
+            setSelectedCategory(null)
+        }
+    },[selectedAppointmentType])
+
+
+    // Sort of the categories if there are some
     const categories = useMemo(() => {
         if (!appointmentTypes) return null
 
