@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
         top: phoneDevice ? RPW(7.5) : 55,
     },
     chevronLeft: {
-        left: phoneDevice ? RPW(2) : 20,
+        left: phoneDevice ? RPW(3) : 22,
     },
     chevronRight: {
-        right: phoneDevice ? RPW(2) : 20,
+        right: phoneDevice ? RPW(3) : 22,
     }
 })

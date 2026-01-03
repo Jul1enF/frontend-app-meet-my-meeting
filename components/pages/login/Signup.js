@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
 
-export default function Signup({ setSignForm }) {
+export default function Signup({ setSignForm, func }) {
     const router  = useRouter()
 
     const [firstName, setFirstName] = useState("")
@@ -60,7 +60,8 @@ export default function Signup({ setSignForm }) {
 
         if (data) {
             dispatch(login(data.user))
-            router.push("/home")
+            if (typeof func === "function") func()
+            else router.push("/home")
         }
     }
 
@@ -160,13 +161,13 @@ export default function Signup({ setSignForm }) {
 
 
                         <TouchableOpacity style={{ width: "100%", alignItems: "center", marginTop: phoneDevice ? RPW(5) : 40 }} activeOpacity={0.5} onPress={() => setSignForm("signin")} >
-                            <Text style={[appStyle.smallText, { color: appStyle.fontColorDarkBg }]}>
+                            <Text style={[appStyle.regularText, { color: appStyle.fontColorDarkBg }]}>
                                 Déjà un compte  ?
                             </Text>
 
                             <View style={styles.signupButton} >
                                 <MaterialIcons name="login" color={appStyle.brightRed} size={phoneDevice ? RPW(4) : 30} />
-                                <Text style={[{ ...appStyle.smallText }, { color: appStyle.brightRed, marginLeft: phoneDevice ? RPW(2) : 15 }]}>
+                                <Text style={[{ ...appStyle.regularText }, { color: appStyle.brightRed, marginLeft: phoneDevice ? RPW(2) : 15 }]}>
                                     Se connecter
                                 </Text>
                             </View>
@@ -204,6 +205,6 @@ const styles = StyleSheet.create({
     signupButton: {
         ...appStyle.button,
         flexDirection: "row",
-        marginTop: phoneDevice ? RPW(1) : 10,
+        marginTop: phoneDevice ? RPW(1.1) : 10,
     }
 });

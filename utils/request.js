@@ -57,6 +57,7 @@ export default async function request({ path, method = "GET", body, params, jwtT
         }
         else {
             data.successText && displayWarning(data.successText, true)
+            data.delay = readingTime(data.successText)
             return data
         }
     }

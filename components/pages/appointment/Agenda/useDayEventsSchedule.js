@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { DateTime } from "luxon";
-import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour } from "@utils/timeFunctions";
+import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
 export default function useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration) {
@@ -138,9 +138,10 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
         // FUNCTION WITH A LOOP TO BLOCK SCHEDULES SLOTS WHILE AN EVENT IS HAPPENING
         const setOccupiedSlots = (start, end, employeeId) => {
-            let slotStart = DateTime.isDateTime(start) ? start.toUTC() : DateTime.fromJSDate(start).toUTC()
-            let eventEnd = DateTime.isDateTime(end) ? end.toUTC() : DateTime.fromJSDate(end).toUTC()
 
+            let slotStart = toParisDt(start)
+            let eventEnd = toParisDt(end)
+    
             while (slotStart < eventEnd) {
                 const slotKeyMs = slotStart.toMillis()
 
@@ -155,9 +156,9 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             }
         }
 
-
         // GET THE EVENTS OF THE CONCERNED DAY, BLOCK SCHEDULES SLOTS WHEN THEY ARE OCCURING AND UPDATE EMPLOYEE STATUS
         for (let event of events) {
+
             if (isSameDay(event.start, dtDay)
                 && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
 
@@ -178,12 +179,14 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
                 // If the event is a modified lunch break for this day
                 event.category === "lunchBreak" && lunchBreaksEvents.push(event)
+
             }
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
             else if (concernedEvents.length) {
                 break;
             }
         }
+
         // Add the default lunck breaks if they have not been modified
         for (let lunchBreak of defaultLunchBreaks) {
 
@@ -193,7 +196,6 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
             }
         }
-
 
 
         // SETTINGS FOR A LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
@@ -233,6 +235,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             // Check if there is an event registered for the start of the event
             const slotOccupied = occupiedSlots.get(dtAppointmentStart.toMillis())
 
+
             // If there is at least an employee available for the start
             if (!slotOccupied || slotOccupied.length !== employeesNumber) {
 
@@ -265,11 +268,12 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                         employees.push({ ...e, ...employeeStatus })
                 })
 
+                
                 appointmentFreeEmployees.length && appointmentsSlots.push({ start: dtAppointmentStart, employees })
             }
             dtAppointmentStart = dtAppointmentStart.plus({ milliseconds: appointmentGapMs })
         }
-
+           
         return { appointmentsSlots, concernedEvents }
 
     }, [noAppointmentsAvailable, selectedEmployeesAvailabilities, events, dtDay, appointmentGapMs, appointmentDuration])

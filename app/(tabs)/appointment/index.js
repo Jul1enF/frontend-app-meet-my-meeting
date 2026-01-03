@@ -31,7 +31,6 @@ export default function AppointmentPage() {
 
   const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = appointmentInfos
 
-
   const appointmentDuration = useMemo(() => selectedAppointmentType?.default_duration, [selectedAppointmentType])
 
 
@@ -76,6 +75,20 @@ export default function AppointmentPage() {
     getAppointmentInformations()
   }} />
 
+  
+  // Function for Appointment Validation in case of a successful registration to reset the states and add the event
+  const resetAndAddEvent = (event) => {
+    setSelectedEmployees(appointmentInfos.employees)
+    setSelectedAppointmentType(null)
+    setSelectedAppointmentSlot(null)
+
+    const newEvents = [...appointmentInfos.events, event].sort((a, b) => new Date(b.start) - new Date(a.start))
+
+    setAppointmentInfos(prev => ({
+      ...prev,
+      events : newEvents,
+    }))
+  }
 
     return (
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems : "center" }} bounces={false} overScrollMode="never" refreshControl={refreshComponent}>
@@ -85,7 +98,7 @@ export default function AppointmentPage() {
         {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
 
         {selectedAppointmentType && selectedAppointmentSlot && 
-        <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} />
+        <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndAddEvent={resetAndAddEvent} />
       }
 
       </ScrollView>

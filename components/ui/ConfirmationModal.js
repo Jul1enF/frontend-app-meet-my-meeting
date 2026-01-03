@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         ...appStyle.card,
     },
     confirmationText: {
-        ...appStyle.regularText,
+        ...appStyle.largeText,
         color: appStyle.fontColorDarkBg,
         textAlign: "center",
     },

@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
 
-export default function Signin({ setSignForm }) {
+export default function Signin({ setSignForm, func }) {
     const router  = useRouter()
 
     const [email, setEmail] = useState("")
@@ -43,7 +43,8 @@ export default function Signin({ setSignForm }) {
 
         if (data) {
             dispatch(login(data.user))
-            router.push("/home")
+            if (typeof func === "function") func()
+            else router.push("/home")
         }
 
     }
@@ -100,13 +101,13 @@ export default function Signin({ setSignForm }) {
                         </Text>
 
                         <TouchableOpacity activeOpacity={0.5} style={{ width: "100%", alignItems: "center", marginTop: phoneDevice ? RPW(5) : 40 }} onPress={() => setSignForm("signup")}>
-                            <Text style={[appStyle.smallText, { color: appStyle.fontColorDarkBg }]}>
+                            <Text style={[appStyle.regularText, { color: appStyle.fontColorDarkBg }]}>
                                 Pas encore de compte ?
                             </Text>
 
                             <View style={styles.signupButton} >
                                 <MaterialIcons name="login" color={appStyle.brightRed} size={phoneDevice ? RPW(4) : 30} />
-                                <Text style={[{ ...appStyle.smallText }, { color: appStyle.brightRed, marginLeft: phoneDevice ? RPW(2) : 15 }]}>
+                                <Text style={[{ ...appStyle.regularText }, { color: appStyle.brightRed, marginLeft: phoneDevice ? RPW(2) : 15 }]}>
                                     Créer un compte
                                 </Text>
                             </View>
@@ -142,6 +143,6 @@ const styles = StyleSheet.create({
     signupButton: {
         ...appStyle.button,
         flexDirection: "row",
-        marginTop: phoneDevice ? RPW(1) : 10,
+        marginTop: phoneDevice ? RPW(1.1) : 10,
     }
 });
