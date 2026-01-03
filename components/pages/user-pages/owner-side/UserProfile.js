@@ -3,11 +3,11 @@ import { useState, useMemo, useRef } from "react";
 
 import Autocomplete from "@components/ui/Autocomplete";
 import UserInformations from "./UserInformations";
-import UserSchedule from "../schedule/UserSchedule";
+import UserSchedule from "../user-schedule/UserSchedule";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { userDefaultSchedule } from "constants/userDefaultSchedule";
-import { createScheduleActions, dayValidation } from "../schedule/scheduleUtils";
+import { createScheduleActions, dayValidation } from "../user-schedule/scheduleUtils";
 import request from "@utils/request";
 
 import Button from "@components/ui/Button";
