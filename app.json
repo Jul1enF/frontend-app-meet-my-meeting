@@ -20,8 +20,7 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "appleTeamId": "SF586N67PQ",
-      "usesAppleSignIn": true
+      "appleTeamId": "SF586N67PQ"
     },
     "android": {
       "adaptiveIcon": {
