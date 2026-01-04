@@ -9,7 +9,7 @@ import { isSameDay } from "@utils/timeFunctions";
 
 export default function DayItem({ date, currentMonth, nextMonth, previousMonth, disabled, chosenDate, setChosenDate, updateViewedDate}) {
 
-const today = useMemo(()=> DateTime.now(), [])
+const today = useMemo(()=> DateTime.now({zone : "Europe/Paris"}), [])
 
 const isToday = isSameDay(date, today)
 const isSelected = isSameDay(date, chosenDate)

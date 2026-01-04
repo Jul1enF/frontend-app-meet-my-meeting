@@ -6,16 +6,21 @@ import { appStyle } from "@styles/appStyle"
 export default function useLayoutSpaces(tabBar, secondHeader) {
     const { height: screenHeight, width: screenWidth } = useSafeAreaFrame()
 
-    const tabbarPaddingBottom = Platform.OS === "ios" ? useSafeAreaInsets().bottom / 2 : useSafeAreaInsets().bottom
+    const insets = useSafeAreaInsets();
 
-    const statusBarOffset = Platform.OS === "ios" ? Constants.statusBarHeight : useSafeAreaInsets().top
+    const tabbarPaddingBottom = Platform.OS === "ios" ? insets.bottom / 2 : insets.bottom
+
+    const statusBarOffset = Platform.OS === "ios" ? Constants.statusBarHeight : insets.top
 
     const topBlockedHeight = secondHeader ? appStyle.headerHeight + appStyle.secondHeaderHeight : appStyle.headerHeight
 
-    // On Android, react native modal already include the statusBarOffset
-    const modalOffsetTop = Platform.OS === "ios" ? topBlockedHeight + statusBarOffset : topBlockedHeight
+    const env = Constants.executionEnvironment
+    const isBuild = env === "bare" || env === "standalone" ? true  : false
 
-    const freeHeight = screenHeight - appStyle.headerHeight - statusBarOffset 
+    // On expo go Android, top : 0 already include the statusBarOffset
+    const modalOffsetTop = Platform.OS === "ios" || isBuild ? topBlockedHeight + statusBarOffset : topBlockedHeight
+
+    const freeHeight = screenHeight - topBlockedHeight - statusBarOffset 
     - ( tabBar ? appStyle.tabBarHeight + tabbarPaddingBottom : 0)
 
     return { modalOffsetTop, statusBarOffset, topBlockedHeight, freeHeight, screenHeight, screenWidth }

@@ -42,11 +42,12 @@ export function isBefore(dateBefore, dateAfter, canBeEquals) {
 }
 
 // Function to know if a date is in between two other
-export function isBetween(dateBefore, dateBetween, dateAfter) {
+export function isBetween(dateBefore, dateBetween, dateAfter, canBeEquals) {
     const parisDateBefore = toParisDt(dateBefore)
     const parisDateBetween = toParisDt(dateBetween)
     const parisDateAfter = toParisDt(dateAfter)
 
+    if (canBeEquals) return parisDateBefore <= parisDateBetween && parisDateBetween <= parisDateAfter
     return parisDateBefore <= parisDateBetween && parisDateBetween < parisDateAfter
 }
 

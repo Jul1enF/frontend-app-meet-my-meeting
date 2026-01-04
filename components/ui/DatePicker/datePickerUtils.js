@@ -1,7 +1,7 @@
 import { DateTime } from "luxon"
 
 export const getMonthDays = (viewedYear, viewedMonth) => {
-    const firstDayOfMonth = DateTime.now().set({ year : viewedYear, month : viewedMonth, day : 1})
+    const firstDayOfMonth = DateTime.now({zone : "Europe/Paris"}).set({ year : viewedYear, month : viewedMonth, day : 1})
     const firstDayOfMonthIndex = firstDayOfMonth.weekday
 
     const daysInViewedMonth = firstDayOfMonth.daysInMonth
@@ -10,7 +10,7 @@ export const getMonthDays = (viewedYear, viewedMonth) => {
 
     const setToMidnight = (date) => date.set({ hour : 0, minute : 0, second : 0, millisecond : 0})
 
-    const today = setToMidnight(DateTime.now())
+    const today = setToMidnight(DateTime.now({zone : "Europe/Paris"}))
 
     const isDisabled = (date) => date < today
 
@@ -42,7 +42,7 @@ export const getMonthDays = (viewedYear, viewedMonth) => {
 
     let nextMonthDay = 1
     while (days.length % 7 !== 0) {
-        const date = DateTime.now().set({ year : viewedYear, month : viewedMonth + 1, day : nextMonthDay})
+        const date = DateTime.now({zone : "Europe/Paris"}).set({ year : viewedYear, month : viewedMonth + 1, day : nextMonthDay})
 
         days.push({
             date,

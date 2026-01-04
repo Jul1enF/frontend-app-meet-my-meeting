@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 
 import DayItem from "./DayItem";
 import { appStyle } from "@styles/appStyle";
@@ -12,8 +12,8 @@ import { DateTime } from "luxon";
 import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
 import { upperCaseInitial } from "@utils/timeFunctions";
 
-export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
-    // ALL DATES ARE IN LOCALE TO BE RELEAVANT TO USER TIMEZONE
+export default memo( function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
+    // ALL DATES ARE IN EUROPE PARIS ZONE TO BE RELEAVANT TO THE SHOP TIMEZONE
     const [viewedDate, setViewedDate] = useState(chosenDate)
     const viewedYear = viewedDate.year
     const viewedMonth = viewedDate.month
@@ -29,7 +29,7 @@ export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible
     const daysName = useMemo(() => {
         const daysName = []
         for (let i = 1; i <= 7; i++) {
-            const name= DateTime.now().set({weekday : i}).toFormat("ccc").slice(0,3)
+            const name= DateTime.now({zone : "Europe/Paris"}).set({weekday : i}).toFormat("ccc").slice(0,3)
             daysName.push(name)
         }
         return daysName
@@ -59,7 +59,7 @@ export default function Calendar({ chosenDate, setChosenDate, setCalendarVisible
             </View>
         </View>
     )
-}
+})
 
 const styles = StyleSheet.create({
     mainContainer: {

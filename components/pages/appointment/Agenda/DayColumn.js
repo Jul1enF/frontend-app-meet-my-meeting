@@ -4,7 +4,7 @@ import { useState, memo, useMemo, useCallback, useLayoutEffect } from 'react';
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import useDayEventsSchedule from './useDayEventsSchedule';
+import useDayEventsSchedule from '@hooks/useDayEventsSchedule';
 import AppointmentSlot from './AppointmentSlot';
 
 export default memo(function DayColumn({ agendaContext, width, dtDay }) {

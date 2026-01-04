@@ -166,8 +166,8 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         // GET THE EVENTS OF THE CONCERNED DAY, BLOCK SCHEDULES SLOTS WHEN THEY ARE OCCURING AND UPDATE EMPLOYEE STATUS
         for (let event of events) {
 
-            if (isSameDay(event.start, dtDay)
-                && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
+            if ( isSameDay(event.start, dtDay)
+                && employeesAvailable.some(e => e._id.toString() === event.employee.toString()) ) {
 
                 concernedEvents.push(event)
 
