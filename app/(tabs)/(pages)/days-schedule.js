@@ -11,61 +11,70 @@ import { DateTime } from 'luxon';
 import useSessionExpired from '@hooks/useSessionExpired';
 
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
+import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
 
 
-export default function DaysSchedule () {
+export default function DaysSchedule() {
 
-const jwtToken = useSelector((state)=> state.user.value.jwtToken)
+    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const email = useSelector((state) => state.user.value.email)
 
-const [warning, setWarning] = useState({})
-const [scheduleInformations, setScheduleInformations] = useState({})
-const [selectedDate, setSelectedDate] = useState(DateTime.now({zone : "Europe/Paris"}).startOf('day') )
+    const [warning, setWarning] = useState({})
+    const [scheduleInformations, setScheduleInformations] = useState({})
+    const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }).startOf('day'))
+    const [selectedEmployee, setSelectedEmployee] = useState(null)
 
-const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs } = scheduleInformations
+    const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs } = scheduleInformations
 
-// LOAD SCHEDULE INFORMATIONS FUNCTION AND USEEFFECT
-const [sessionExpired, setSessionExpired] = useState(false)
-useSessionExpired(sessionExpired, setSessionExpired)
+    // LOAD SCHEDULE INFORMATIONS FUNCTION AND USEEFFECT
+    const [sessionExpired, setSessionExpired] = useState(false)
+    useSessionExpired(sessionExpired, setSessionExpired)
 
-const getScheduleInformations = async (clearEtag) => {
-    const data = await request({ path : "pros/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning})
+    const getScheduleInformations = async (clearEtag) => {
+        const data = await request({ path: "pros/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning })
 
-    if (data?.result){
-        setScheduleInformations(data.informations)
+        if (data?.result) {
+            setScheduleInformations(data.informations)
+            !selectedEmployee && setSelectedEmployee(data.informations.employees.filter(e => e.email === email))
+        }
     }
-}
 
-useEffect(()=>{
-    getScheduleInformations(true)
-},[])
-
+    useEffect(() => {
+        getScheduleInformations(true)
+    }, [])
 
 
-// Refresh component for the scrollview
-  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
-    setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 800)
-    getScheduleInformations()
-  }} />
+    // Refresh component for the scrollview
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
-    return(
-        <ScrollView bounces={false} overScrollMode="never" style={{flex : 1}} 
-        contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingVertical : appStyle.mediumMarginTop }}
-        refreshControl={refreshComponent}
-        stickyHeaderIndices={[2]}
+    const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
+        setIsRefreshing(true)
+        setTimeout(() => setIsRefreshing(false), 800)
+        getScheduleInformations()
+    }} />
+
+    return (
+        <ScrollView bounces={false} overScrollMode="never" style={{ flex: 1 }}
+            contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingVertical: appStyle.mediumMarginTop }}
+            refreshControl={refreshComponent}
+            stickyHeaderIndices={[2]}
         >
 
             <Text style={appStyle.pageTitle}>
                 Agenda
             </Text>
 
-            <Text style={[{marginBottom : appStyle.mediumMarginTop}, appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
+            <Text style={[{ marginBottom: appStyle.mediumMarginTop }, appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
                 {warning?.text}
             </Text>
 
-            <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+            <View style={{width : "100%"}}>
+                <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+
+                <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
+            </View>
+
 
         </ScrollView>
     )

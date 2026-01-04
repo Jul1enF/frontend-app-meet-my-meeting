@@ -6,13 +6,15 @@ import { appStyle } from "@styles/appStyle"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
-export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, suggestionTextStyle, iconColor, canCreate }) {
+export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, suggestionTextStyle, iconColor, canCreate, editable = true, showClear = true }) {
     const inputWidth = width ?? appStyle.largeItemWidth
     const inputHeight = height ?? appStyle.largeItemHeight
     
     return (
         <AutocompleteDropdown
             dataSet={data}
+            showClear={showClear}
+            editable={editable}
             clearOnFocus={false}
             closeOnBlur={true}
             closeOnSubmit={true}
