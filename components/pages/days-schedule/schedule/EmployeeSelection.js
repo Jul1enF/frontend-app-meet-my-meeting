@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { useMemo, memo, useEffect, useState } from 'react';
+import { useMemo, memo } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';

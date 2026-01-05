@@ -12,6 +12,7 @@ import useSessionExpired from '@hooks/useSessionExpired';
 
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
 import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
+import ScheduleContainer from '@components/pages/days-schedule/schedule/ScheduleContainer';
 
 
 export default function DaysSchedule() {
@@ -25,6 +26,10 @@ export default function DaysSchedule() {
     const [selectedEmployee, setSelectedEmployee] = useState(null)
 
     const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs } = scheduleInformations
+
+    const scheduleContext = useMemo(()=>{
+        return { appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate }
+    },[scheduleInformations, selectedEmployee, selectedDate])
 
     // LOAD SCHEDULE INFORMATIONS FUNCTION AND USEEFFECT
     const [sessionExpired, setSessionExpired] = useState(false)
@@ -74,6 +79,8 @@ export default function DaysSchedule() {
 
                 <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
             </View>
+
+            <ScheduleContainer scheduleContext={scheduleContext} />
 
 
         </ScrollView>
