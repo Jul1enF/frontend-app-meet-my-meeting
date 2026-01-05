@@ -12,7 +12,7 @@ import useSessionExpired from '@hooks/useSessionExpired';
 
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
 import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
-import ScheduleContainer from '@components/pages/days-schedule/schedule/ScheduleContainer';
+import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 
 
 export default function DaysSchedule() {
@@ -80,7 +80,7 @@ export default function DaysSchedule() {
                 <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
             </View>
 
-            <ScheduleContainer scheduleContext={scheduleContext} />
+            <Schedule scheduleContext={scheduleContext} />
 
 
         </ScrollView>

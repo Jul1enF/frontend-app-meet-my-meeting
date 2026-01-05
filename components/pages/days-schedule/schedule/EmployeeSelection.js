@@ -26,6 +26,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
         item?.employee && setSelectedEmployee([item.employee])
     }
 
+
     return (
         <View style={styles.mainContainer}>
 
@@ -37,9 +38,10 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
             setSelectedItem={updateSelectedEmployees} 
             initialValue={"default"}
             inputStyle={{ fontWeight: "600", paddingLeft: 0, color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} 
-            inputContainerStyle={{ borderColor: appStyle.strongBlack }} 
+            inputContainerStyle={{ borderColor: appStyle.strongBlack, marginTop : 0 }} 
             placeholderColor={appStyle.mediumGrey} 
             iconColor={appStyle.strongBlack}
+            height={phoneDevice ? null : 70}
             />}
 
         </View>
@@ -52,6 +54,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: appStyle.pageBody.backgroundColor,
-        paddingBottom: appStyle.regularMarginTop,
+        paddingVertical : appStyle.regularMarginTop * 0.5,
     }
 })

@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         width: "100%",
         borderRadius: 0,
         paddingTop: phoneDevice ? RPW(1) : 10,
-        paddingBottom: phoneDevice ? RPW(3) : 15,
+        paddingBottom: phoneDevice ? RPW(3) : 12,
     },
     monthHeader: {
         width: "100%",
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         columnGap: "2.66%",
         height: phoneDevice ? RPW(8) : 50,
-        marginTop: phoneDevice ? RPW(0.2) : 5,
+        marginTop: phoneDevice ? RPW(0.2) : 0,
     },
     dayName: {
         ...appStyle.regularText,
@@ -107,6 +107,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         columnGap: "2.66%",
-        marginTop: phoneDevice ? RPW(0.4) : 4,
+        marginTop: phoneDevice ? RPW(0.4) : 0,
     }
 })

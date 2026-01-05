@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     },
     dayContainer : {
         width: "100%",
-        maxWidth : phoneDevice ? RPW(10) : 72,
-        maxHeight : phoneDevice ? RPW(10) : 72,
+        maxWidth : phoneDevice ? RPW(10) : 60,
+        maxHeight : phoneDevice ? RPW(10) : 60,
         aspectRatio: 1,
         justifyContent: "center",
         alignItems: "center",
