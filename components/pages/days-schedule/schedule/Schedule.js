@@ -5,24 +5,32 @@ import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import useDayEventsSchedule from '@hooks/useDayEventsSchedule';
+import EventItem from './EventItem';
+
+import { toParisDt } from '@utils/timeFunctions';
 
 
 export default memo(function Schedule({ scheduleContext }) {
 
+    // SelectedAppointmentType for redaction of appointements
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
     const appointmentDuration = useMemo(() => {
         if (!selectedAppointmentType) return null
         return selectedAppointmentType.default_duration
     }, [selectedAppointmentType])
 
-    const { appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate } = scheduleContext
+    // Memoised props
+    const { appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, defaultSchedule } = scheduleContext
 
-    const timeGridWidth = phoneDevice ? RPW(16) : 100
+    
     const appointmentGapMin = useMemo(() => appointmentGapMs / 1000 / 60, [appointmentGapMs])
-    const minuteHeight = phoneDevice ? RPW(1) : 8
+    const minuteHeight = phoneDevice ? RPW(1.3) : 8
 
-    const { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour } = useDayEventsSchedule(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, appointmentDuration)
+    // Hook to get the events, appointments slots and working hours
+    const { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour } = useDayEventsSchedule(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, defaultSchedule, appointmentDuration)
 
+
+    // Memo of the working hours
     const dtDayWorkingHours = useMemo(() => {
         if (!minWorkingHour && !maxWorkingHour && !concernedEvents.length) return null
         return {
@@ -32,6 +40,7 @@ export default memo(function Schedule({ scheduleContext }) {
     }, [minWorkingHour, maxWorkingHour, concernedEvents])
 
 
+    // useCallBack function for construction of the grid
     const getGrid = useCallback((timeGrid) => {
         const grid = []
         if (!dtDayWorkingHours) return null
@@ -44,7 +53,7 @@ export default memo(function Schedule({ scheduleContext }) {
             const borderBottomWidth = !nextStart.minute ? phoneDevice ? 2 : 4 : 1
 
             grid.push(
-                <View key={start.toISO()} style={{ height: appointmentGapMin * minuteHeight, borderBottomWidth, borderBottomColor: appStyle.strongBlack, alignItems: "center", paddingTop: phoneDevice ? RPW(2) : 10 }}>
+                <View key={start.toISO()} style={{ height: appointmentGapMin * minuteHeight, borderBottomWidth, borderBottomColor: appStyle.strongBlack, alignItems: "center", paddingTop: phoneDevice ? RPW(2) : 10, width : "100%" }}>
 
                     {timeGrid && <Text style={{ ...appStyle.regularText, fontWeight: "500" }}>
                         {start.toFormat("HH:mm")}
@@ -60,17 +69,24 @@ export default memo(function Schedule({ scheduleContext }) {
     }, [dtDayWorkingHours, appointmentGapMin, minuteHeight])
 
 
+    // Memo of the two different grid
     const grid = useMemo(() => getGrid(false), [getGrid])
     const timeGrid = useMemo(() => getGrid(true), [getGrid])
 
+
+
     return (
         <View style={styles.mainContainer}>
-            <View style={{ width: timeGridWidth, backgroundColor: appStyle.darkWhite2 }}>
+            <View style={{ width: phoneDevice ? RPW(16) : 100, backgroundColor: appStyle.darkWhite2 }}>
                 {timeGrid}
             </View>
 
             <View style={styles.columnContainer}>
+
                 {grid}
+
+                {concernedEvents.map((e ) => 
+                 <EventItem {...e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} key={ toParisDt(e.start).toISO() } /> )}
             </View>
 
         </View>
@@ -86,6 +102,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     columnContainer: {
-        width: "100%",
+        flex : 1,
+        alignItems : "center"
     }
 })

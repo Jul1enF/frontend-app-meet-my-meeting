@@ -1,0 +1,195 @@
+import { Text, View, StyleSheet } from 'react-native';
+import { useMemo, memo, useState } from 'react';
+
+import { phoneDevice, RPH, RPW } from '@utils/dimensions'
+import { appStyle } from '@styles/appStyle';
+
+import { getMinDuration } from '@utils/timeFunctions';
+import { eventCatTranslation } from 'constants/translations';
+
+
+export default memo(function EventItem({ start, end, description, category, appointment_type = {}, client, unregistered_client, minuteHeight, dtDayWorkingHours }) {
+
+    if (!start || !end || !dtDayWorkingHours) return <></>
+
+    else {
+        const { dtDayStart, dtDayEnd } = dtDayWorkingHours
+
+        const { category: appCat, title, default_duration } = appointment_type
+
+        let color
+        let paddingTop = 0
+        let justifyContent = "space-evenly"
+
+        switch (category) {
+            case "appointment":
+                color = "rgba(183, 162, 2, 1)"
+                break;
+            case "closure":
+                color = appStyle.darkGrey
+                paddingTop = appStyle.mediumMarginTop
+                justifyContent = "flex-start"
+                break;
+            case "absence":
+            case "dayOff":
+                color = appStyle.strongGrey
+                paddingTop = appStyle.mediumMarginTop
+                justifyContent = "flex-start"
+                break;
+            case "lunchBreak":
+            case "defaultLunchBreak":
+            case "break":
+                color = appStyle.lightGreen
+                justifyContent = "center"
+                break;
+        }
+
+        // Var for the display of the events (top, height, etc...)
+        const eventMinFromStart = getMinDuration(dtDayStart, start)
+        const eventMinDuration = getMinDuration(start, end)
+
+        const fullHeight = eventMinDuration * minuteHeight
+        const height = fullHeight * 0.94
+        const fullTop = eventMinFromStart * minuteHeight
+        const top = fullTop + (fullHeight * 0.03)
+
+
+        // For the event taking the full day we repeat their name along the day height
+        const fullDayItemDetails = useMemo(() => {
+            const itemDetails = []
+            const numberOfItems = Math.floor(fullHeight / (90 * minuteHeight))
+            for (let i = 0; i < numberOfItems; i++) {
+                itemDetails.push(
+                    <View style={{ flexDirection : "row", justifyContent: "flex-end", alignItems : "center", height: height / numberOfItems, maxWidth: "100%" }} key={i}>
+
+                        <Text style={styles.categoryTitle}>
+                            {eventCatTranslation[category]}
+                            {description && " :"}
+                        </Text>
+
+                        {description &&
+                            <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                                {description}
+                            </Text>
+                        }
+                    </View>
+                )
+            }
+            return itemDetails
+        }, [])
+
+
+        if (category === "closure" || category === "absence" || category === "dayOff") {
+            return (
+                <View style={[styles.mainContainer, {
+                    top: fullTop,
+                    height: fullHeight,
+                    backgroundColor: color,
+                    paddingTop,
+                    justifyContent,
+                }]} >
+
+                    {fullDayItemDetails}
+
+                </View>
+            )
+        }
+
+        // Appointments and breaks
+        return (
+            <View style={[styles.mainContainer, {
+                top,
+                height,
+                backgroundColor: color,
+                paddingTop,
+                justifyContent,
+            }]} >
+                
+                <Text style={styles.categoryTitle}>
+                    {eventCatTranslation[category]}
+                    {(category === "appointment" || description) && " :"}
+                </Text>
+
+
+                    <View style={styles.row}>
+
+
+                        {category === "appointment" &&
+               
+                            <Text style={styles.eventDetails} >
+
+                                {appCat && 
+                                <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                                    {appCat + " : "}
+                                </Text>
+                            }
+
+                                {`${title} - ${default_duration} min`}
+                            </Text>
+    
+                        }
+
+                        {description &&
+                            <Text style={styles.eventDetails} >
+                                {description}
+                            </Text>
+                        }
+
+                    </View>
+
+
+                    {category === "appointment" &&
+                        <View style={styles.row}>
+                            <Text style={styles.eventDetails} numberOfLines={2} >
+                                <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                                    Client.e :
+                                </Text>
+
+                                {" "}
+                                {unregistered_client?.last_name ?? client?.last_name ?? null}
+                                {" "}
+                                {unregistered_client?.first_name ?? client?.first_name ?? null}
+                            </Text>
+                        </View>
+                    }
+
+
+
+            </View>
+        )
+    }
+})
+
+const styles = StyleSheet.create({
+    mainContainer: {
+        width: "90%",
+        borderRadius: appStyle.regularItemBorderRadius,
+        position: "absolute",
+        paddingHorizontal: phoneDevice ? appStyle.regularLateralPadding * 0.5 : appStyle.regularLateralPadding,
+        paddingBottom : phoneDevice ? RPW(0.2) : 5,
+        alignItems: "center",
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent : "center",
+        width : "100%",
+        maxWidth: "100%",
+    },
+    categoryTitle: {
+        ...appStyle.largeText,
+        color: appStyle.fontColorDarkBg,
+        fontWeight: "700",
+        textAlign : "center",
+        lineHeight : phoneDevice ? RPW(3.8) : 29,
+    },
+    eventDetailsTitle : {
+        fontWeight : "700"
+    },
+    eventDetails: {
+        fontSize : appStyle.regularText.fontSize,
+        letterSpacing : appStyle.regularText.letterSpacing,
+        color: appStyle.fontColorDarkBg,
+        textAlign : "center",
+        lineHeight : phoneDevice ? RPW(4.6) : 29,
+    }
+})

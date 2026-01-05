@@ -1,4 +1,4 @@
-import { ScrollView, RefreshControl } from 'react-native';
+import { ScrollView, RefreshControl, View } from 'react-native';
 import { useEffect, useState, useMemo } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
@@ -29,7 +29,7 @@ export default function AppointmentPage() {
 
   }, [appointmentInfos.employees])
 
-  const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = appointmentInfos
+  const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, defaultSchedule } = appointmentInfos
 
   const appointmentDuration = useMemo(() => selectedAppointmentType?.default_duration, [selectedAppointmentType])
 
@@ -59,6 +59,7 @@ export default function AppointmentPage() {
     maxFuturDays,
     sortFreeEmployees,
     rolesPriorities,
+    defaultSchedule,
     employeesAutocompleteList,
     appointmentDuration
   }),
@@ -99,17 +100,19 @@ export default function AppointmentPage() {
   }
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} bounces={false} overScrollMode="never" refreshControl={refreshComponent}>
+    <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} overScrollMode="never" refreshControl={refreshComponent}>
 
-      <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
+        <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
 
-      {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
+        {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
 
-      {selectedAppointmentType && selectedAppointmentSlot &&
-        <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndRenewEvents={resetAndRenewEvents} />
-      }
+        {selectedAppointmentType && selectedAppointmentSlot &&
+          <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndRenewEvents={resetAndRenewEvents} />
+        }
 
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 

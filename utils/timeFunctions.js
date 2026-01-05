@@ -56,6 +56,11 @@ export function getDuration(start, end) {
     return toParisDt(end).diff(toParisDt(start)).milliseconds
 }
 
+// Function to get the duration between two date
+export function getMinDuration(start, end) {
+    return toParisDt(end).diff(toParisDt(start)).milliseconds / 1000 / 60
+}
+
 
 // Function to create a dtDate from a string hour in Paris time zone
 export const datefromStringHour = (stringHour, dtDay) => DateTime.fromFormat(stringHour, "HH:mm", { zone: "Europe/Paris" }).set({ year: dtDay.year, month: dtDay.month, day: dtDay.day })

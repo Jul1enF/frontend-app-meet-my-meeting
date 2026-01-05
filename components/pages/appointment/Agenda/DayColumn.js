@@ -9,9 +9,9 @@ import AppointmentSlot from './AppointmentSlot';
 
 export default memo(function DayColumn({ agendaContext, width, dtDay }) {
 
-    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, rolesPriorities } = agendaContext
+    const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, rolesPriorities, defaultSchedule } = agendaContext
 
-    const { appointmentsSlots } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
+    const { appointmentsSlots } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, defaultSchedule, appointmentDuration)
 
 
     // useMemo to create a memoised version of the slots

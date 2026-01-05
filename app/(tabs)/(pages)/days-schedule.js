@@ -25,11 +25,11 @@ export default function DaysSchedule() {
     const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }).startOf('day'))
     const [selectedEmployee, setSelectedEmployee] = useState(null)
 
-    const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs } = scheduleInformations
+    const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = scheduleInformations
 
-    const scheduleContext = useMemo(()=>{
-        return { appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate }
-    },[scheduleInformations, selectedEmployee, selectedDate])
+    const scheduleContext = useMemo(() => {
+        return { appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate }
+    }, [scheduleInformations, selectedEmployee, selectedDate])
 
     // LOAD SCHEDULE INFORMATIONS FUNCTION AND USEEFFECT
     const [sessionExpired, setSessionExpired] = useState(false)
@@ -60,29 +60,31 @@ export default function DaysSchedule() {
     }} />
 
     return (
-        <ScrollView bounces={false} overScrollMode="never" style={{ flex: 1 }}
-            contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingVertical: appStyle.mediumMarginTop }}
-            refreshControl={refreshComponent}
-            stickyHeaderIndices={[2]}
-        >
+        <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
+            <ScrollView overScrollMode="never" style={{ flex: 1 }}
+                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingVertical: appStyle.mediumMarginTop }}
+                refreshControl={refreshComponent}
+                stickyHeaderIndices={[2]}
+            >
 
-            <Text style={appStyle.pageTitle}>
-                Agenda
-            </Text>
+                <Text style={appStyle.pageTitle}>
+                    Agenda
+                </Text>
 
-            <Text style={[{ marginBottom: appStyle.mediumMarginTop }, appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
-                {warning?.text}
-            </Text>
+                <Text style={[{ marginBottom: appStyle.mediumMarginTop }, appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
+                    {warning?.text}
+                </Text>
 
-            <View style={{width : "100%"}}>
-                <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+                <View style={{ width: "100%" }}>
+                    <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
-                <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
-            </View>
+                    <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
+                </View>
 
-            <Schedule scheduleContext={scheduleContext} />
+                <Schedule scheduleContext={scheduleContext} />
 
 
-        </ScrollView>
+            </ScrollView>
+        </View>
     )
 }

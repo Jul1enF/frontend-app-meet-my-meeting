@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { DateTime } from "luxon";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
-export default function useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration) {
+export default function useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, defaultSchedule, appointmentDuration) {
 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
@@ -21,6 +21,16 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
         () => dtDay ? dtDay.weekday - 1 : null,
         [dtDay]
     )
+
+
+
+
+    // MEMO OF THE DEFAULT START AND END OF DAYS FOR CLOSURE/ABSENCE
+    const defaultStart = useMemo(()=> defaultSchedule?.start ?? 8, [defaultSchedule])
+    const defaultEnd = useMemo(()=> defaultSchedule?.end ?? 19, [defaultSchedule])
+
+
+
 
 
 
@@ -46,7 +56,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             // The employee is not available (day off)
             if (!employeeDay.enabled) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ start: dtDay.set({ hours: 8 }), end: dtDay.set({ hours: 19 }), description: "Jour Off", employee: employee._id })
+                concernedAbsenceEvents.push({ start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }), employee: employee._id, category : "dayOff" })
 
                 return
             }
@@ -58,11 +68,10 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             )
             if (employeeAbsence) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ start: dtDay.set({ hours: 8 }), end: dtDay.set({ hours: 19 }), description: employeeAbsence.description, employee: employee._id })
+                concernedAbsenceEvents.push({ ...employeeAbsence, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd })})
 
                 return
             }
-
 
             // No return has been made, the employee is available, we push it without useless infos and with his start and end timing
             const dtEmployeeStart = datefromStringHour(employeeDay.start, dtDay)
@@ -99,7 +108,8 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
         return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour, concernedAbsenceEvents }
 
-    }, [selectedEmployeesArray, dtDay, absences])
+    }, [selectedEmployeesArray, dtDay, absences, defaultStart, defaultEnd])
+
 
 
 
@@ -107,9 +117,10 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
     // VERIFICATION THAT THE SHOP IS NOT CLOSED OR ALL EMPLOYEES ABSENT
     const appointmentsAvailability = useMemo(() => {
-        if (!dtDay || !closures) return { noAvailabilities: true, concernedClosureEvents: [] }
 
         const concernedClosureEvents = []
+
+        if (!dtDay || !closures) return { noAvailabilities: true, concernedClosureEvents}
 
         // closures are always full-day (00:00 → 23:59 Paris time)
         const closureHappening = closures.find(closure =>
@@ -118,17 +129,18 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
         if (closureHappening) {
             // add an event to be displayed on the employee schedule
-            concernedClosureEvents.push({ start: dtDay.set({ hours: 8 }), end: dtDay.set({ hours: 19 }), description: closureHappening.description, employee: null })
+            concernedClosureEvents.push({ ...closureHappening, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }) })
 
             return { noAvailabilities: true, concernedClosureEvents }
         }
 
         const { noEmployeesAvailability } = selectedEmployeesAvailabilities
 
-        return { noAvailabilities: noEmployeesAvailability ? true : false, concernedClosureEvents }
+        return { noAvailabilities: noEmployeesAvailability, concernedClosureEvents }
 
 
-    }, [dtDay, closures, selectedEmployeesAvailabilities.noEmployeesAvailability])
+    }, [dtDay, closures, selectedEmployeesAvailabilities.noEmployeesAvailability, defaultStart, defaultEnd])
+
 
 
 
@@ -144,10 +156,13 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
         const { concernedAbsenceEvents, minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
 
-        // If we have to return because there is no availabilities or not enough informations, we first set the absences or closures events of employee to display them in his schedule
-        concernedEvents = concernedClosureEvents && concernedClosureEvents.length ? [...concernedClosureEvents] : [...concernedAbsenceEvents]
 
-        if (!dtDay || !events || !appointmentGapMs || !appointmentDuration || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
+        // We add to concernedEvents (used in an employee schedul) the releavant informations depending on the situation (shop closed or employee is absent )
+        concernedEvents = concernedClosureEvents.length ? [...concernedClosureEvents] :
+        [...concernedAbsenceEvents]
+
+        // Return in case of lack of informations or no availabilities
+        if (!dtDay || !events || !appointmentGapMs || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
 
             return { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour }
         }
@@ -185,7 +200,6 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             }
         }
 
-
         // GET THE EVENTS OF THE CONCERNED DAY, BLOCK SCHEDULES SLOTS WHEN THEY ARE OCCURING AND UPDATE EMPLOYEE STATUS
         for (let event of events) {
 
@@ -193,6 +207,9 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
                 && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
 
                 concernedEvents.push(event)
+                
+                // If we don't have the appointment duration, next iteration because we are only interested by the concernedEvents for the employee schedule
+                if (!appointmentDuration ) continue;
 
                 const employeeId = event.employee.toString()
 
@@ -223,10 +240,12 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
             if (!lunchBreaksEvents.length || !lunchBreaksEvents.some(e => e.employee.toString() === lunchBreak.employee)) {
 
                 concernedEvents.push(lunchBreak)
-                setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
+                appointmentDuration && setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
             }
         }
 
+        // If we don't have the appointment duration we return because we were only interesting on the concerned events to display them in the employee schedule
+        if ( !appointmentDuration ) return { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour }
 
 
         // SETTINGS FOR A LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
@@ -248,8 +267,7 @@ export default function useDayEventsSchedule(dtDay, selectedEmployees, events, c
 
             return dtDay
         }
-
-
+        
 
         // LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
         while (isBefore(dtAppointmentStart.plus({ minutes: appointmentDuration }), maxWorkingHour, true)) {

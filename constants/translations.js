@@ -4,3 +4,14 @@ export const roleTranslation = {
     employee : "Employé",
     client : "Client"
 }
+
+
+export const eventCatTranslation = {
+    break : "Pause",
+    lunchBreak : "Pause déjeuner",
+    defaultLunchBreak : "Pause déjeuner",
+    dayOff : "Jour Off",
+    appointment : "RDV",
+    closure : "Fermeture",
+    absence : "Congé"
+}
