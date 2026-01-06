@@ -13,6 +13,8 @@ import useSessionExpired from '@hooks/useSessionExpired';
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
 import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
+import ModalPageWrapper from '@components/layout/ModalPageWrapper';
+import AppointmentRedaction from '@components/pages/days-schedule/AppointmentRedaction';
 
 
 export default function DaysSchedule() {
@@ -25,13 +27,26 @@ export default function DaysSchedule() {
     const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }).startOf('day'))
     const [selectedEmployee, setSelectedEmployee] = useState(null)
 
+
+    // States for the modal/appointment redaction page
+    const [appointmentsSlots, setAppointmentsSlots] = useState(null)
+    const [appointmentStart, setAppointmentStart] = useState(null)
+    const [isNewAppointment, setIsNewAppointment] = useState(false)
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
+
+
+    // Memoisation of the schedule informations
     const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = scheduleInformations
 
     const scheduleContext = useMemo(() => {
-        return { appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate }
-    }, [scheduleInformations, selectedEmployee, selectedDate])
+        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setAppointmentStart, setAppointmentsSlots, setIsNewAppointment }
+    }, [scheduleInformations, selectedEmployee, selectedDate, selectedAppointmentType])
+
+
+
 
     // LOAD SCHEDULE INFORMATIONS FUNCTION AND USEEFFECT
+
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
 
@@ -68,10 +83,11 @@ export default function DaysSchedule() {
     return (
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
-            {/* Modal to set or modidy an appointment */}
-            {/* <ModalPageWrapper visible={eventRedaction} setVisible={setEventRedaction} backHeaderText="Agenda">
-                <View style={{ width : 200, height : 400, backgroundColor : "orange"}} />
-            </ModalPageWrapper> */}
+            {/* Modal to set or modify an appointment */}
+            <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} backHeaderText="Agenda">
+                <AppointmentRedaction 
+                setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} isNewAppointment={isNewAppointment} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
+            </ModalPageWrapper>
 
 
 
@@ -80,7 +96,7 @@ export default function DaysSchedule() {
                 width: "100%",
                 position: "absolute",
                 top: 0,
-                zIndex: 10,
+                zIndex: 1,
                 opacity: stickyComponent ? 1 : 0,
                 pointerEvents: stickyComponent ? "auto" : "none",
                 backgroundColor: appStyle.pageBody.backgroundColor,

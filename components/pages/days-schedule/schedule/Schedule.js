@@ -1,12 +1,11 @@
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useMemo, memo, useState, useCallback } from 'react';
+import { useMemo, memo, useState, useCallback, useEffect } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import useDayEventsSchedule from '@hooks/useDayEventsSchedule';
 import EventItem from './EventItem';
-import ModalPageWrapper from '@components/layout/ModalPageWrapper';
 
 import { toParisDt, isBetween } from '@utils/timeFunctions';
 import Feather from '@expo/vector-icons/Feather';
@@ -14,26 +13,28 @@ import Feather from '@expo/vector-icons/Feather';
 
 export default memo(function Schedule({ scheduleContext }) {
 
-    // SelectedAppointmentType for redaction of appointements
-    const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
+
+    // Memoised props
+    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, selectedAppointmentType, defaultSchedule, setAppointmentStart, setAppointmentsSlots, setIsNewAppointment } = scheduleContext
+
+
+    // useMemo to get the appointmentDuration frome selectedAppointmentType
     const appointmentDuration = useMemo(() => {
         if (!selectedAppointmentType) return null
         return selectedAppointmentType.default_duration
     }, [selectedAppointmentType])
 
-    // State to display the redaction component of an event
-    const [eventRedaction, setEventRedaction] = useState(false)
-
-    // Memoised props
-    const { appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, defaultSchedule } = scheduleContext
-
-
+    // Height of one minutes and appointment gap duration in minutes
     const appointmentGapMin = useMemo(() => appointmentGapMs / 1000 / 60, [appointmentGapMs])
     const minuteHeight = phoneDevice ? RPW(1.5) : 8
 
     // Hook to get the events, the appointments slots and the working hours
     const { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour } = useDayEventsSchedule(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, defaultSchedule, appointmentDuration)
 
+
+    useEffect(() => {
+        setAppointmentsSlots(appointmentsSlots)
+    }, [appointmentsSlots])
 
     // Memo of the working hours
     const dtDayWorkingHours = useMemo(() => {
@@ -56,6 +57,8 @@ export default memo(function Schedule({ scheduleContext }) {
         let displayPlusIcon = timeGrid ? false : true
 
         while (start <= dtDayEnd) {
+            const dtSlotStart = start
+
             const nextStart = start.plus({ minutes: appointmentGapMin })
             const borderBottomWidth = !nextStart.minute ? phoneDevice ? 2 : 4 : 1
 
@@ -79,11 +82,14 @@ export default memo(function Schedule({ scheduleContext }) {
 
                     {displayPlusIcon &&
                         <TouchableOpacity activeOpacity={0.6} style={styles.plusIconContainer}
-                        onPress={()=>setEventRedaction(true)}
+                            onPress={() => {
+                                setAppointmentStart(dtSlotStart)
+                                setIsNewAppointment(true)
+                            }}
                         >
 
                             <Feather name="plus-circle" size={phoneDevice ? RPW(6.5) : 40} color={appStyle.strongBlack} />
-                            
+
                         </TouchableOpacity>
                     }
 
@@ -138,6 +144,6 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: phoneDevice ? RPW(2) : 10,
         right: phoneDevice ? RPW(2) : 10,
-        alignItems : "flex-end"
+        alignItems: "flex-end"
     }
 })

@@ -6,7 +6,8 @@ import { appStyle } from "@styles/appStyle"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
-export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, suggestionTextStyle, iconColor, canCreate, editable = true, showClear = true }) {
+export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, listItemStyle, suggestionTextStyle, bold, iconColor, canCreate, editable = true, showClear = true, multiline = false }) {
+
     const inputWidth = width ?? appStyle.largeItemWidth
     const inputHeight = height ?? appStyle.largeItemHeight
     
@@ -38,6 +39,7 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, p
                 placeholder: placeholderText,
                 autoCorrect: false,
                 autoCapitalize: "none",
+                multiline,
                 placeholderTextColor: placeholderColor ?? appStyle.placeholderColor,
                 style: !inputStyle ? styles.autoCompleteInput : { ...styles.autoCompleteInput, ...inputStyle },
             }}
@@ -47,12 +49,22 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, p
                 width: inputWidth,
             }}
             renderItem={(item) => (
-                <View style={[styles.suggestionsListItem, { height: inputHeight }]}>
-                    <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle]}>{item.title}</Text>
+                <View style={[styles.suggestionsListItem, { height: inputHeight }, listItemStyle ?? {}]}>
+                    <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle]}>
+
+                        {item.boldTitle && 
+                        <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle, bold && {fontWeight : bold} ]} >
+                            {item.boldTitle}
+                        </Text>
+                        }
+
+                        {item.titleToDisplay ?? item.title ?? null}
+                    
+                    </Text>
                 </View>
             )}
             EmptyResultComponent={() => (
-                <View style={[styles.suggestionsListItem, { height: inputHeight }]}>
+                <View style={[styles.suggestionsListItem, { height: inputHeight }, listItemStyle ?? {}]}>
                     <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle]}>{emptyText}</Text>
                 </View>
             )}
