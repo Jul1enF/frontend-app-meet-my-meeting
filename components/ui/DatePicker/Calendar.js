@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useState, useMemo, memo } from "react";
 
 import DayItem from "./DayItem";
@@ -12,7 +12,7 @@ import { DateTime } from "luxon";
 import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
 import { upperCaseInitial } from "@utils/timeFunctions";
 
-export default memo( function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
+export default memo(function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
     // ALL DATES ARE IN EUROPE PARIS ZONE TO BE RELEAVANT TO THE SHOP TIMEZONE
     const [viewedDate, setViewedDate] = useState(chosenDate)
     const viewedYear = viewedDate.year
@@ -21,19 +21,19 @@ export default memo( function Calendar({ chosenDate, setChosenDate, setCalendarV
     const daysItems = useMemo(() => getMonthDays(viewedYear, viewedMonth), [viewedYear, viewedMonth])
 
     const updateViewedDate = (increment) => {
-        setViewedDate(prev => increment ? prev.plus({months : 1}) : prev.minus({months : 1}))
+        setViewedDate(prev => increment ? prev.plus({ months: 1 }) : prev.minus({ months: 1 }))
     }
 
-    const monthName = upperCaseInitial( viewedDate.toFormat("MMMM yyyy") )
-    
+    const monthName = upperCaseInitial(viewedDate.toFormat("MMMM yyyy"))
+
     const daysName = useMemo(() => {
         const daysName = []
         for (let i = 1; i <= 7; i++) {
-            const name= DateTime.now({zone : "Europe/Paris"}).set({weekday : i}).toFormat("ccc").slice(0,3)
+            const name = DateTime.now({ zone: "Europe/Paris" }).set({ weekday: i }).toFormat("ccc").slice(0, 3)
             daysName.push(name)
         }
         return daysName
-    },[])
+    }, [])
 
 
     return (
@@ -41,13 +41,19 @@ export default memo( function Calendar({ chosenDate, setChosenDate, setCalendarV
             <MaterialCommunityIcons name="close" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.8) : 32} style={styles.closeIcon} onPress={() => setCalendarVisible(false)} />
 
             <View style={styles.monthHeader}>
-                <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(false)} />
+
+                <TouchableOpacity activeOpacity={0.6} style={styles.leftChevronContainer} onPress={() => updateViewedDate(false)}>
+                    <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} />
+                </TouchableOpacity>
+
 
                 <Text style={styles.monthText}>
                     {monthName}
                 </Text>
 
-                <FontAwesome5 name="chevron-right" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateViewedDate(true)} />
+                <TouchableOpacity activeOpacity={0.6} style={styles.rightChevronContainer} onPress={() => updateViewedDate(true)}>
+                    <FontAwesome5 name="chevron-right" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.daysNameContainer} >
@@ -80,6 +86,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         height: phoneDevice ? RPW(10) : 60,
+    },
+    leftChevronContainer: {
+        alignItems: "flex-start",
+        justifyContent: "center",
+        paddingLeft: phoneDevice ? RPW(1) : 3,
+        width: phoneDevice ? RPW(10) : 60,
+        aspectRatio: 1,
+    },
+    rightChevronContainer: {
+        alignItems: "flex-end",
+        justifyContent: "center",
+        paddingRight: phoneDevice ? RPW(1) : 3,
+        width: phoneDevice ? RPW(10) : 60,
+        aspectRatio: 1,
     },
     monthText: {
         ...appStyle.pageSubtitle,

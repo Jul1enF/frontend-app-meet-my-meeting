@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useState, memo, useMemo, useEffect } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
@@ -35,13 +35,18 @@ export default memo(function WeekDatePicker({ selectedDate, setSelectedDate }) {
         <View style={styles.mainContainer}>
 
             <View style={styles.monthHeader}>
-                <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateFirstWeekDay(false)} />
+                <TouchableOpacity activeOpacity={0.6} style={styles.leftChevronContainer} onPress={() => updateFirstWeekDay(false)}>
+                    <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} />
+                </TouchableOpacity>
+
 
                 <Text style={styles.monthText}>
                     {monthName}
                 </Text>
 
-                <FontAwesome5 name="chevron-right" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} onPress={() => updateFirstWeekDay(true)} />
+                <TouchableOpacity activeOpacity={0.6} style={styles.rightChevronContainer} onPress={() => updateFirstWeekDay(true)}>
+                    <FontAwesome5 name="chevron-right" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} />
+                </TouchableOpacity>
             </View>
 
 
@@ -74,6 +79,7 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         paddingTop: phoneDevice ? RPW(1) : 10,
         paddingBottom: phoneDevice ? RPW(3) : 12,
+        zIndex : 999,
     },
     monthHeader: {
         width: "100%",
@@ -81,6 +87,18 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         height: phoneDevice ? RPW(10) : 60,
+    },
+      leftChevronContainer: {
+        alignItems: "flex-start",
+        justifyContent: "center",
+        width: phoneDevice ? RPW(10) : 60,
+        aspectRatio: 1,
+    },
+    rightChevronContainer: {
+        alignItems: "flex-end",
+        justifyContent: "center",
+        width: phoneDevice ? RPW(10) : 60,
+        aspectRatio: 1,
     },
     monthText: {
         ...appStyle.pageSubtitle,

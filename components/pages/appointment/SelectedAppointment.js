@@ -10,11 +10,15 @@ export default function SelectedAppointment({ informationsArray }) {
     const rows = informationsArray.map((e, i) => {
         return (
             <View key={i} style={styles.row} >
-                { e.category && <Text style={styles.selectedAppointmentCategory}>
-                    {e.category} :
-                </Text> }
 
                 <Text style={styles.selectedAppointmentTitle}>
+
+                    {e.category &&
+                        <Text style={styles.selectedAppointmentCategory}>
+                            {e.category} :{" "}
+                        </Text>
+                    }
+
                     {e.title}
                 </Text>
             </View>
@@ -36,9 +40,9 @@ const styles = StyleSheet.create({
         borderWidth: phoneDevice ? 2 : 3,
         borderColor: appStyle.strongBlack,
         rowGap: phoneDevice ? RPW(1.5) : 10,
-        columnGap : phoneDevice ? RPW(3) : 25,
-        flexDirection : "row",
-         alignItems: "center",
+        columnGap: phoneDevice ? RPW(3) : 25,
+        flexDirection: "row",
+        alignItems: "center",
         flexWrap: "wrap",
     },
     row: {

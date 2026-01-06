@@ -1,5 +1,5 @@
-import { ScrollView, RefreshControl, Text, View } from 'react-native';
-import { useEffect, useState, useMemo } from 'react';
+import { ScrollView, RefreshControl, Text, View, StyleSheet } from 'react-native';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
@@ -59,27 +59,85 @@ export default function DaysSchedule() {
         getScheduleInformations()
     }} />
 
+
+    // Custom sticky header settings
+    const [stickyComponent, setStickyComponent] = useState(false)
+    const [pageTitleHeight, setPageTitleHeight] = useState(0)
+
+
     return (
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
+
+            {/* Modal to set or modidy an appointment */}
+            {/* <ModalPageWrapper visible={eventRedaction} setVisible={setEventRedaction} backHeaderText="Agenda">
+                <View style={{ width : 200, height : 400, backgroundColor : "orange"}} />
+            </ModalPageWrapper> */}
+
+
+
+            {/* Sticky Header after the pageTitle bottom is reached */}
+            <View style={{
+                width: "100%",
+                position: "absolute",
+                top: 0,
+                zIndex: 10,
+                opacity: stickyComponent ? 1 : 0,
+                pointerEvents: stickyComponent ? "auto" : "none",
+                backgroundColor: appStyle.pageBody.backgroundColor,
+            }}>
+
+                <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+
+                <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
+            </View>
+
+
+
             <ScrollView overScrollMode="never" style={{ flex: 1 }}
-                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingVertical: appStyle.mediumMarginTop }}
+                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingBottom: appStyle.mediumMarginTop }}
                 refreshControl={refreshComponent}
-                stickyHeaderIndices={[2]}
+                onScroll={(e) => {
+                    if (pageTitleHeight === 0) return
+                    const y = e.nativeEvent.contentOffset.y
+                    setStickyComponent(prev => {
+                        const shouldStick = y > pageTitleHeight
+                        return prev !== shouldStick ? shouldStick : prev
+                    })
+                }}
             >
 
-                <Text style={appStyle.pageTitle}>
-                    Agenda
-                </Text>
 
-                <Text style={[{ marginBottom: appStyle.mediumMarginTop }, appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
-                    {warning?.text}
-                </Text>
+                <View style={styles.pageTitleContainer}
+                    onLayout={e => {
+                        if (pageTitleHeight === 0) {
+                            setPageTitleHeight(e.nativeEvent.layout.height)
+                        }
+                    }}
+                >
+                    <Text style={appStyle.pageTitle}>
+                        Agenda
+                    </Text>
 
-                <View style={{ width: "100%" }}>
+                    <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
+                        {warning?.text}
+                    </Text>
+
+                </View>
+
+
+
+                {/* Sticky Header before it reached the top */}
+                <View style={{
+                    width: "100%",
+                    opacity: stickyComponent ? 0 : 1,
+                    pointerEvents: stickyComponent ? "none" : "auto",
+                }}>
+
                     <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
                     <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
                 </View>
+
 
                 <Schedule scheduleContext={scheduleContext} />
 
@@ -88,3 +146,11 @@ export default function DaysSchedule() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    pageTitleContainer: {
+        paddingVertical: appStyle.mediumMarginTop,
+        alignItems: "center",
+        justifyContent: "center",
+    }
+})

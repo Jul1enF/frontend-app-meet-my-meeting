@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useState, memo, useMemo } from 'react';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
@@ -68,13 +68,22 @@ export default memo(function Agenda({ agendaContext }) {
         <>
             {employeesAutocompleteList.length > 1 && <Autocomplete data={employeesAutocompleteList} setSelectedItem={updateSelectedEmployees} placeholderText="Choisir votre spécialiste" emptyText="Aucun résultat" inputStyle={{ fontWeight: "600", paddingLeft: 0, color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} inputContainerStyle={{ borderColor: appStyle.strongBlack }} placeholderColor={appStyle.mediumGrey} iconColor={appStyle.strongBlack} />}
 
-            <View style={{ width: "100%", flexDirection: "row", justifyContent: "center"}} >
+            <View style={{ width: "100%", flexDirection: "row", justifyContent: "center" }} >
 
-                <FontAwesome5 name="chevron-left" style={[styles.chevron, styles.chevronLeft]} color={startColumnIndex === 0 ? appStyle.lightGrey2 : appStyle.strongBlack} onPress={() => changeStartColumnIndex()} />
+                <TouchableOpacity activeOpacity={0.6} style={styles.leftChevronContainer} onPress={() => {changeStartColumnIndex()}}>
+
+                    <FontAwesome5 name="chevron-left" style={[styles.chevron, styles.chevronLeft]} color={startColumnIndex === 0 ? appStyle.lightGrey2 : appStyle.strongBlack} size={appStyle.inputIconSize} />
+
+                </TouchableOpacity>
+
 
                 {dayColumns}
 
-                <FontAwesome5 name="chevron-right" style={[styles.chevron, styles.chevronRight]} color={maxDaysReached ? appStyle.mediumGrey : appStyle.strongBlack} onPress={() => changeStartColumnIndex(true)} />
+                <TouchableOpacity activeOpacity={0.6} style={styles.rightChevronContainer} onPress={() => changeStartColumnIndex(true)}>
+
+                    <FontAwesome5 name="chevron-right" style={[styles.chevron, styles.chevronRight]} color={maxDaysReached ? appStyle.mediumGrey : appStyle.strongBlack} size={appStyle.inputIconSize} />
+
+                </TouchableOpacity>
 
             </View>
 
@@ -83,15 +92,25 @@ export default memo(function Agenda({ agendaContext }) {
 })
 
 const styles = StyleSheet.create({
-    chevron: {
-        fontSize: appStyle.inputIconSize,
+    leftChevronContainer: {
+        alignItems: "center",
+        justifyContent: "center",
         position: "absolute",
-        top: phoneDevice ? RPW(7.5) : 55,
+        top: phoneDevice ? RPW(4) : 25,
+        left: phoneDevice ? RPW(0) : 5,
+        width: phoneDevice ? RPW(12) : 85,
+        aspectRatio: 1,
+        paddingRight: phoneDevice ? RPW(0.5) : 5,
+        zIndex: 10,
     },
-    chevronLeft: {
-        left: phoneDevice ? RPW(3) : 22,
+    rightChevronContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        position: "absolute",
+        top: phoneDevice ? RPW(5) : 20,
+        right: phoneDevice ? RPW(0.5) : 5,
+        width: phoneDevice ? RPW(12) : 85,
+        aspectRatio: 1,
+        paddingLeft: phoneDevice ? RPW(0.5) : 5
     },
-    chevronRight: {
-        right: phoneDevice ? RPW(3) : 22,
-    }
 })

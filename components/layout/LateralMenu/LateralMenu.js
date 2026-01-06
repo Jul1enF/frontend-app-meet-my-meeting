@@ -24,7 +24,7 @@ export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight,
         { sectionName: "Agenda", link: "/days-schedule" },
     )
 
-    role === "owner" && sectionsArray.push(
+    if (role === "owner" || role === "admin") sectionsArray.push(
         { sectionName: "Liste des utilisateurs", link: "/users" },
         { sectionName: "Modèles de RDV", link: "/appointments-types" },
     )

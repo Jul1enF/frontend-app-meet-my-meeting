@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
 import { useSegments } from "expo-router";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -42,17 +42,17 @@ export default function Header({appObsolete}) {
                     start={{ x: 0, y: 0.5 }}
                     end={{ x: 1, y: 0.5 }}
                 >
-                    <View style={styles.menuIconContainer}>
-                        <FontAwesome name="navicon" style={styles.icon} size={phoneDevice ? RPW(6) : 38} onPress={() => setMenuVisible(!menuVisible)} />
-                    </View>
+                    <TouchableOpacity activeOpacity={0.6} style={styles.menuIconContainer} onPress={() => setMenuVisible(!menuVisible)}>
+                        <FontAwesome name="navicon" style={styles.icon} size={phoneDevice ? RPW(6) : 38} />
+                    </TouchableOpacity>
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}>
                             Meet My Meeting
                         </Text>
                     </View>
-                    <View style={styles.searchIconContainer}>
-                        <FontAwesome6 name="magnifying-glass" style={styles.icon} size={phoneDevice ? RPW(6) : 38} onPress={() => setSearchVisible(!searchVisible)} />
-                    </View>
+                    <TouchableOpacity activeOpacity={0.6} style={styles.searchIconContainer} onPress={() => setSearchVisible(!searchVisible)}>
+                        <FontAwesome6 name="magnifying-glass" style={styles.icon} size={phoneDevice ? RPW(6) : 38} />
+                    </TouchableOpacity>
                 </LinearGradient>
                 <View style={styles.headerLigne}></View>
                 

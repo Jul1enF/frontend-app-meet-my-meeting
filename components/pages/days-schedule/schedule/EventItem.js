@@ -17,12 +17,28 @@ export default memo(function EventItem({ start, end, description, category, appo
 
         const { category: appCat, title, default_duration } = appointment_type
 
+
+        // Var for the display of the events (top, height, etc...)
+        const eventMinFromStart = getMinDuration(dtDayStart, start)
+        const eventMinDuration = getMinDuration(start, end)
+
+        const fullHeight = eventMinDuration * minuteHeight
+        const height = fullHeight * 0.94
+        const fullTop = eventMinFromStart * minuteHeight
+        const top = fullTop + (fullHeight * 0.03)
+
         let color
-        let paddingTop = 0
+        let paddingTop = 5
         let justifyContent = "space-evenly"
+        let rowGap
+
 
         switch (category) {
             case "appointment":
+                if (eventMinDuration >= 40){
+                    justifyContent = "center"
+                    rowGap = phoneDevice ? RPW(7) : 40
+                }
                 color = "rgba(183, 162, 2, 1)"
                 break;
             case "closure":
@@ -39,19 +55,11 @@ export default memo(function EventItem({ start, end, description, category, appo
             case "lunchBreak":
             case "defaultLunchBreak":
             case "break":
-                color = appStyle.lightGreen
+                color = "rgba(0, 143, 43, 1)"
                 justifyContent = "center"
                 break;
         }
 
-        // Var for the display of the events (top, height, etc...)
-        const eventMinFromStart = getMinDuration(dtDayStart, start)
-        const eventMinDuration = getMinDuration(start, end)
-
-        const fullHeight = eventMinDuration * minuteHeight
-        const height = fullHeight * 0.94
-        const fullTop = eventMinFromStart * minuteHeight
-        const top = fullTop + (fullHeight * 0.03)
 
 
         // For the event taking the full day we repeat their name along the day height
@@ -60,7 +68,7 @@ export default memo(function EventItem({ start, end, description, category, appo
             const numberOfItems = Math.floor(fullHeight / (90 * minuteHeight))
             for (let i = 0; i < numberOfItems; i++) {
                 itemDetails.push(
-                    <View style={{ flexDirection : "row", justifyContent: "flex-end", alignItems : "center", height: height / numberOfItems, maxWidth: "100%" }} key={i}>
+                    <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", height: height / numberOfItems, maxWidth: "100%" }} key={i}>
 
                         <Text style={styles.categoryTitle}>
                             {eventCatTranslation[category]}
@@ -78,7 +86,7 @@ export default memo(function EventItem({ start, end, description, category, appo
             return itemDetails
         }, [])
 
-
+        // Return for thoses elements
         if (category === "closure" || category === "absence" || category === "dayOff") {
             return (
                 <View style={[styles.mainContainer, {
@@ -95,63 +103,64 @@ export default memo(function EventItem({ start, end, description, category, appo
             )
         }
 
-        // Appointments and breaks
+
+
+        // Return for appointments and breaks
         return (
-            <View style={[styles.mainContainer, {
+            <View style={[styles.mainContainer, rowGap && {rowGap}, {
                 top,
                 height,
                 backgroundColor: color,
                 paddingTop,
                 justifyContent,
             }]} >
-                
+
                 <Text style={styles.categoryTitle}>
                     {eventCatTranslation[category]}
                     {(category === "appointment" || description) && " :"}
                 </Text>
 
 
-                    <View style={styles.row}>
+                <View style={styles.row}>
 
+                    {category === "appointment" &&
 
-                        {category === "appointment" &&
-               
-                            <Text style={styles.eventDetails} >
+                        <Text style={styles.eventDetails} >
 
-                                {appCat && 
+                            {appCat &&
                                 <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
                                     {appCat + " : "}
                                 </Text>
                             }
 
-                                {`${title} - ${default_duration} min`}
-                            </Text>
-    
-                        }
+                            {`${title} - ${default_duration} min`}
+                        </Text>
 
-                        {description &&
-                            <Text style={styles.eventDetails} >
-                                {description}
-                            </Text>
-                        }
-
-                    </View>
-
-
-                    {category === "appointment" &&
-                        <View style={styles.row}>
-                            <Text style={styles.eventDetails} numberOfLines={2} >
-                                <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
-                                    Client.e :
-                                </Text>
-
-                                {" "}
-                                {unregistered_client?.last_name ?? client?.last_name ?? null}
-                                {" "}
-                                {unregistered_client?.first_name ?? client?.first_name ?? null}
-                            </Text>
-                        </View>
                     }
+
+                    {description &&
+                        <Text style={styles.eventDetails} >
+                            {description}
+                        </Text>
+                    }
+
+                </View>
+
+
+                {category === "appointment" &&
+                    <View style={styles.row}>
+                        <Text style={styles.eventDetails} numberOfLines={2} >
+                            <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                                Client•e :
+                            </Text>
+
+                            {" "}
+                            {unregistered_client?.last_name ?? client?.last_name ?? null}
+                            {" "}
+                            {unregistered_client?.first_name ?? client?.first_name ?? null}
+                        </Text>
+                    </View>
+                }
 
 
 
@@ -166,30 +175,29 @@ const styles = StyleSheet.create({
         borderRadius: appStyle.regularItemBorderRadius,
         position: "absolute",
         paddingHorizontal: phoneDevice ? appStyle.regularLateralPadding * 0.5 : appStyle.regularLateralPadding,
-        paddingBottom : phoneDevice ? RPW(0.2) : 5,
+        paddingBottom: phoneDevice ? RPW(1) : 5,
         alignItems: "center",
     },
     row: {
         flexDirection: "row",
-        justifyContent : "center",
-        width : "100%",
+        justifyContent: "center",
+        width: "100%",
         maxWidth: "100%",
     },
     categoryTitle: {
         ...appStyle.largeText,
         color: appStyle.fontColorDarkBg,
         fontWeight: "700",
-        textAlign : "center",
-        lineHeight : phoneDevice ? RPW(3.8) : 29,
+        textAlign: "center",
+        lineHeight: phoneDevice ? RPW(3.8) : 29,
     },
-    eventDetailsTitle : {
-        fontWeight : "700"
+    eventDetailsTitle: {
+        fontWeight: "700"
     },
     eventDetails: {
-        fontSize : appStyle.regularText.fontSize,
-        letterSpacing : appStyle.regularText.letterSpacing,
+        fontSize: appStyle.regularText.fontSize,
+        letterSpacing: appStyle.regularText.letterSpacing,
         color: appStyle.fontColorDarkBg,
-        textAlign : "center",
-        lineHeight : phoneDevice ? RPW(4.6) : 29,
+        textAlign: "center",
     }
 })
