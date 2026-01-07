@@ -29,10 +29,10 @@ export default function DaysSchedule() {
     const [selectedEmployee, setSelectedEmployee] = useState(null)
 
 
-    // States for the modal/appointment redaction page
+    // States for the modal/event redaction page
     const [appointmentsSlots, setAppointmentsSlots] = useState(null)
     const [appointmentStart, setAppointmentStart] = useState(null)
-    const [isNewEvent, setIsNewEvent] = useState(false)
+    const [oldEvent, setOldEvent] = useState(null)
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
 
 
@@ -40,7 +40,7 @@ export default function DaysSchedule() {
     const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = scheduleInformations
 
     const scheduleContext = useMemo(() => {
-        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setAppointmentStart, setAppointmentsSlots, setIsNewEvent }
+        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setAppointmentStart, setAppointmentsSlots, setOldEvent }
     }, [scheduleInformations, selectedEmployee, selectedDate, selectedAppointmentType])
 
 
@@ -77,9 +77,9 @@ export default function DaysSchedule() {
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
             {/* Modal to set or modify an appointment */}
-            <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} backHeaderText="Agenda">
+            <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} closeFunction={()=>setOldEvent(null)} backHeaderText="Agenda">
                 <EventRedaction 
-                setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} isNewEvent={isNewEvent} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
+                setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} oldEvent={oldEvent} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
             </ModalPageWrapper>
 
 

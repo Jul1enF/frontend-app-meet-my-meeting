@@ -8,9 +8,14 @@ import GoingBackHeader from "@components/ui/GoingBackHeader";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 
 
-export default function ModalPageWrapper({ visible, setVisible, backHeaderText, noScrollView, children }) {
+export default function ModalPageWrapper({ visible, setVisible, closeFunction, backHeaderText, noScrollView, children }) {
 
     const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
+
+    const close = () =>{
+        setVisible(false)
+        typeof closeFunction === "function" && closeFunction()
+    }
 
     return (
         <Modal
@@ -20,14 +25,14 @@ export default function ModalPageWrapper({ visible, setVisible, backHeaderText, 
             backdropColor="transparent"
             animationIn="slideInRight"
             animationOut="slideOutRight"
-            onBackButtonPress={() => setVisible(false)}
+            onBackButtonPress={close}
             deviceWidth={screenWidth}
             deviceHeight={screenHeight}
             useNativeDriverForBackdrop={true}
         >
             <AutocompleteDropdownContextProvider>
 
-                <GoingBackHeader previousPageName={backHeaderText} leftFunction={() => setVisible(false)} />
+                <GoingBackHeader previousPageName={backHeaderText} leftFunction={close} />
 
                 { noScrollView && {children} }
 
