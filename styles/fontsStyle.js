@@ -39,8 +39,9 @@ export const fontsStyle = {
     },
     labelText: {
         color: strongBlack,
-        fontSize: phoneDevice ? RPW(4) : 25,
-        fontWeight: "500",
+        fontSize: phoneDevice ? RPW(4.8) : 32,
+        fontWeight: "600",
+        letterSpacing: phoneDevice ? RPW(0.4) : 1,
     },
     smallText: {
         color: strongBlack,

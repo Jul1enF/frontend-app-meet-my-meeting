@@ -14,7 +14,7 @@ import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/Wee
 import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 import ModalPageWrapper from '@components/layout/ModalPageWrapper';
-import AppointmentRedaction from '@components/pages/days-schedule/AppointmentRedaction';
+import EventRedaction from '@components/pages/days-schedule/event-registration/EventRedaction';
 
 
 export default function DaysSchedule() {
@@ -85,7 +85,7 @@ export default function DaysSchedule() {
 
             {/* Modal to set or modify an appointment */}
             <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} backHeaderText="Agenda">
-                <AppointmentRedaction 
+                <EventRedaction 
                 setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} isNewAppointment={isNewAppointment} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
             </ModalPageWrapper>
 

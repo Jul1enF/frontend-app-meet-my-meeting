@@ -55,7 +55,7 @@ export default memo(function EventItem({ start, end, description, category, appo
             case "lunchBreak":
             case "defaultLunchBreak":
             case "break":
-                color = "rgba(0, 143, 43, 1)"
+                color = "rgba(119, 166, 0, 1)"
                 justifyContent = "center"
                 break;
         }
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: phoneDevice ? appStyle.regularLateralPadding * 0.5 : appStyle.regularLateralPadding,
         paddingBottom: phoneDevice ? RPW(1) : 5,
         alignItems: "center",
+        opacity : 0.95,
     },
     row: {
         flexDirection: "row",
