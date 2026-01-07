@@ -1,4 +1,4 @@
-import { ScrollView, RefreshControl, Text, View, StyleSheet } from 'react-native';
+import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useEffect, useState, useMemo, memo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -9,6 +9,7 @@ import request from '@utils/request';
 import { DateTime } from 'luxon';
 
 import useSessionExpired from '@hooks/useSessionExpired';
+import useRefreshControl from '@hooks/useRefreshControl';
 
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
 import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
@@ -64,16 +65,8 @@ export default function DaysSchedule() {
     }, [])
 
 
-
-    // Refresh component for the scrollview
-    const [isRefreshing, setIsRefreshing] = useState(false)
-
-    const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
-        setIsRefreshing(true)
-        setTimeout(() => setIsRefreshing(false), 800)
-        getScheduleInformations()
-    }} />
-
+    // refreshControl for the ScrollView
+    const refreshControl = useRefreshControl(getScheduleInformations)
 
     // Custom sticky header settings
     const [stickyComponent, setStickyComponent] = useState(false)
@@ -88,7 +81,6 @@ export default function DaysSchedule() {
                 <EventRedaction 
                 setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} isNewEvent={isNewEvent} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
             </ModalPageWrapper>
-
 
 
             {/* Sticky Header after the pageTitle bottom is reached */}
@@ -107,10 +99,9 @@ export default function DaysSchedule() {
             </View>
 
 
-
             <ScrollView overScrollMode="never" style={{ flex: 1 }}
                 contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingBottom: appStyle.largeMarginTop }}
-                refreshControl={refreshComponent}
+                refreshControl={refreshControl}
                 onScroll={(e) => {
                     if (pageTitleHeight === 0) return
                     const y = e.nativeEvent.contentOffset.y
@@ -127,8 +118,7 @@ export default function DaysSchedule() {
                         if (pageTitleHeight === 0) {
                             setPageTitleHeight(e.nativeEvent.layout.height)
                         }
-                    }}
-                >
+                    }} >
                     <Text style={appStyle.pageTitle}>
                         Agenda
                     </Text>

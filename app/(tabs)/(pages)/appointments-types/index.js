@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, RefreshControl, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, FlatList, TouchableOpacity } from "react-native";
 import { useEffect, useState, useRef, useMemo } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
@@ -6,6 +6,7 @@ import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector } from "react-redux";
 import useSessionExpired from "@hooks/useSessionExpired";
+import useRefreshControl from "@hooks/useRefreshControl";
 import { sortByCategory } from "@components/pages/appointments-types/AppointmentTypesUtils";
 
 import ModalPageWrapper from "@components/layout/ModalPageWrapper";
@@ -52,15 +53,8 @@ export default function AppointmentsTypesPage() {
 
     const typesFlatlistRef = useRef(null)
 
-    // Refresh component for the flatlist
-
-    const [isRefreshing, setIsRefreshing] = useState(false)
-
-    const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
-        setIsRefreshing(true)
-        setTimeout(() => setIsRefreshing(false), 1000)
-        getTypes()
-    }} />
+    // refreshControl for the ScrollView
+    const refreshControl = useRefreshControl(getTypes)
 
     // Header
     const typesListHeader = () => {
@@ -90,10 +84,10 @@ export default function AppointmentsTypesPage() {
     const typesListEmpty = () => <Text style={appStyle.pageSubtitle} > Aucun modèle encore créé !</Text>
 
     return (
-        <View style={{flex :1, backgroundColor : appStyle.pageBody.backgroundColor}}>
+        <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
             <FlatList
                 data={types}
-                refreshControl={refreshComponent}
+                refreshControl={refreshControl}
                 ref={typesFlatlistRef}
                 onScrollToIndexFailed={(event) => {
                     typesFlatlistRef.current.scrollToIndex({ animated: false, index: event.index })
@@ -113,7 +107,7 @@ export default function AppointmentsTypesPage() {
                     </TouchableOpacity>
                 }
                 style={{ flex: 1 }}
-                contentContainerStyle={{alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom, paddingTop : appStyle.largeMarginTop}}
+                contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom, paddingTop: appStyle.largeMarginTop }}
             />
 
             <ModalPageWrapper visible={typeModalVisible} setVisible={setTypeModalVisible} backHeaderText="Liste des modèles de RDV" >

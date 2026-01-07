@@ -1,10 +1,11 @@
-import { View, StyleSheet, Text, FlatList, RefreshControl, TextInput, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, FlatList, TextInput, TouchableOpacity } from "react-native";
 import { useEffect, useState, useRef } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector } from "react-redux";
+import useRefreshControl from "@hooks/useRefreshControl";
 import useSortUsers from "@components/pages/user-pages/owner-side/useSortUsers";
 
 import UserItem from "@components/pages/user-pages/owner-side/UserItem";
@@ -62,15 +63,8 @@ export default function UsersPage() {
 
     const usersFlatlistRef = useRef(null)
 
-    // Refresh component for the flatlist
-
-    const [isRefreshing, setIsRefreshing] = useState(false)
-
-    const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
-        setIsRefreshing(true)
-        setTimeout(() => setIsRefreshing(false), 1000)
-        fetchUsers()
-    }} />
+    // refreshControl for the ScrollView
+    const refreshControl = useRefreshControl(fetchUsers)
 
     const usersListHeader = () => {
         return (
@@ -113,7 +107,7 @@ export default function UsersPage() {
 
                 <FlatList
                     data={usersToDisplay}
-                    refreshControl={refreshComponent}
+                    refreshControl={refreshControl}
                     ref={usersFlatlistRef}
                     onScrollToIndexFailed={(event) => {
                         usersFlatlistRef.current.scrollToIndex({ animated: false, index: event.index })

@@ -1,9 +1,10 @@
-import { ScrollView, RefreshControl, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useEffect, useState, useMemo } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 import request from '@utils/request';
+import useRefreshControl from '@hooks/useRefreshControl';
 import AppointmentTypesList from '@components/pages/appointment/AppointmentTypesList';
 import AgendaContainer from '@components/pages/appointment/AgendaContainer';
 import AppointmentValidation from '@components/pages/appointment/AppointmentValidation';
@@ -67,14 +68,8 @@ export default function AppointmentPage() {
 
 
 
-  // Refresh component for the scrollview
-  const [isRefreshing, setIsRefreshing] = useState(false)
-
-  const refreshComponent = <RefreshControl refreshing={isRefreshing} colors={[appStyle.strongBlack]} progressBackgroundColor={appStyle.pageBody.backgroundColor} tintColor={appStyle.strongBlack} onRefresh={() => {
-    setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 800)
-    getAppointmentInformations()
-  }} />
+  // refreshControl for the ScrollView
+  const refreshControl = useRefreshControl(getAppointmentInformations)
 
 
   // Function for Appointment Validation to reset the selected criteriums and add an event or download fresh datas
@@ -101,7 +96,7 @@ export default function AppointmentPage() {
 
   return (
     <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} overScrollMode="never" refreshControl={refreshComponent}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} overScrollMode="never" refreshControl={refreshControl}>
 
         <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
 
