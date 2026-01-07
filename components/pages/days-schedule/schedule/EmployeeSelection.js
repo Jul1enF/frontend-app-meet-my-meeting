@@ -23,7 +23,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
 
     // Function for the autocomplete to update the selectedEmployees
     const updateSelectedEmployees = (item) => {
-        item?.employee && setSelectedEmployee([item.employee])
+        item?.employee && setSelectedEmployee(item.employee)
     }
 
 

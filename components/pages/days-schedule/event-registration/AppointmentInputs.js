@@ -7,8 +7,12 @@ import useAutocompleteLists from "./useAutocompleteLists"
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-export default function AppointmentInputs({ appointmentTypes, users, appointmentsSlots, selectedAppointmentType, appointmentStart, setSelectedAppointmentType, setAppointmentStart, setUser, unregisteredUser, setUnregisteredUser }) {
+export default function AppointmentInputs({ redactionContext, setClient, unregisteredUser, setUnregisteredUser }) {
 
+    // Props coming from the root
+    const { appointmentsSlots, appointmentStart, setAppointmentStart, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, selectedEmployee } = redactionContext
+
+    // Creation with a hook of the autocomplete lists
     const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart)
 
     const [slotWarning, setSlotWarning] = useState("")
@@ -23,6 +27,7 @@ export default function AppointmentInputs({ appointmentTypes, users, appointment
             setTimeout(() => setSlotWarning(""), 5000)
         }
     }, [selectedAppointmentType, appointmentsSlotsList])
+
 
 
     // Memoisation of the Autocomplete for the appointments slots and the users
@@ -48,7 +53,7 @@ export default function AppointmentInputs({ appointmentTypes, users, appointment
         <Autocomplete
             data={usersList}
             placeholderText={"Utilisateur ( inscrit )"}
-            setSelectedItem={(item) => setUser(item?.user ?? null)}
+            setSelectedItem={(item) => setClient(item?.user ?? null)}
             emptyText="Aucun résultat"
             width="100%"
             inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight }}
@@ -58,7 +63,10 @@ export default function AppointmentInputs({ appointmentTypes, users, appointment
             bold="700"
             multiline={true}
         />
-    ), [])
+    ), [usersList])
+
+
+
 
     return (
         <>
@@ -110,6 +118,15 @@ export default function AppointmentInputs({ appointmentTypes, users, appointment
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
             />
+
+
+            <Text style={{...appStyle.regularText, marginTop : appStyle.mediumMarginTop, color : appStyle.fontColorDarkBg, fontWeight : "500"}}>
+                <Text style={{...appStyle.largeText, color : appStyle.fontColorDarkBg, fontWeight : "700"}}>
+                    Avec :
+                </Text>
+                {`  ${selectedEmployee.first_name}`}
+            </Text>
+
         </>
     )
 }

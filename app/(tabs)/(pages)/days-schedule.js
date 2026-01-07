@@ -10,6 +10,7 @@ import { DateTime } from 'luxon';
 
 import useSessionExpired from '@hooks/useSessionExpired';
 import useRefreshControl from '@hooks/useRefreshControl';
+import useDaysScheduleContext from '@components/pages/days-schedule/useDaysScheduleContext';
 
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
 import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
@@ -20,29 +21,14 @@ import EventRedaction from '@components/pages/days-schedule/event-registration/E
 
 export default function DaysSchedule() {
 
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
-    const email = useSelector((state) => state.user.value.email)
-
     const [warning, setWarning] = useState({})
     const [scheduleInformations, setScheduleInformations] = useState({})
-    const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }).startOf('day'))
-    const [selectedEmployee, setSelectedEmployee] = useState(null)
 
+    // Memoised props for the components
+    const { daysScheduleContext, scheduleContext, redactionContext } = useDaysScheduleContext(scheduleInformations, setScheduleInformations)
 
-    // States for the modal/event redaction page
-    const [appointmentsSlots, setAppointmentsSlots] = useState(null)
-    const [appointmentStart, setAppointmentStart] = useState(null)
-    const [oldEvent, setOldEvent] = useState(null)
-    const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
-
-
-    // Memoisation of the schedule informations
-    const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = scheduleInformations
-
-    const scheduleContext = useMemo(() => {
-        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setAppointmentStart, setAppointmentsSlots, setOldEvent }
-    }, [scheduleInformations, selectedEmployee, selectedDate, selectedAppointmentType])
-
+    // Memoised props for this component
+    const { appointmentStart, setAppointmentStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
 
 
 
@@ -56,7 +42,7 @@ export default function DaysSchedule() {
 
         if (data?.result) {
             setScheduleInformations(data.informations)
-            !selectedEmployee && setSelectedEmployee(data.informations.employees.filter(e => e.email === email))
+            !selectedEmployee && setSelectedEmployee(data.informations.employees.find(e => e.email === email))
         }
     }
 
@@ -78,20 +64,12 @@ export default function DaysSchedule() {
 
             {/* Modal to set or modify an appointment */}
             <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} closeFunction={()=>setOldEvent(null)} backHeaderText="Agenda">
-                <EventRedaction 
-                setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} oldEvent={oldEvent} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
+                <EventRedaction redactionContext={redactionContext} />
             </ModalPageWrapper>
 
 
             {/* Sticky Header after the pageTitle bottom is reached */}
-            <View style={{
-                width: "100%",
-                position: "absolute",
-                top: 0,
-                zIndex: 1,
-                opacity: stickyComponent ? 1 : 0,
-                pointerEvents: stickyComponent ? "auto" : "none",
-                backgroundColor: appStyle.pageBody.backgroundColor,
+            <View style={{ width: "100%", position: "absolute", top: 0, zIndex: 1, opacity: stickyComponent ? 1 : 0, pointerEvents: stickyComponent ? "auto" : "none", backgroundColor: appStyle.pageBody.backgroundColor,
             }}>
                 <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
@@ -131,10 +109,7 @@ export default function DaysSchedule() {
 
 
                 {/* Sticky Header before it reached the top */}
-                <View style={{
-                    width: "100%",
-                    opacity: stickyComponent ? 0 : 1,
-                    pointerEvents: stickyComponent ? "none" : "auto",
+                <View style={{ width: "100%", opacity: stickyComponent ? 0 : 1, pointerEvents: stickyComponent ? "none" : "auto",
                 }}>
                     <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
@@ -143,7 +118,6 @@ export default function DaysSchedule() {
 
 
                 <Schedule scheduleContext={scheduleContext} />
-
 
             </ScrollView>
         </View>

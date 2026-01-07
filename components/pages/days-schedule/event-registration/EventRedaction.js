@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useState } from 'react';
 // import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
@@ -10,11 +10,13 @@ import Autocomplete from '@components/ui/Autocomplete';
 import AppointmentInputs from './AppointmentInputs';
 
 
-export default function EventRedaction({ setScheduleInformations, selectedEmployee, appointmentsSlots, appointmentStart, setAppointmentStart, oldEvent, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType }) {
+export default function EventRedaction({ redactionContext }) {
+
+    const { setScheduleInformations, selectedEmployee, appointmentsSlots, appointmentStart, setAppointmentStart, oldEvent, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, jwtToken } = redactionContext
 
     const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart)
 
-    const [user, setUser] = useState()
+    const [client, setClient] = useState()
     const [unregisteredUser, setUnregisteredUser] = useState({ first_name: "", last_name: "" })
     const [category, setCategory] = useState("appointment")
 
@@ -49,10 +51,9 @@ export default function EventRedaction({ setScheduleInformations, selectedEmploy
 
                         {category === "appointment" && 
 
-                        <AppointmentInputs appointmentTypes={appointmentTypes} users={users} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setAppointmentStart={setAppointmentStart} setUser={setUser} unregisteredUser={unregisteredUser} setUnregisteredUser={setUnregisteredUser} />
+                        <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredUser={unregisteredUser} setUnregisteredUser={setUnregisteredUser} />
                         }
 
-                       
 
 
 
