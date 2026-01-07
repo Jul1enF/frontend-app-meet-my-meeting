@@ -10,7 +10,7 @@ import Autocomplete from '@components/ui/Autocomplete';
 import AppointmentInputs from './AppointmentInputs';
 
 
-export default function EventRedaction({ setScheduleInformations, selectedEmployee, appointmentsSlots, appointmentStart, setAppointmentStart, isNewAppointment, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType }) {
+export default function EventRedaction({ setScheduleInformations, selectedEmployee, appointmentsSlots, appointmentStart, setAppointmentStart, isNewEvent, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType }) {
 
     const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart)
 
@@ -32,7 +32,7 @@ export default function EventRedaction({ setScheduleInformations, selectedEmploy
 
 
                     <Text style={appStyle.pageTitle}>
-                        {isNewAppointment ? "Nouveau RDV :" : "Modifier un RDV :"}
+                        {isNewEvent ? "Nouvel évènement :" : "Modifier un évènement :"}
                     </Text>
 
                     <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>

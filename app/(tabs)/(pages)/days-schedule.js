@@ -31,7 +31,7 @@ export default function DaysSchedule() {
     // States for the modal/appointment redaction page
     const [appointmentsSlots, setAppointmentsSlots] = useState(null)
     const [appointmentStart, setAppointmentStart] = useState(null)
-    const [isNewAppointment, setIsNewAppointment] = useState(false)
+    const [isNewEvent, setIsNewEvent] = useState(false)
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
 
 
@@ -39,7 +39,7 @@ export default function DaysSchedule() {
     const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = scheduleInformations
 
     const scheduleContext = useMemo(() => {
-        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setAppointmentStart, setAppointmentsSlots, setIsNewAppointment }
+        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setAppointmentStart, setAppointmentsSlots, setIsNewEvent }
     }, [scheduleInformations, selectedEmployee, selectedDate, selectedAppointmentType])
 
 
@@ -86,7 +86,7 @@ export default function DaysSchedule() {
             {/* Modal to set or modify an appointment */}
             <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} backHeaderText="Agenda">
                 <EventRedaction 
-                setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} isNewAppointment={isNewAppointment} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
+                setScheduleInformations={setScheduleInformations} selectedEmployee={selectedEmployee} appointmentsSlots={appointmentsSlots} appointmentStart={appointmentStart} setAppointmentStart={setAppointmentStart} isNewEvent={isNewEvent} appointmentTypes={appointmentTypes} users={users} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} />
             </ModalPageWrapper>
 
 
@@ -101,7 +101,6 @@ export default function DaysSchedule() {
                 pointerEvents: stickyComponent ? "auto" : "none",
                 backgroundColor: appStyle.pageBody.backgroundColor,
             }}>
-
                 <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
                 <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
@@ -137,7 +136,6 @@ export default function DaysSchedule() {
                     <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
                         {warning?.text}
                     </Text>
-
                 </View>
 
 
@@ -148,7 +146,6 @@ export default function DaysSchedule() {
                     opacity: stickyComponent ? 0 : 1,
                     pointerEvents: stickyComponent ? "none" : "auto",
                 }}>
-
                     <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
                     <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />

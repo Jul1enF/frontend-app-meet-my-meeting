@@ -15,7 +15,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
 
     // Memoised props
-    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, selectedAppointmentType, defaultSchedule, setAppointmentStart, setAppointmentsSlots, setIsNewAppointment } = scheduleContext
+    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, selectedAppointmentType, defaultSchedule, setAppointmentStart, setAppointmentsSlots, setIsNewEvent } = scheduleContext
 
 
     // useMemo to get the appointmentDuration frome selectedAppointmentType
@@ -84,7 +84,7 @@ export default memo(function Schedule({ scheduleContext }) {
                         <TouchableOpacity activeOpacity={0.6} style={styles.plusIconContainer}
                             onPress={() => {
                                 setAppointmentStart(dtSlotStart)
-                                setIsNewAppointment(true)
+                                setIsNewEvent(true)
                             }}
                         >
 
