@@ -4,7 +4,7 @@ import { useMemo, memo, useState, useCallback, useEffect } from 'react';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import useDayEventsSchedule from '@hooks/useDayEventsSchedule';
+import useScheduleEvents from '@hooks/useScheduleEvents';
 import EventItem from './EventItem';
 
 import { toParisDt, isBetween } from '@utils/timeFunctions';
@@ -15,26 +15,16 @@ export default memo(function Schedule({ scheduleContext }) {
 
 
     // Memoised props
-    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, selectedAppointmentType, defaultSchedule, setEventStart, setAppointmentsSlots, setOldEvent } = scheduleContext
+    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, defaultSchedule, setEventStart, setOldEvent } = scheduleContext
 
-
-    // useMemo to get (depending on EventRedaction) the duration of a break or an appointment
-    const eventDuration = useMemo(() => {
-        if (!selectedAppointmentType) return null
-        return selectedAppointmentType.default_duration
-    }, [selectedAppointmentType])
 
     // Height of one minutes and appointment gap duration in minutes
     const appointmentGapMin = useMemo(() => appointmentGapMs / 1000 / 60, [appointmentGapMs])
     const minuteHeight = phoneDevice ? RPW(1.5) : 8
 
     // Hook to get the events, the appointments slots and the working hours
-    const { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour } = useDayEventsSchedule(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, defaultSchedule, eventDuration)
+    const { concernedEvents, minWorkingHour, maxWorkingHour } = useScheduleEvents(selectedDate, selectedEmployee, events, closures, absences, defaultSchedule )
 
-
-    useEffect(() => {
-        setAppointmentsSlots(appointmentsSlots)
-    }, [appointmentsSlots])
 
     // Memo of the working hours
     const dtDayWorkingHours = useMemo(() => {

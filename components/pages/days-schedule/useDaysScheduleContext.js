@@ -19,11 +19,8 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
 
 
     // States for the event redaction page
-    const [appointmentsSlots, setAppointmentsSlots] = useState(null)
     const [eventStart, setEventStart] = useState(null)
     const [oldEvent, setOldEvent] = useState(null)
-    const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
-    const [breakDuration, setBreakDuration] = useState(0)
 
 
 
@@ -37,18 +34,18 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
 
     // PROPS FOR THE SCHEDULE
     const scheduleContext = useMemo(() => {
-        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, selectedAppointmentType, setEventStart, setAppointmentsSlots, setOldEvent }
+        return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, setEventStart, setOldEvent }
     },
-        [scheduleInformations, selectedEmployee, selectedDate, selectedAppointmentType])
+        [scheduleInformations, selectedEmployee, selectedDate])
 
 
 
     // PROPS FOR EVENT REDACTION
     const redactionContext = useMemo(() => {
 
-        return { setScheduleInformations, selectedEmployee, appointmentsSlots, eventStart, setEventStart, oldEvent, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, jwtToken, breakDuration, setBreakDuration }
+        return { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken }
     },
-        [selectedEmployee, appointmentsSlots, eventStart, oldEvent, appointmentTypes, users, selectedAppointmentType, jwtToken, breakDuration])
+        [selectedEmployee, eventStart, oldEvent, appointmentTypes, scheduleInformations, selectedDate, jwtToken ])
 
 
     return { daysScheduleContext, scheduleContext, redactionContext }

@@ -7,10 +7,10 @@ import useAutocompleteLists from "./useAutocompleteLists"
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-export default function AppointmentInputs({ redactionContext, setClient, unregisteredUser, setUnregisteredUser }) {
+export default function AppointmentInputs({ redactionContext, setClient, unregisteredUser, setUnregisteredUser, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots }) {
 
     // Props coming from the root
-    const { appointmentsSlots, eventStart, setEventStart, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, selectedEmployee } = redactionContext
+    const { eventStart, setEventStart, appointmentTypes, users, selectedEmployee } = redactionContext
 
     // Creation with a hook of the autocomplete lists
     const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)

@@ -30,7 +30,7 @@ export default function AppointmentPage() {
 
   }, [appointmentInfos.employees])
 
-  const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, defaultSchedule } = appointmentInfos
+  const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = appointmentInfos
 
   const appointmentDuration = useMemo(() => selectedAppointmentType?.default_duration, [selectedAppointmentType])
 
@@ -60,7 +60,6 @@ export default function AppointmentPage() {
     maxFuturDays,
     sortFreeEmployees,
     rolesPriorities,
-    defaultSchedule,
     employeesAutocompleteList,
     appointmentDuration
   }),

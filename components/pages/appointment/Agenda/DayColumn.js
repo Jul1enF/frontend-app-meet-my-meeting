@@ -5,13 +5,14 @@ import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import useDayEventsSchedule from '@hooks/useDayEventsSchedule';
+import useScheduleFreeSlots from '@hooks/useScheduleFreeSlots';
 import AppointmentSlot from './AppointmentSlot';
 
 export default memo(function DayColumn({ agendaContext, width, dtDay }) {
 
     const { setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, rolesPriorities, defaultSchedule } = agendaContext
 
-    const { appointmentsSlots } = useDayEventsSchedule(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, defaultSchedule, appointmentDuration)
+    const { appointmentsSlots } = useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration)
 
 
     // useMemo to create a memoised version of the slots

@@ -1,10 +1,11 @@
 import { Text, View, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 // import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
+import useScheduleFreeSlots from '@hooks/useScheduleFreeSlots';
 import useAutocompleteLists from './useAutocompleteLists';
 import Autocomplete from '@components/ui/Autocomplete';
 import AppointmentInputs from './AppointmentInputs';
@@ -14,16 +15,34 @@ import BreakInputs from './BreakInputs';
 
 export default function EventRedaction({ redactionContext }) {
 
-    const { setScheduleInformations, selectedEmployee, appointmentsSlots, eventStart, setEventStart, oldEvent, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, jwtToken } = redactionContext
+    const { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken } = redactionContext
 
-    const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)
-
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
     const [client, setClient] = useState()
     const [unregisteredUser, setUnregisteredUser] = useState({ first_name: "", last_name: "" })
     const [category, setCategory] = useState("appointment")
     const [description, setDescription] = useState("")
-    const [vacationStart, setVacationStart] = useState(eventStart.startOf('day'))
-    const [vacationEnd, setVacationEnd] = useState(eventStart.startOf('day'))
+    const [vacationStart, setVacationStart] = useState(eventStart ? eventStart.startOf('day') : null)
+    const [vacationEnd, setVacationEnd] = useState(eventStart ? eventStart.endOf('day') : null)
+    const [breakDuration, setBreakDuration] = useState(0)
+
+
+    // Settings of the event duration depending on the last duration to have been modified
+    const [eventDuration, setEventDuration] = useState(null)
+    const prevDurations = useRef({})
+    useEffect(() => {
+        const appDuration = selectedAppointmentType?.default_duration
+        if (prevDurations.current.breakDuration !== breakDuration) setEventDuration(breakDuration)
+        else if (prevDurations.current.appDuration !== appDuration) {
+            setEventDuration(appDuration)
+        }
+        prevDurations.current = { breakDuration, appDuration }
+    }, [breakDuration, selectedAppointmentType])
+
+
+    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, eventDuration)
+
+    const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)
 
 
     return (
@@ -49,20 +68,20 @@ export default function EventRedaction({ redactionContext }) {
                             data={categoriesList}
                             editable={false}
                             showClear={false}
-                            setSelectedItem={(item) => setCategory(item?.category ?? null) }
+                            setSelectedItem={(item) => setCategory(item?.category ?? null)}
                             initialValue={"initialValue"}
                             width="100%"
                         />
 
                         {category === "appointment" &&
-                            <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredUser={unregisteredUser} setUnregisteredUser={setUnregisteredUser} />
+                            <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredUser={unregisteredUser} setUnregisteredUser={setUnregisteredUser} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
                         }
 
                         {(category === "absence" || category === "closure") &&
                             <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} />
                         }
 
-                        {category === "break" && 
+                        {category === "break" &&
                             <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} />
                         }
 
