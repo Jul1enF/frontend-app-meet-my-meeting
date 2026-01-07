@@ -28,7 +28,7 @@ export default function DaysSchedule() {
     const { daysScheduleContext, scheduleContext, redactionContext } = useDaysScheduleContext(scheduleInformations, setScheduleInformations)
 
     // Memoised props for this component
-    const { appointmentStart, setAppointmentStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
 
 
 
@@ -63,7 +63,7 @@ export default function DaysSchedule() {
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
             {/* Modal to set or modify an appointment */}
-            <ModalPageWrapper visible={appointmentStart} setVisible={setAppointmentStart} closeFunction={()=>setOldEvent(null)} backHeaderText="Agenda">
+            <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={()=>setOldEvent(null)} backHeaderText="Agenda">
                 <EventRedaction redactionContext={redactionContext} />
             </ModalPageWrapper>
 

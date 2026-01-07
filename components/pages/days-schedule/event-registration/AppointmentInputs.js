@@ -10,10 +10,10 @@ import { appStyle } from '@styles/appStyle';
 export default function AppointmentInputs({ redactionContext, setClient, unregisteredUser, setUnregisteredUser }) {
 
     // Props coming from the root
-    const { appointmentsSlots, appointmentStart, setAppointmentStart, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, selectedEmployee } = redactionContext
+    const { appointmentsSlots, eventStart, setEventStart, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType, selectedEmployee } = redactionContext
 
     // Creation with a hook of the autocomplete lists
-    const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart)
+    const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)
 
     const [slotWarning, setSlotWarning] = useState("")
 
@@ -21,7 +21,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     useEffect(() => {
         if (!selectedAppointmentType || !appointmentsSlotsList.length) return
         if (appointmentsSlotsList.length && !appointmentsSlotsList.some(e =>
-            e.start.toMillis() === appointmentStart.toMillis()
+            e.start.toMillis() === eventStart.toMillis()
         )) {
             setSlotWarning("Erreur : le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire.")
             setTimeout(() => setSlotWarning(""), 5000)
@@ -36,17 +36,17 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
         <Autocomplete
             key={appointmentsSlotsList.length}
             data={appointmentsSlotsList}
-            placeholderText={appointmentStart ? appointmentStart.toFormat("HH : mm") : "Horaire"}
+            placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
             initialValue={"initialValue"}
             showClear={false}
             editable={false}
-            setSelectedItem={(item) => item?.start && setAppointmentStart(item?.start)}
+            setSelectedItem={(item) => item?.start && setEventStart(item?.start)}
             emptyText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
             width="100%"
             suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
             listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
         />
-    ), [appointmentsSlotsList, appointmentStart, selectedAppointmentType])
+    ), [appointmentsSlotsList, eventStart, selectedAppointmentType])
 
 
     const usersAutocomplete = useMemo(() => (

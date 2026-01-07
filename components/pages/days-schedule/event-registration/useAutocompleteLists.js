@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-export default function useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart) {
+export default function useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart) {
 
     const role = useSelector((state)=>state.user.value.role)
     const canAddClosures = ["owner","admin"].includes(role)
@@ -66,11 +66,11 @@ export default function useAutocompleteLists(appointmentTypes, users, appointmen
 
     const appointmentsSlotsList = useMemo(() => {
     
-        if (!appointmentsSlots || !appointmentsSlots.length || !appointmentStart) return []
+        if (!appointmentsSlots || !appointmentsSlots.length || !eventStart) return []
 
         return [...appointmentsSlots].map(e => {
 
-            const id = e.start.toMillis() === appointmentStart.toMillis() ?
+            const id = e.start.toMillis() === eventStart.toMillis() ?
                 "initialValue" : e.start.toISO()
 
             return {
@@ -79,7 +79,7 @@ export default function useAutocompleteLists(appointmentTypes, users, appointmen
                 start: e.start,
             }
         })
-    }, [appointmentsSlots, appointmentStart])
+    }, [appointmentsSlots, eventStart])
 
     return {categoriesList, appointmentsList, usersList, appointmentsSlotsList }
 }

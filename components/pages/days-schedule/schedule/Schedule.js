@@ -15,11 +15,11 @@ export default memo(function Schedule({ scheduleContext }) {
 
 
     // Memoised props
-    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, selectedAppointmentType, defaultSchedule, setAppointmentStart, setAppointmentsSlots, setOldEvent } = scheduleContext
+    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, selectedAppointmentType, defaultSchedule, setEventStart, setAppointmentsSlots, setOldEvent } = scheduleContext
 
 
-    // useMemo to get the appointmentDuration frome selectedAppointmentType
-    const appointmentDuration = useMemo(() => {
+    // useMemo to get (depending on EventRedaction) the duration of a break or an appointment
+    const eventDuration = useMemo(() => {
         if (!selectedAppointmentType) return null
         return selectedAppointmentType.default_duration
     }, [selectedAppointmentType])
@@ -29,7 +29,7 @@ export default memo(function Schedule({ scheduleContext }) {
     const minuteHeight = phoneDevice ? RPW(1.5) : 8
 
     // Hook to get the events, the appointments slots and the working hours
-    const { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour } = useDayEventsSchedule(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, defaultSchedule, appointmentDuration)
+    const { appointmentsSlots, concernedEvents, minWorkingHour, maxWorkingHour } = useDayEventsSchedule(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, defaultSchedule, eventDuration)
 
 
     useEffect(() => {
@@ -82,7 +82,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
                     {displayPlusIcon &&
                         <TouchableOpacity activeOpacity={0.6} style={styles.plusIconContainer}
-                            onPress={() => setAppointmentStart(dtSlotStart) }
+                            onPress={() => setEventStart(dtSlotStart) }
                         >
 
                             <Feather name="plus-circle" size={phoneDevice ? RPW(6.5) : 40} color={appStyle.strongBlack} />
