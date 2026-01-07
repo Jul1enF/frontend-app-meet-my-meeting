@@ -13,8 +13,6 @@ export default function UserSchedule({ scheduleArray, scheduleActions, contractE
 
     const workingHours = scheduleArray.map((e, i) => <DaySchedule index={i} key={i} scheduleActions={scheduleActions} day={e} />)
 
-    const marginTop = phoneDevice ? RPW(5.5) : 35
-
     const [changeContractEnd, setChangeContractEnd] = useState(contractEnd ? true : false)
 
     const datePickerDtDate = !contractEnd ? DateTime.now({zone : "Europe/Paris"}) : 
@@ -32,20 +30,20 @@ export default function UserSchedule({ scheduleArray, scheduleActions, contractE
 
             <View style={styles.contractContainer} >
 
-                <Switch active={changeContractEnd} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: marginTop }}
+                <Switch active={changeContractEnd} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop}}
                     leftFunction={() => {
                         setChangeContractEnd(prev => !prev)
                         contractEnd && changeContractEnd && setContractEnd(null)
                     }} />
 
-                <View style={[styles.underline, { marginTop }]}>
+                <View style={[styles.underline, { marginTop : appStyle.mediumMarginTop }]}>
                     <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                         Fin de contrat :
                     </Text>
                 </View>
 
                 {changeContractEnd &&
-                    <View style={{marginTop}} >
+                    <View style={{marginTop : appStyle.mediumMarginTop}} >
                         <DatePicker
                             chosenDate={datePickerDtDate}
                             inputText=" ( inclus ) "
@@ -71,7 +69,7 @@ const styles = StyleSheet.create({
         minWidth: "100%",
         paddingHorizontal: appStyle.regularItem.paddingHorizontal,
         marginTop: appStyle.regularItem.marginTop * (phoneDevice ? 2 : 1.3),
-        paddingBottom: appStyle.mediumMarginTop,
+        paddingBottom: appStyle.largeMarginTop,
         alignItems: "center",
     },
     underline: {

@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
         ...appStyle.input.base,
         backgroundColor: "transparent",
         alignItems: "center",
+        paddingLeft : 0,
     },
     autoCompleteInput: {
         ...appStyle.regularText,
@@ -103,6 +104,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         paddingBottom: 0,
         paddingTop: 0,
+        paddingLeft : appStyle.regularLateralPadding,
     },
     suggestionsListContainer: {
         backgroundColor: appStyle.strongGrey2,

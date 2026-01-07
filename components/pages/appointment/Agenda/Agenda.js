@@ -66,7 +66,7 @@ export default memo(function Agenda({ agendaContext }) {
 
     return (
         <>
-            {employeesAutocompleteList.length > 1 && <Autocomplete data={employeesAutocompleteList} setSelectedItem={updateSelectedEmployees} placeholderText="Choisir votre spécialiste" emptyText="Aucun résultat" inputStyle={{ fontWeight: "600", paddingLeft: 0, color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} inputContainerStyle={{ borderColor: appStyle.strongBlack }} placeholderColor={appStyle.mediumGrey} iconColor={appStyle.strongBlack} />}
+            {employeesAutocompleteList.length > 1 && <Autocomplete data={employeesAutocompleteList} setSelectedItem={updateSelectedEmployees} placeholderText="Choisir votre spécialiste" emptyText="Aucun résultat" inputStyle={{ fontWeight: "600", color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} inputContainerStyle={{ borderColor: appStyle.strongBlack }} placeholderColor={appStyle.mediumGrey} iconColor={appStyle.strongBlack} />}
 
             <View style={{ width: "100%", flexDirection: "row", justifyContent: "center" }} >
 

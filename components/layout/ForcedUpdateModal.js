@@ -22,7 +22,7 @@ export default function ForcedUpdateModal({ appObsolete, screenWidth, screenHeig
                 height: freeHeight,
                 top: modalOffsetTop + 0.5
             }]}>
-                <Text style={{ ...appStyle.pageSubtitle, textAlign: "center" }}>
+                <Text style={appStyle.pageSubtitle}>
                     Version de l'application obsolète
                 </Text>
                 <Text style={{ ...appStyle.regularText, marginTop: phoneDevice ? RPW(5) : 20, textAlign: "center", lineHeight: phoneDevice ? RPW(6) : 40 }}>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         width: "100%",
         backgroundColor: appStyle.darkWhite,
-        paddingTop: appStyle.mediumMarginTop,
+        paddingTop: appStyle.largeMarginTop,
         paddingHorizontal : 15,
     },
     obsoleteText: {

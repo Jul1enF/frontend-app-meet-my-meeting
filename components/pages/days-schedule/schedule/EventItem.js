@@ -18,7 +18,7 @@ export default memo(function EventItem({ start, end, description, category, appo
         const { category: appCat, title, default_duration } = appointment_type
 
 
-        // Var for the display of the events (top, height, etc...)
+        // Var for the display of the events (top, height, font, etc...)
         const eventMinFromStart = getMinDuration(dtDayStart, start)
         const eventMinDuration = getMinDuration(start, end)
 
@@ -26,6 +26,10 @@ export default memo(function EventItem({ start, end, description, category, appo
         const height = fullHeight * 0.94
         const fullTop = eventMinFromStart * minuteHeight
         const top = fullTop + (fullHeight * 0.03)
+
+        const detailsFontSize = eventMinDuration > 15 ? appStyle.regularText.fontSize : appStyle.smallText.fontSize
+
+        const categoryFontSize = eventMinDuration > 15 ? appStyle.largeText.fontSize : appStyle.regularText.fontSize
 
         let color
         let paddingTop = 5
@@ -35,7 +39,7 @@ export default memo(function EventItem({ start, end, description, category, appo
 
         switch (category) {
             case "appointment":
-                if (eventMinDuration >= 40){
+                if (eventMinDuration >= 40) {
                     justifyContent = "center"
                     rowGap = phoneDevice ? RPW(7) : 40
                 }
@@ -43,13 +47,13 @@ export default memo(function EventItem({ start, end, description, category, appo
                 break;
             case "closure":
                 color = appStyle.darkGrey
-                paddingTop = appStyle.mediumMarginTop
+                paddingTop = appStyle.largeMarginTop
                 justifyContent = "flex-start"
                 break;
             case "absence":
             case "dayOff":
                 color = appStyle.strongGrey
-                paddingTop = appStyle.mediumMarginTop
+                paddingTop = appStyle.largeMarginTop
                 justifyContent = "flex-start"
                 break;
             case "lunchBreak":
@@ -58,6 +62,15 @@ export default memo(function EventItem({ start, end, description, category, appo
                 color = "rgba(119, 166, 0, 1)"
                 justifyContent = "center"
                 break;
+        }
+
+
+        // Style for eventDetails text
+        const eventDetails = {
+            fontSize: detailsFontSize,
+            letterSpacing: appStyle.regularText.letterSpacing,
+            color: appStyle.fontColorDarkBg,
+            textAlign: "center",
         }
 
 
@@ -70,13 +83,13 @@ export default memo(function EventItem({ start, end, description, category, appo
                 itemDetails.push(
                     <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", height: height / numberOfItems, maxWidth: "100%" }} key={i}>
 
-                        <Text style={styles.categoryTitle}>
+                        <Text style={[styles.categoryTitle, {fontSize : categoryFontSize}]}>
                             {eventCatTranslation[category]}
                             {description && " :"}
                         </Text>
 
                         {description &&
-                            <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                            <Text style={[eventDetails, styles.eventDetailsTitle]} >
                                 {description}
                             </Text>
                         }
@@ -107,7 +120,7 @@ export default memo(function EventItem({ start, end, description, category, appo
 
         // Return for appointments and breaks
         return (
-            <View style={[styles.mainContainer, rowGap && {rowGap}, {
+            <View style={[styles.mainContainer, rowGap && { rowGap }, {
                 top,
                 height,
                 backgroundColor: color,
@@ -115,7 +128,7 @@ export default memo(function EventItem({ start, end, description, category, appo
                 justifyContent,
             }]} >
 
-                <Text style={styles.categoryTitle}>
+                <Text style={[styles.categoryTitle, {fontSize : categoryFontSize}]}>
                     {eventCatTranslation[category]}
                     {(category === "appointment" || description) && " :"}
                 </Text>
@@ -125,10 +138,10 @@ export default memo(function EventItem({ start, end, description, category, appo
 
                     {category === "appointment" &&
 
-                        <Text style={styles.eventDetails} >
+                        <Text style={eventDetails} >
 
                             {appCat &&
-                                <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                                <Text style={[eventDetails, styles.eventDetailsTitle]} >
                                     {appCat + " : "}
                                 </Text>
                             }
@@ -139,7 +152,7 @@ export default memo(function EventItem({ start, end, description, category, appo
                     }
 
                     {description &&
-                        <Text style={styles.eventDetails} >
+                        <Text style={eventDetails} >
                             {description}
                         </Text>
                     }
@@ -149,8 +162,8 @@ export default memo(function EventItem({ start, end, description, category, appo
 
                 {category === "appointment" &&
                     <View style={styles.row}>
-                        <Text style={styles.eventDetails} numberOfLines={2} >
-                            <Text style={[styles.eventDetails, styles.eventDetailsTitle]} >
+                        <Text style={eventDetails} numberOfLines={2} >
+                            <Text style={[eventDetails, styles.eventDetailsTitle]} >
                                 Client•e :
                             </Text>
 
@@ -177,7 +190,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: phoneDevice ? appStyle.regularLateralPadding * 0.5 : appStyle.regularLateralPadding,
         paddingBottom: phoneDevice ? RPW(1) : 5,
         alignItems: "center",
-        opacity : 0.95,
+        opacity: 0.95,
     },
     row: {
         flexDirection: "row",
@@ -186,7 +199,7 @@ const styles = StyleSheet.create({
         maxWidth: "100%",
     },
     categoryTitle: {
-        ...appStyle.largeText,
+        letterSpacing : appStyle.largeText.letterSpacing,
         color: appStyle.fontColorDarkBg,
         fontWeight: "700",
         textAlign: "center",
@@ -195,10 +208,4 @@ const styles = StyleSheet.create({
     eventDetailsTitle: {
         fontWeight: "700"
     },
-    eventDetails: {
-        fontSize: appStyle.regularText.fontSize,
-        letterSpacing: appStyle.regularText.letterSpacing,
-        color: appStyle.fontColorDarkBg,
-        textAlign: "center",
-    }
 })

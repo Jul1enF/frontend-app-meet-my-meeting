@@ -14,7 +14,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Catégorie :
                 </Text>
 
-                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" height={appStyle.regularItemHeight} width={appStyle.regularItemWidth} inputStyle={{ fontWeight: "400", paddingLeft: 0 }} canCreate={true} initialValue={selectedType?.category && {title : selectedType.category, id : selectedType._id} } />
+                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" height={appStyle.regularItemHeight} width={appStyle.regularItemWidth} inputStyle={{ fontWeight: "400" }} canCreate={true} initialValue={selectedType?.category && {title : selectedType.category, id : selectedType._id} } />
             </View>
 
             <View style={styles.column}>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     column: {
         alignItems: "center",
         width: "100%",
-        marginTop: appStyle.mediumMarginTop,
+        marginTop: appStyle.largeMarginTop,
     },
     label: {
         ...appStyle.largeText,

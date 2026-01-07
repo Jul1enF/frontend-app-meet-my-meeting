@@ -20,20 +20,18 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
 
     const { dayError, breakError } = useScheduleError(day)
 
-    const marginTop = phoneDevice ? RPW(5.5) : 35
-
     return (
         <View style={styles.mainContainer}>
 
-            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: marginTop }} leftFunction={() => toggleEnabled(day, index)} />
+            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => toggleEnabled(day, index)} />
 
-            <View style={[styles.underline, { marginTop }]}>
+            <View style={[styles.underline, { marginTop : appStyle.mediumMarginTop }]}>
                 <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                     {dayName} :
                 </Text>
             </View>
 
-            <View style={[{ width: "100%", marginTop: appStyle.mediumMarginTop }, !activeDay && { display: "none" }]}>
+            <View style={[{ width: "100%", marginTop: appStyle.largeMarginTop }, !activeDay && { display: "none" }]}>
 
                 <View style={styles.fullRow}>
 
@@ -61,7 +59,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                     {dayError}
                 </Text>
 
-                <View style={{ width: "100%", alignItems: "center", marginTop: appStyle.mediumMarginTop }}>
+                <View style={{ width: "100%", alignItems: "center", marginTop: appStyle.largeMarginTop }}>
                     <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                         Pause :
                     </Text>
@@ -70,7 +68,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                 </View>
 
 
-                <View style={[styles.fullRow, { marginTop: appStyle.mediumMarginTop }, !activeBreak && { display: "none" }]}>
+                <View style={[styles.fullRow, { marginTop: appStyle.largeMarginTop }, !activeBreak && { display: "none" }]}>
 
                     <View style={styles.row}>
                         <Text style={styles.label}>
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: appStyle.regularItem.paddingHorizontal,
         marginTop: appStyle.regularItem.marginTop * (phoneDevice ? 2 : 1.3),
         alignItems: "center",
-        paddingBottom: appStyle.mediumMarginTop,
+        paddingBottom: appStyle.largeMarginTop,
     },
     underline: {
         borderBottomColor: appStyle.darkWhite,
@@ -128,6 +126,7 @@ const styles = StyleSheet.create({
         ...appStyle.largeText,
         color: appStyle.fontColorDarkBg,
         padding: phoneDevice ? RPW(2) : 15,
+        textAlign : "left",
     },
     timeContainer: {
         marginLeft: phoneDevice ? RPW(2) : 15,

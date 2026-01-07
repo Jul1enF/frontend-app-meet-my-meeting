@@ -19,7 +19,7 @@ export default function AgendaContainer({ agendaContext, selectedAppointmentSlot
     }, [selectedAppointmentSlot])
 
     return (
-        <View style={{ width: "100%", alignItems: "center", paddingBottom: selectedAppointmentSlot ? 0 : appStyle.mediumMarginTop  }} >
+        <View style={{ width: "100%", alignItems: "center", paddingBottom: selectedAppointmentSlot ? 0 : appStyle.largeMarginTop  }} >
 
             <StepTitle title="2. Choisir votre horaire" chevronUp={agendaVisible} 
             chevronFunc={()=> setAgendaVisible(prev => !prev)} marginTop={appStyle.regularMarginTop * 1.5} />

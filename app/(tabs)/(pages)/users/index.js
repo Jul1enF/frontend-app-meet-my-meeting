@@ -74,7 +74,7 @@ export default function UsersPage() {
 
     const usersListHeader = () => {
         return (
-            <View style={{ paddingTop: appStyle.mediumMarginTop }}>
+            <View style={{ paddingTop: appStyle.largeMarginTop }}>
                 <Text style={appStyle.pageTitle}>
                     Liste des utilisateurs
                 </Text>
@@ -119,7 +119,7 @@ export default function UsersPage() {
                         usersFlatlistRef.current.scrollToIndex({ animated: false, index: event.index })
                     }}
                     ListHeaderComponent={usersListHeader}
-                    ListHeaderComponentStyle={{ marginBottom: appStyle.mediumMarginTop }}
+                    ListHeaderComponentStyle={{ marginBottom: appStyle.largeMarginTop }}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => item._id}
                     renderItem={({ item, index }) => <TouchableOpacity

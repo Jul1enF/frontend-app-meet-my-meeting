@@ -12,11 +12,12 @@ import AppointmentInputs from './AppointmentInputs';
 
 export default function EventRedaction({ setScheduleInformations, selectedEmployee, appointmentsSlots, appointmentStart, setAppointmentStart, isNewAppointment, appointmentTypes, users, selectedAppointmentType, setSelectedAppointmentType }) {
 
-    const {categoriesList, appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart)
+    const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, appointmentStart)
 
     const [user, setUser] = useState()
     const [unregisteredUser, setUnregisteredUser] = useState({ first_name: "", last_name: "" })
     const [category, setCategory] = useState("appointment")
+
   
     return (
         <>
@@ -68,6 +69,6 @@ export default function EventRedaction({ setScheduleInformations, selectedEmploy
 const styles = StyleSheet.create({
     card: {
         ...appStyle.card,
-        marginTop: appStyle.mediumMarginTop,
+        marginTop: appStyle.largeMarginTop,
     },
 })

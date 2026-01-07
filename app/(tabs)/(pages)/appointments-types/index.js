@@ -99,7 +99,7 @@ export default function AppointmentsTypesPage() {
                     typesFlatlistRef.current.scrollToIndex({ animated: false, index: event.index })
                 }}
                 ListHeaderComponent={typesListHeader}
-                ListHeaderComponentStyle={{ marginBottom: appStyle.mediumMarginTop }}
+                ListHeaderComponentStyle={{ marginBottom: appStyle.largeMarginTop }}
                 ListEmptyComponent={typesListEmpty}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item._id}
@@ -113,7 +113,7 @@ export default function AppointmentsTypesPage() {
                     </TouchableOpacity>
                 }
                 style={{ flex: 1 }}
-                contentContainerStyle={{alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom, paddingTop : appStyle.mediumMarginTop}}
+                contentContainerStyle={{alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom, paddingTop : appStyle.largeMarginTop}}
             />
 
             <ModalPageWrapper visible={typeModalVisible} setVisible={setTypeModalVisible} backHeaderText="Liste des modèles de RDV" >
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     addTypeButton: {
         ...appStyle.regularItem,
         backgroundColor: appStyle.strongRed,
-        marginTop: appStyle.mediumMarginTop,
+        marginTop: appStyle.largeMarginTop,
         alignItems: "center",
         justifyContent: "center"
     },

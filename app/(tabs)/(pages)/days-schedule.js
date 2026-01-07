@@ -110,7 +110,7 @@ export default function DaysSchedule() {
 
 
             <ScrollView overScrollMode="never" style={{ flex: 1 }}
-                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingBottom: appStyle.mediumMarginTop }}
+                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingBottom: appStyle.largeMarginTop }}
                 refreshControl={refreshComponent}
                 onScroll={(e) => {
                     if (pageTitleHeight === 0) return
@@ -165,7 +165,7 @@ export default function DaysSchedule() {
 
 const styles = StyleSheet.create({
     pageTitleContainer: {
-        paddingVertical: appStyle.mediumMarginTop,
+        paddingVertical: appStyle.largeMarginTop,
         alignItems: "center",
         justifyContent: "center",
     }

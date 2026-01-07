@@ -37,7 +37,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
             editable={false}
             setSelectedItem={updateSelectedEmployees} 
             initialValue={"default"}
-            inputStyle={{ fontWeight: "600", paddingLeft: 0, color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} 
+            inputStyle={{ fontWeight: "600", color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }} 
             inputContainerStyle={{ borderColor: appStyle.strongBlack, marginTop : 0 }} 
             placeholderColor={appStyle.mediumGrey} 
             iconColor={appStyle.strongBlack}

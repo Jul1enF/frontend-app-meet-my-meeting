@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         flexWrap: "wrap",
         width: "100%",
-        rowGap: appStyle.mediumMarginTop,
-        marginTop: appStyle.mediumMarginTop,
+        rowGap: appStyle.largeMarginTop,
+        marginTop: appStyle.largeMarginTop,
     },
     col: {
         alignItems: "flex-start",

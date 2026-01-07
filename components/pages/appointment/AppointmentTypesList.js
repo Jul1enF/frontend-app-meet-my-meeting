@@ -53,7 +53,7 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
     const category = selectedAppointmentType?.category
 
     return (
-        <View style={{ width: "100%", alignItems: "center", paddingTop: appStyle.mediumMarginTop, paddingBottom: selectedAppointmentType ? 0 : appStyle.mediumMarginTop }} >
+        <View style={{ width: "100%", alignItems: "center", paddingTop: appStyle.largeMarginTop, paddingBottom: selectedAppointmentType ? 0 : appStyle.largeMarginTop }} >
 
             <View style={{
                 borderBottomColor: appStyle.strongBlack,
@@ -67,7 +67,7 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
             </Text>
 
             <StepTitle title="1. Choisir votre rendez-vous" chevronUp={categoriesListVisible}
-                marginTop={appStyle.mediumMarginTop}
+                marginTop={appStyle.largeMarginTop}
                 chevronFunc={() => {
                     setSelectedCategory(null)
                     setCategoriesListVisible(!categoriesListVisible)

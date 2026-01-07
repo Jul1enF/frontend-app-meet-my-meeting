@@ -50,11 +50,10 @@ const styles = StyleSheet.create({
     confirmationText: {
         ...appStyle.largeText,
         color: appStyle.fontColorDarkBg,
-        textAlign: "center",
     },
     line: {
         width: "40%",
         ...appStyle.horizontalLine,
-        marginVertical: appStyle.mediumMarginTop,
+        marginVertical: appStyle.largeMarginTop,
     },
 })
