@@ -10,9 +10,9 @@ import DayItem from './DayItem';
 import { getWeekDetails } from './weekDatePickerUtils';
 
 
-export default memo(function WeekDatePicker({ selectedDate, setSelectedDate }) {
+export default memo(function WeekDatePicker({ selectedDate, setSelectedDate, firstWeekDay, setFirstWeekDay }) {
 
-    const [firstWeekDay, setFirstWeekDay] = useState(null)
+    // const [firstWeekDay, setFirstWeekDay] = useState(null)
 
     useEffect(() => {
         const daysBeforeMonday = selectedDate.weekday - 1

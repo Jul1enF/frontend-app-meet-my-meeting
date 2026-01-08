@@ -1,19 +1,17 @@
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useEffect, useState, useMemo, memo } from 'react';
-import { useSelector } from 'react-redux';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 import request from '@utils/request';
 
-import { DateTime } from 'luxon';
-
 import useSessionExpired from '@hooks/useSessionExpired';
 import useRefreshControl from '@hooks/useRefreshControl';
-import useDaysScheduleContext from '@components/pages/days-schedule/useDaysScheduleContext';
+import useDaysScheduleContext from '@components/pages/days-schedule/mainContainer/useDaysScheduleContext';
 
+import StickyHeader from '@components/pages/days-schedule/mainContainer/StickyHeader';
 import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
-import EmployeeSelection from '@components/pages/days-schedule/schedule/EmployeeSelection';
+import EmployeeSelection from '@components/pages/days-schedule/mainContainer/EmployeeSelection';
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 import ModalPageWrapper from '@components/layout/ModalPageWrapper';
 import EventRedaction from '@components/pages/days-schedule/event-registration/EventRedaction';
@@ -25,7 +23,7 @@ export default function DaysSchedule() {
     const [scheduleInformations, setScheduleInformations] = useState({})
 
 
-     // LOAD SCHEDULE INFORMATIONS FUNCTION
+    // LOAD SCHEDULE INFORMATIONS FUNCTION
 
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
@@ -59,24 +57,20 @@ export default function DaysSchedule() {
     // Custom sticky header settings
     const [stickyComponent, setStickyComponent] = useState(false)
     const [pageTitleHeight, setPageTitleHeight] = useState(0)
+    const [firstWeekDay, setFirstWeekDay] = useState(null)
 
 
     return (
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
             {/* Modal to set or modify an appointment */}
-            <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={()=>setOldEvent(null)} backHeaderText="Agenda">
+            <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda">
                 <EventRedaction redactionContext={redactionContext} />
             </ModalPageWrapper>
 
 
             {/* Sticky Header after the pageTitle bottom is reached */}
-            <View style={{ width: "100%", position: "absolute", top: 0, zIndex: 1, opacity: stickyComponent ? 1 : 0, pointerEvents: stickyComponent ? "auto" : "none", backgroundColor: appStyle.pageBody.backgroundColor,
-            }}>
-                <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-
-                <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
-            </View>
+            <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={true} />
 
 
             <ScrollView overScrollMode="never" style={{ flex: 1 }}
@@ -111,12 +105,14 @@ export default function DaysSchedule() {
 
 
                 {/* Sticky Header before it reached the top */}
-                <View style={{ width: "100%", opacity: stickyComponent ? 0 : 1, pointerEvents: stickyComponent ? "none" : "auto",
+                {/* <View style={{
+                    width: "100%", opacity: stickyComponent ? 0 : 1, pointerEvents: stickyComponent ? "none" : "auto",
                 }}>
                     <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
                     <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
-                </View>
+                </View> */}
+                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} />
 
 
                 <Schedule scheduleContext={scheduleContext} />
