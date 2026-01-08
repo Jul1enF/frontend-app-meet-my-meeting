@@ -8,10 +8,13 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 
-export default function TimePicker({time, changeTime}) {
+export default function DurationPicker({duration, changeDuration}) {
 
-    const hours = Number(time.slice(0,2))
-    const minutes = Number(time.slice(3))
+    const hours = Math.floor(duration / 60)
+    const minutes = duration % 60
+    const stringHours = `${hours < 10 ? "0" : ""}${hours.toString()}`
+    const stringMinutes = `${minutes < 10 ? "0" : ""}${minutes.toString()}`
+    const stringTime = `${stringHours} : ${stringMinutes}`
 
     const [showPicker, setShowPicker] = useState(false)
 
@@ -22,15 +25,14 @@ export default function TimePicker({time, changeTime}) {
     const closePicker = () => {
         setShowPicker(false)
         const {hours, minutes} = pickerRef.current.latestDuration
-        const hoursFormatted = hours.current > 9 ? hours.current : "0" + hours.current.toString()
-        const minutesFormatted = minutes.current > 9 ? minutes.current : "0" + minutes.current.toString()
-        changeTime(`${hoursFormatted}:${minutesFormatted}`)
+        const minutesDuration = minutes.current + (hours.current * 60)
+        changeDuration(minutesDuration)
     }
 
     return (
         <View>
             <TouchableOpacity style={styles.timeContainer} activeOpacity={0.6} onPress={() => setShowPicker(true)}>
-                <Text style={styles.timeText} >{time}</Text>
+                <Text style={styles.timeText} >{stringTime}</Text>
             </TouchableOpacity>
 
             <Modal
@@ -55,8 +57,8 @@ export default function TimePicker({time, changeTime}) {
                         aggressivelyGetLatestDuration={true}
                         hideSeconds={true}
                         hourLimit={{ max: 23, min: 0 }}
-                        hourLabel={"  :"}
-                        minuteLabel={""}
+                        hourLabel={"H"}
+                        minuteLabel={"m"}
                         padHoursWithZero={true}
                         padMinutesWithZero={true}
                         LinearGradient={LinearGradient}
@@ -88,8 +90,7 @@ export default function TimePicker({time, changeTime}) {
                             pickerLabel : {
                                 fontWeight : "800",
                                 letterSpacing : phoneDevice ? RPW(1.2) : 12,
-                                fontSize : phoneDevice ? RPW(7) : 45,
-                                paddingTop : phoneDevice ? RPW(0.8) : 7,
+                                fontSize : appStyle.pageSubtitle.fontSize,
                             },
                             // Style for container of the numbers column
                             pickerItemContainer: {
@@ -114,9 +115,9 @@ export default function TimePicker({time, changeTime}) {
 }
 const styles = StyleSheet.create({
      timeContainer: {
-        marginLeft: phoneDevice ? RPW(2) : 15,
         backgroundColor: appStyle.strongGrey,
-        padding: phoneDevice ? RPW(2) : 15,
+        paddingVertical: phoneDevice ? RPW(2) : 15,
+        paddingHorizontal : phoneDevice ? RPW(3) : 20,
         borderRadius: appStyle.regularItemBorderRadius,
     },
     timeText: {

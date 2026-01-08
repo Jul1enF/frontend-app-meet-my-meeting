@@ -4,7 +4,6 @@ import { useState, memo, useMemo, useCallback, useLayoutEffect } from 'react';
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import useDayEventsSchedule from '@hooks/useDayEventsSchedule';
 import useScheduleFreeSlots from '@hooks/useScheduleFreeSlots';
 import AppointmentSlot from './AppointmentSlot';
 

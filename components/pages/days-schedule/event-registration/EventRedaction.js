@@ -25,7 +25,7 @@ export default function EventRedaction({ redactionContext }) {
     const [vacationStart, setVacationStart] = useState(eventStart ? eventStart.startOf('day') : null)
     const [vacationEnd, setVacationEnd] = useState(eventStart ? eventStart.endOf('day') : null)
     const [breakDuration, setBreakDuration] = useState(0)
-
+console.log("break duration", breakDuration)
 
     // Settings of the event duration depending on the last duration to have been modified
     const [eventDuration, setEventDuration] = useState(null)
