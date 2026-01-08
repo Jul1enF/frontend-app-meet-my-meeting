@@ -48,11 +48,10 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
                 appointment_type: appType._id,
                 client,
                 unregistered_client,
-                proRegistration: true,
             })
 
             if (!oldEvent) {
-                setPath("appointments/appointment-registration")
+                setPath("events/event-registration")
                 setMethod("POST")
             }
 
@@ -82,6 +81,7 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
 
         if (data?.result) {
             const { eventSaved } = data
+            console.log("EVENT SAVED :", eventSaved)
             const delay = data.delay ?? 0
             setTimeout(() => resetAndRenewEvents(eventSaved), delay)
         }

@@ -105,14 +105,7 @@ export default function DaysSchedule() {
 
 
                 {/* Sticky Header before it reached the top */}
-                {/* <View style={{
-                    width: "100%", opacity: stickyComponent ? 0 : 1, pointerEvents: stickyComponent ? "none" : "auto",
-                }}>
-                    <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-
-                    <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
-                </View> */}
-                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} />
+                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={false} />
 
 
                 <Schedule scheduleContext={scheduleContext} />
