@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { DateTime } from "luxon";
 import { useSelector } from "react-redux";
 
-export default function useDaysScheduleContext(scheduleInformations = {}, setScheduleInformations) {
+export default function useDaysScheduleContext(scheduleInformations = {}, setScheduleInformations, getScheduleInformations ) {
 
     // Informations on the current user
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
@@ -21,6 +21,28 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
     // States for the event redaction page
     const [eventStart, setEventStart] = useState(null)
     const [oldEvent, setOldEvent] = useState(null)
+
+
+
+    // Function after event registration attempt to reset the selected criteriums and add an event or download fresh datas
+  const resetAndRenewEvents = (event) => {
+
+    // The registration has been successfull, a new event has been retrieved
+    if (event) {
+      setEventStart(null)
+      
+      const newEvents = [...scheduleInformations.events, event].sort((a, b) => new Date(b.start) - new Date(a.start))
+
+      setScheduleInformations(prev => ({
+        ...prev,
+        events: newEvents,
+      }))
+    }
+    else {
+      getScheduleInformations()
+    }
+
+  }
 
 
 
@@ -43,7 +65,7 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
     // PROPS FOR EVENT REDACTION
     const redactionContext = useMemo(() => {
 
-        return { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken }
+        return { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents }
     },
         [selectedEmployee, eventStart, oldEvent, appointmentTypes, scheduleInformations, selectedDate, jwtToken ])
 

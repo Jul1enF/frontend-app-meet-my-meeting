@@ -4,9 +4,9 @@ import { useMemo, useState, useEffect } from 'react';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import DurationPicker from './DurationPicker';
+import DurationPicker from '../DurationPicker';
 import Autocomplete from '@components/ui/Autocomplete';
-import useAutocompleteLists from './useAutocompleteLists';
+import useAutocompleteLists from '../useAutocompleteLists';
 
 
 export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots }) {

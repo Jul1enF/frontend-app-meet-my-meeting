@@ -39,7 +39,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
 
     const registerAppointment = async () => {
 
-        const appointmentToSave = {
+        const eventToSave = {
             start: slot.start.toUTC().toJSDate(),
             end: slot.start.plus({ minutes: type.default_duration }).toUTC().toJSDate(),
             employee: slot.employee._id,
@@ -50,7 +50,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
         const data = await request({
             path: "appointments/appointment-registration",
             method: "POST",
-            body: { appointmentToSave },
+            body: { eventToSave },
             jwtToken,
             setSessionExpired,
             functionRef: registerRef,
@@ -58,9 +58,9 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
             setModalVisible: setConfirmationModalVisible,
         })
         if (data?.result) {
-            const { appointmentSaved } = data
-            dispatch(addEvent(appointmentSaved))
-            setTimeout(()=> resetAndRenewEvents(appointmentSaved), data.delay)
+            const { eventSaved } = data
+            dispatch(addEvent(eventSaved))
+            setTimeout(()=> resetAndRenewEvents(eventSaved), data.delay)
         }
         else if (data.delay){
             setTimeout(()=> resetAndRenewEvents(), data.delay)

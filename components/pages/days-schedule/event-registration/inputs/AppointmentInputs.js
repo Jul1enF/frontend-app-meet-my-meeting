@@ -2,12 +2,12 @@ import { TextInput, Text, View } from "react-native";
 import { useEffect, useState, useMemo } from "react";
 
 import Autocomplete from "@components/ui/Autocomplete"
-import useAutocompleteLists from "./useAutocompleteLists"
+import useAutocompleteLists from "../useAutocompleteLists"
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-export default function AppointmentInputs({ redactionContext, setClient, unregisteredUser, setUnregisteredUser, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots }) {
+export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots }) {
 
     // Props coming from the root
     const { eventStart, setEventStart, appointmentTypes, users, selectedEmployee } = redactionContext
@@ -23,7 +23,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
         if (appointmentsSlotsList.length && !appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            setSlotWarning("Erreur : le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire.")
+            setSlotWarning("Erreur : le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :")
             setTimeout(() => setSlotWarning(""), 5000)
         }
     }, [selectedAppointmentType, appointmentsSlotsList])
@@ -100,9 +100,9 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             <TextInput
                 style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
-                    setUnregisteredUser(prev => ({ ...prev, last_name: e }))
+                    setUnregisteredClient(prev => ({ ...prev, last_name: e }))
                 }}
-                value={unregisteredUser.last_name}
+                value={unregisteredClient.last_name}
                 placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
@@ -111,9 +111,9 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             <TextInput
                 style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
-                    setUnregisteredUser(prev => ({ ...prev, first_name: e }))
+                    setUnregisteredClient(prev => ({ ...prev, first_name: e }))
                 }}
-                value={unregisteredUser.first_name}
+                value={unregisteredClient.first_name}
                 placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"

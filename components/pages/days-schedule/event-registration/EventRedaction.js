@@ -8,24 +8,24 @@ import { appStyle } from '@styles/appStyle';
 import useScheduleFreeSlots from '@hooks/useScheduleFreeSlots';
 import useAutocompleteLists from './useAutocompleteLists';
 import Autocomplete from '@components/ui/Autocomplete';
-import AppointmentInputs from './AppointmentInputs';
-import VacationInputs from './VacationInputs';
-import BreakInputs from './BreakInputs';
+import AppointmentInputs from './inputs/AppointmentInputs';
+import VacationInputs from './inputs/VacationInputs';
+import BreakInputs from './inputs/BreakInputs';
+import EventSaving from './EventSaving';
 
 
 export default function EventRedaction({ redactionContext }) {
 
-    const { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken } = redactionContext
+    const { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
 
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
-    const [client, setClient] = useState()
-    const [unregisteredUser, setUnregisteredUser] = useState({ first_name: "", last_name: "" })
+    const [client, setClient] = useState(null)
+    const [unregisteredClient, setUnregisteredClient] = useState({ first_name: "", last_name: "" })
     const [category, setCategory] = useState("appointment")
     const [description, setDescription] = useState("")
     const [vacationStart, setVacationStart] = useState(eventStart ? eventStart.startOf('day') : null)
     const [vacationEnd, setVacationEnd] = useState(eventStart ? eventStart.endOf('day') : null)
     const [breakDuration, setBreakDuration] = useState(0)
-console.log("break duration", breakDuration)
 
     // Settings of the event duration depending on the last duration to have been modified
     const [eventDuration, setEventDuration] = useState(null)
@@ -74,7 +74,7 @@ console.log("break duration", breakDuration)
                         />
 
                         {category === "appointment" &&
-                            <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredUser={unregisteredUser} setUnregisteredUser={setUnregisteredUser} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
+                            <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
                         }
 
                         {(category === "absence" || category === "closure") &&
@@ -86,7 +86,7 @@ console.log("break duration", breakDuration)
                         }
 
 
-
+                        <EventSaving setScheduleInformations={setBreakDuration} selectedEmployee={selectedEmployee} eventStart={eventStart} setEventStart={setEventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
 
                     </View>
 

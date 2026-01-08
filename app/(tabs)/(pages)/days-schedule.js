@@ -24,15 +24,8 @@ export default function DaysSchedule() {
     const [warning, setWarning] = useState({})
     const [scheduleInformations, setScheduleInformations] = useState({})
 
-    // Memoised props for the components
-    const { daysScheduleContext, scheduleContext, redactionContext } = useDaysScheduleContext(scheduleInformations, setScheduleInformations)
 
-    // Memoised props for this component
-    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
-
-
-
-    // LOAD SCHEDULE INFORMATIONS FUNCTION AND USEEFFECT
+     // LOAD SCHEDULE INFORMATIONS FUNCTION
 
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
@@ -46,6 +39,15 @@ export default function DaysSchedule() {
         }
     }
 
+
+    // Memoised props for the all the components
+    const { daysScheduleContext, scheduleContext, redactionContext } = useDaysScheduleContext(scheduleInformations, setScheduleInformations, getScheduleInformations)
+
+    // Memoised props for this component
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
+
+
+    // useEffect to execute the function to fetch schedule informations
     useEffect(() => {
         getScheduleInformations(true)
     }, [])
