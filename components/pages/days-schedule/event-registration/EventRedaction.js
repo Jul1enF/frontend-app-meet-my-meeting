@@ -42,7 +42,7 @@ export default function EventRedaction({ redactionContext }) {
 
     const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, eventDuration)
 
-    const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)
+    const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee)
 
 
     return (
@@ -78,7 +78,7 @@ export default function EventRedaction({ redactionContext }) {
                         }
 
                         {(category === "absence" || category === "closure") &&
-                            <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} />
+                            <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} selectedEmployee={selectedEmployee} />
                         }
 
                         {category === "break" &&

@@ -74,6 +74,26 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
                 description,
             }
         }
+
+        //Vacations
+        if (category === "absence" || category === "closure"){
+            if (vacationEnd < vacationStart){
+                displayWarning("Erreur : La date de fin est inférieure à la date de début")
+                return
+            }
+            if (!description){
+                displayWarning("Erreur : Description manquante")
+                return
+            }
+
+            event = {
+                ...event,
+                start: vacationStart.toUTC().toJSDate(),
+                end: vacationEnd.toUTC().toJSDate(),
+                description,
+            }
+        }
+
         console.log("Event", event)
         setEventToSave(event)
 

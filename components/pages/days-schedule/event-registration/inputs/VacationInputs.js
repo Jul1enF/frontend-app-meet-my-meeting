@@ -5,8 +5,8 @@ import { appStyle } from '@styles/appStyle';
 
 import DatePicker from '@components/ui/DatePicker/DatePicker';
 
-export default function VacationInputs({ vacationStart, setVacationStart, vacationEnd, setVacationEnd, description, setDescription, category }) {
-    console.log("Category Inputs:", category)
+export default function VacationInputs({ vacationStart, setVacationStart, vacationEnd, setVacationEnd, description, setDescription, category, selectedEmployee }) {
+    
     return (
         <>
             <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
@@ -41,6 +41,16 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="sentences"
             />
+
+
+            { category === "absence" && 
+            <Text style={{...appStyle.regularText, marginTop : appStyle.mediumMarginTop, color : appStyle.fontColorDarkBg, fontWeight : "500"}}>
+                <Text style={{...appStyle.largeText, color : appStyle.fontColorDarkBg, fontWeight : "700"}}>
+                    Personne concernée :
+                </Text>
+                {`  ${selectedEmployee.first_name} ${selectedEmployee.last_name ?? ""}`}
+            </Text>
+            }
 
         </>
     )

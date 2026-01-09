@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
+import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeFunctions";
 
 
 export default function useScheduleEvents(dtDay, selectedEmployees, events, closures, absences, defaultSchedule) {
@@ -62,7 +62,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
             // The employee is not available (absence which is always full-day (00:00 → 23:59 Paris time))
             const employeeAbsence = absences.find(absence =>
-                absence.employee._id.toString() === employee._id.toString() &&
+                absence.employee.toString() === employee._id.toString() &&
                 isBetween(absence.start, dtDay, absence.end)
             )
             if (employeeAbsence) {
@@ -156,13 +156,14 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
 
         // We add to concernedEvents (used in an employee schedule) the releavant informations depending on the situation (shop closed or employee is absent )
-        concernedEvents = concernedClosureEvents.length ? [...concernedClosureEvents] :
+        const isClosed = concernedClosureEvents.length > 0
+        concernedEvents = isClosed ? [...concernedClosureEvents] :
         [...concernedAbsenceEvents]
 
         // Return in case of lack of informations or no availabilities
         if (!dtDay || !events || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
 
-            return { concernedEvents, minWorkingHour, maxWorkingHour }
+            return { concernedEvents, minWorkingHour : isClosed ? null : minWorkingHour, maxWorkingHour: isClosed ? null : maxWorkingHour }
         }
 
 

@@ -22,7 +22,7 @@ const textColor = isToday && !isSelected ? { color : appStyle.strongRed} : {}
     return (
         <TouchableOpacity style={[styles.mainContainer, {opacity}, isSelected && styles.selected]} activeOpacity={!disabled ? 0.6 : 0.1} onPress={()=>{
             if (!disabled){
-                const itemDate = date.set({ hour : chosenDate.hour, minute : chosenDate.minute})
+                const itemDate = date.set({ hour : chosenDate.hour, minute : chosenDate.minute, second : chosenDate.second, millisecond : chosenDate.millisecond})
                 setChosenDate(itemDate)
 
                 if (!currentMonth) nextMonth ? updateViewedDate(true) : updateViewedDate(false)

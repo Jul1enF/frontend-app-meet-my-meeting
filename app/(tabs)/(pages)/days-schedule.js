@@ -33,17 +33,17 @@ export default function DaysSchedule() {
         if (data?.result) {
             setScheduleInformations(data.informations)
             setSelectedEmployee(prev =>
-                prev ?? data.informations.employees.find(e => e.email === email)
+                prev ?? data.informations.employees.find(e => e._id === _id)
             )
         }
-    }, [jwtToken, email ])
+    }, [jwtToken, _id ])
 
 
     // Memoised props for the all the components
     const { daysScheduleContext, scheduleContext, redactionContext } = useDaysScheduleContext(scheduleInformations, setScheduleInformations, getScheduleInformations)
 
     // Memoised props for this component
-    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, jwtToken } = daysScheduleContext
 
 
     // useEffect for firstRender to fetch datas with a clearEtag (and ref for useFocusEffect)
@@ -77,7 +77,7 @@ export default function DaysSchedule() {
 
 
             {/* Sticky Header after the pageTitle bottom is reached */}
-            <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={true} />
+            <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={true} />
 
 
             <ScrollView overScrollMode="never" style={{ flex: 1 }}
@@ -112,7 +112,7 @@ export default function DaysSchedule() {
 
 
                 {/* Sticky Header before it reached the top */}
-                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={false} />
+                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={false} />
 
 
                 <Schedule scheduleContext={scheduleContext} />

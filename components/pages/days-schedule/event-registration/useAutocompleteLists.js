@@ -1,17 +1,32 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-export default function useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart) {
+export default function useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee = null) {
 
     const role = useSelector((state)=>state.user.value.role)
-    const canAddClosures = ["owner","admin"].includes(role)
+    const _id = useSelector((state)=>state.user.value._id)
 
-    const categoriesList = useMemo(()=>[
-        { title : "RDV", id : "initialValue", category : "appointment" },
-        { title : "Congé", id : "1", category : "absence" },
-        { title : "Pause", id : "2", category : "break" },
-        canAddClosures && { title : "Fermeture", id : "3", category : "closure"},
-    ],[])
+
+    const categoriesList = useMemo(()=>{
+        if (!selectedEmployee) return []
+
+        const canAddClosure = ["owner","admin"].includes(role)
+
+        const canAddAbsenceOrBreak = ["owner","admin"].includes(role) || _id.toString() === selectedEmployee._id.toString()
+
+        const list = [
+            { title : "RDV", id : "initialValue", category : "appointment" },
+        ]
+
+        canAddAbsenceOrBreak && list.push(
+            { title : "Pause", id : "1", category : "break" },
+            { title : "Congé", id : "2", category : "absence" }
+        )
+
+        canAddClosure && list.push({ title : "Fermeture", id : "3", category : "closure"})
+
+        return list
+    },[selectedEmployee])
 
 
 

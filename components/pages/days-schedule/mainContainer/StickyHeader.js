@@ -7,7 +7,7 @@ import WeekDatePicker from "../week-date-picker/WeekDatePicker";
 import EmployeeSelection from "./EmployeeSelection";
 
 
-export default function StickyHeader({stickyComponent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, firstWeekDay, setFirstWeekDay, isSticky = false}) {
+export default function StickyHeader({stickyComponent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, firstWeekDay, setFirstWeekDay, isSticky = false}) {
 
     return (
         <View style={ isSticky ? 
@@ -16,7 +16,7 @@ export default function StickyHeader({stickyComponent, selectedDate, setSelected
          >
             <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} />
 
-            <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} email={email} />
+            <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} />
         </View>
     )
 }

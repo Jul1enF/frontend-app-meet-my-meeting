@@ -7,6 +7,7 @@ const defaultUser = {
     jwtToken: "",
     role : "",
     events: [],
+    _id : "",
 }
 
 const initialState = {

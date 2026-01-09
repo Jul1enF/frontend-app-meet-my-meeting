@@ -40,7 +40,7 @@ export default function AppointmentPage() {
     const data = await request({ path: "appointments/appointment-informations", clearEtag, setWarning })
     if (data?.result) {
       setAppointmentInfos(data.informations)
-      setSelectedEmployees(data.informations.employees)
+      setSelectedEmployees(prev =>  prev ?? data.informations.employees)
     }
   }
 

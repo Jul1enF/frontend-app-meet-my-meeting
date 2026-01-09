@@ -6,14 +6,14 @@ import { appStyle } from '@styles/appStyle';
 
 import Autocomplete from '@components/ui/Autocomplete';
 
-export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, email }) {
+export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id }) {
 
     const employeesAutocompleteList = useMemo(() => {
         if (!employees) return null
         else return employees.reduce((acc, e) => {
             acc.push({
                 title: e.first_name,
-                id: e.email === email ? "default" : e._id,
+                id: e._id === _id ? "default" : e._id,
                 employee: e,
             })
             return acc

@@ -82,7 +82,7 @@ export default memo(function EventItem({ start, end, description, category, appo
             const numberOfItems = Math.floor(fullHeight / (90 * minuteHeight))
             for (let i = 0; i < numberOfItems; i++) {
                 itemDetails.push(
-                    <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", height: height / numberOfItems, maxWidth: "100%" }} key={i}>
+                    <View style={{ justifyContent: "center", alignItems: "center", height: height / numberOfItems, maxWidth: "100%", rowGap : phoneDevice ? RPW(3) : 20  }} key={i}>
 
                         <Text style={[styles.categoryTitle, {fontSize : categoryFontSize}]}>
                             {eventCatTranslation[category]}
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
         color: appStyle.fontColorDarkBg,
         fontWeight: "700",
         textAlign: "center",
-        lineHeight: phoneDevice ? RPW(3.8) : 29,
+        lineHeight: phoneDevice ? RPW(5.5) : 29,
     },
     eventDetailsTitle: {
         fontWeight: "700"
