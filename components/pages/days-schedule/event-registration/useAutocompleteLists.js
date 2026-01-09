@@ -20,8 +20,13 @@ export default function useAutocompleteLists(appointmentTypes, users, appointmen
 
         const category = appointmentTypes[0].category ? true : false
 
+        const categoryCount = category && [...appointmentTypes].reduce((acc, {category})=>{
+            acc[category] ? acc[category] += 1 : acc[category] = 1
+            return acc
+        },{})
+
         const sortedArray = category ?
-            [...appointmentTypes].sort((a, b) => a.category.localeCompare(b.category))
+            [...appointmentTypes].sort((a, b) => categoryCount[b.category] - categoryCount[a.category])
             : [...appointmentTypes].sort((a, b) => a.default_duration - b.default_duration)
 
         const appointmentsArray = sortedArray.map(e => {
@@ -65,8 +70,9 @@ export default function useAutocompleteLists(appointmentTypes, users, appointmen
 
 
     const appointmentsSlotsList = useMemo(() => {
+        if (!appointmentsSlots) return null
     
-        if (!appointmentsSlots || !appointmentsSlots.length || !eventStart) return []
+        if (!appointmentsSlots.length || !eventStart) return []
 
         return [...appointmentsSlots].map(e => {
 

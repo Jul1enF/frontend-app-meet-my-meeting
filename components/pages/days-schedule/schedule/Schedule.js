@@ -23,7 +23,7 @@ export default memo(function Schedule({ scheduleContext }) {
     const minuteHeight = phoneDevice ? RPW(1.5) : 8
 
     // Hook to get the events, the appointments slots and the working hours
-    const { concernedEvents, minWorkingHour, maxWorkingHour } = useScheduleEvents(selectedDate, selectedEmployee, events, closures, absences, defaultSchedule )
+    const { concernedEvents, minWorkingHour, maxWorkingHour } = useScheduleEvents(selectedDate, selectedEmployee, events, closures, absences, defaultSchedule)
 
 
     // Memo of the working hours
@@ -52,12 +52,16 @@ export default memo(function Schedule({ scheduleContext }) {
             const nextStart = start.plus({ minutes: appointmentGapMin })
             const borderBottomWidth = !nextStart.minute ? phoneDevice ? 2 : 4 : 1
 
+            // Logic to know if a plus icon (for adding an event) is displayed or not (because there is an event on that slot or it's the end of the day)
             if (concernedEvents?.length && !timeGrid) {
                 let shouldDisplayIcon = true
-                for (let event of concernedEvents) {
-                    if (isBetween(event.start, start, event.end)) {
-                        shouldDisplayIcon = false
-                        break;
+                if (start.toMillis() === dtDayEnd.toMillis()) shouldDisplayIcon = false
+                else {
+                    for (let event of concernedEvents) {
+                        if (isBetween(event.start, start, event.end)) {
+                            shouldDisplayIcon = false
+                            break;
+                        }
                     }
                 }
                 displayPlusIcon = shouldDisplayIcon
@@ -72,7 +76,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
                     {displayPlusIcon &&
                         <TouchableOpacity activeOpacity={0.6} style={styles.plusIconContainer}
-                            onPress={() => setEventStart(dtSlotStart) }
+                            onPress={() => setEventStart(dtSlotStart)}
                         >
 
                             <Feather name="plus-circle" size={phoneDevice ? RPW(6.5) : 40} color={appStyle.strongBlack} />
@@ -83,7 +87,7 @@ export default memo(function Schedule({ scheduleContext }) {
                 </View>
             )
 
-            start = start.plus({ minutes: appointmentGapMin })
+            start = nextStart
         }
 
         return grid

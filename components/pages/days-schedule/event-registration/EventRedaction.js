@@ -16,7 +16,7 @@ import EventSaving from './EventSaving';
 
 export default function EventRedaction({ redactionContext }) {
 
-    const { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
+    const { selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
 
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
     const [client, setClient] = useState(null)
@@ -82,7 +82,7 @@ export default function EventRedaction({ redactionContext }) {
                         }
 
                         {category === "break" &&
-                            <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} />
+                            <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} />
                         }
 
 

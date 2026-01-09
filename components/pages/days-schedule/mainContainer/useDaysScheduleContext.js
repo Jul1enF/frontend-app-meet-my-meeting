@@ -65,7 +65,7 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
     // PROPS FOR EVENT REDACTION
     const redactionContext = useMemo(() => {
 
-        return { setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents }
+        return { selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents }
     },
         [selectedEmployee, eventStart, oldEvent, appointmentTypes, scheduleInformations, selectedDate, jwtToken ])
 

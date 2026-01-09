@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
-export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, appointmentDuration) {
+export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration) {
 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
@@ -131,8 +131,14 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
         const { minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
 
 
-        // Return in case of lack of informations or no availabilities
-        if (!dtDay || !events || !appointmentGapMs || noAvailabilities || !minWorkingHour || !maxWorkingHour || !appointmentDuration || !employeesAvailable.length || !defaultLunchBreaks) {
+        // Return in case of lack of informations (null to know that the slots have not been calculated)
+        if (!dtDay || !events || !appointmentGapMs || !eventDuration) {
+
+            return { appointmentsSlots : null }
+        }
+
+        // Return in case of no availabilities
+        if ( noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
 
             return { appointmentsSlots }
         }
@@ -237,7 +243,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
 
         // LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
-        while (isBefore(dtAppointmentStart.plus({ minutes: appointmentDuration }), maxWorkingHour, true)) {
+        while (isBefore(dtAppointmentStart.plus({ minutes: eventDuration }), maxWorkingHour, true)) {
             if (firstLoop) {
                 dtAppointmentStart = getFirstAppointmentSlot()
                 firstLoop = false
@@ -246,12 +252,12 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
             // Remove the employee that are not working throughout the entire appointment duration (their day of work is over)
             const workingEmployees = employeesAvailable.filter(e => {
                 return dtAppointmentStart >= e.dtEmployeeStart &&
-                    dtAppointmentStart.plus({ minutes: appointmentDuration }) <= e.dtEmployeeEnd
+                    dtAppointmentStart.plus({ minutes: eventDuration }) <= e.dtEmployeeEnd
             })
             const employeesNumber = workingEmployees.length
 
 
-            const dtAppointmentEndMs = dtAppointmentStart.plus({ minutes: appointmentDuration }).toMillis()
+            const dtAppointmentEndMs = dtAppointmentStart.plus({ minutes: eventDuration }).toMillis()
 
             // Check if there is an event registered for the start of the event
             const slotOccupied = occupiedSlots.get(dtAppointmentStart.toMillis())
@@ -298,7 +304,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
         return { appointmentsSlots }
 
-    }, [appointmentsAvailability, selectedEmployeesAvailabilities, events, dtDay, appointmentGapMs, appointmentDuration])
+    }, [appointmentsAvailability, selectedEmployeesAvailabilities, events, dtDay, appointmentGapMs, eventDuration])
 
 
     return dayFreeSlots

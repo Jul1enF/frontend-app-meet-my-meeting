@@ -28,6 +28,12 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
 
     // Function to check that the form is valid
     const eventValidation = () => {
+        let event = {
+            employee: selectedEmployee._id,
+            category,
+        }
+
+        // Appointment
         if (category === "appointment") {
             if (!appType || (!client && !unregisteredClient.first_name && !unregisteredClient.last_name)) {
                 displayWarning("Erreur : Informations manquantes")
@@ -40,23 +46,43 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
 
             const unregistered_client = (!unregisteredClient.first_name && !unregisteredClient.last_name) ? null : unregisteredClient
 
-            setEventToSave({
+            event = {
+                ...event,
                 start: eventStart.toUTC().toJSDate(),
                 end: eventStart.plus({ minutes: appType.default_duration }).toUTC().toJSDate(),
-                employee: selectedEmployee._id,
-                category: "appointment",
                 appointment_type: appType._id,
                 client,
                 unregistered_client,
-            })
+            }
+        }
 
-            if (!oldEvent) {
-                setPath("events/event-registration")
-                setMethod("POST")
+        // Break
+        if (category === "break" || category === "lunchBreak") {
+            if (!breakDuration || !description) {
+                displayWarning("Erreur : Informations manquantes")
+                return
+            }
+            if (!appointmentsSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
+                displayWarning("Erreur : Le rdv ne rentre pas dans le créneau")
+                return
             }
 
-            setConfirmationModalVisible(true)
+            event = {
+                ...event,
+                start: eventStart.toUTC().toJSDate(),
+                end: eventStart.plus({ minutes: breakDuration }).toUTC().toJSDate(),
+                description,
+            }
         }
+        console.log("Event", event)
+        setEventToSave(event)
+
+        if (!oldEvent) {
+            setPath("events/event-registration")
+            setMethod("POST")
+        }
+
+        setConfirmationModalVisible(true)
     }
 
 
@@ -81,7 +107,6 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
 
         if (data?.result) {
             const { eventSaved } = data
-            console.log("EVENT SAVED :", eventSaved)
             const delay = data.delay ?? 0
             setTimeout(() => resetAndRenewEvents(eventSaved), delay)
         }

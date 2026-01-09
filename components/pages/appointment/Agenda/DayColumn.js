@@ -16,6 +16,7 @@ export default memo(function DayColumn({ agendaContext, width, dtDay }) {
 
     // useMemo to create a memoised version of the slots
     const slots = useMemo(() => {
+        if (!appointmentsSlots) return null
         return appointmentsSlots.map(e => <AppointmentSlot key={e.start.toMillis()} {...e} setSelectedAppointmentSlot={setSelectedAppointmentSlot} sortFreeEmployees={sortFreeEmployees} rolesPriorities={rolesPriorities} /> )
     }, [appointmentsSlots])
 

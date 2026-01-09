@@ -8,17 +8,17 @@ import { getMinDuration } from '@utils/timeFunctions';
 import { eventCatTranslation } from 'constants/translations';
 
 
-export default memo(function EventItem({ start, end, description, category, appointment_type = {}, client, unregistered_client, minuteHeight, dtDayWorkingHours }) {
+export default memo(function EventItem({ start, end, description, category, appointment_type, client, unregistered_client, minuteHeight, dtDayWorkingHours }) {
 
     if (!start || !end || !dtDayWorkingHours) return <></>
 
     else {
         const { dtDayStart, dtDayEnd } = dtDayWorkingHours
 
-        const { category: appCat, title, default_duration } = appointment_type
+        const { category: appCat, title, default_duration } = appointment_type ?? {}
 
 
-        // Var for the display of the events (top, height, font, etc...)
+        // Var for the display of the events (top, height, fonts, etc...)
         const eventMinFromStart = getMinDuration(dtDayStart, start)
         const eventMinDuration = getMinDuration(start, end)
 
@@ -61,6 +61,7 @@ export default memo(function EventItem({ start, end, description, category, appo
             case "break":
                 color = "rgba(119, 166, 0, 1)"
                 justifyContent = "center"
+                if (eventMinDuration > 15) rowGap = phoneDevice ? RPW(3) : 20
                 break;
         }
 

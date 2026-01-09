@@ -4,12 +4,12 @@ import { useMemo, useState, useEffect } from 'react';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import DurationPicker from '../DurationPicker';
+import DurationPicker from './DurationPicker';
 import Autocomplete from '@components/ui/Autocomplete';
 import useAutocompleteLists from '../useAutocompleteLists';
 
 
-export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots }) {
+export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription }) {
 
     // Creation with a hook of the autocomplete list
     const { appointmentsSlotsList } = useAutocompleteLists(null, null, appointmentsSlots, eventStart)
@@ -19,8 +19,9 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
 
     // Set an error if the break start selected doesn't fit with the break duration in a schedule slot
     useEffect(() => {
-        if (!breakDuration || !appointmentsSlotsList.length) return
-        if (appointmentsSlotsList.length && !appointmentsSlotsList.some(e =>
+
+        if (!breakDuration || !appointmentsSlotsList) return
+        if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
             setSlotWarning("Erreur : la pause ne rentre pas dans le créneau ! Merci de changer sa durée ou de choisir un autre horaire ci dessous :")
@@ -33,8 +34,8 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
 
     const slotsAutocomplete = useMemo(() => (
         <Autocomplete
-            key={appointmentsSlotsList.length}
-            data={appointmentsSlotsList}
+            key={appointmentsSlotsList ? appointmentsSlotsList.length : "key"}
+            data={appointmentsSlotsList ?? []}
             placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
             initialValue={"initialValue"}
             showClear={false}
@@ -68,6 +69,20 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
             </Text>
 
             {slotsAutocomplete}
+
+            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
+                Description :
+            </Text>
+
+
+            <TextInput
+                style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
+                onChangeText={(e) => setDescription(e)}
+                value={description}
+                placeholder='Description...'
+                placeholderTextColor={appStyle.placeholderColor}
+                autoCapitalize="sentences"
+            />
         </>
     )
 }

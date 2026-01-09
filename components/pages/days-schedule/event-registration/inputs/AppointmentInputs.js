@@ -19,10 +19,11 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
     // Set an error if the appointment start time selected doesn't fit with the appointment selected duration in a schedule slot
     useEffect(() => {
-        if (!selectedAppointmentType || !appointmentsSlotsList.length) return
-        if (appointmentsSlotsList.length && !appointmentsSlotsList.some(e =>
+        if (!selectedAppointmentType || !appointmentsSlotsList ) return
+        if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
+            console.log("app slots lists :", appointmentsSlotsList)
             setSlotWarning("Erreur : le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :")
             setTimeout(() => setSlotWarning(""), 5000)
         }
@@ -34,8 +35,8 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
     const slotsAutocomplete = useMemo(() => (
         <Autocomplete
-            key={appointmentsSlotsList.length}
-            data={appointmentsSlotsList}
+            key={appointmentsSlotsList ? appointmentsSlotsList.length : "key"}
+            data={appointmentsSlotsList ?? []}
             placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
             initialValue={"initialValue"}
             showClear={false}

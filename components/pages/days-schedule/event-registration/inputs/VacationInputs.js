@@ -39,7 +39,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
                 value={description}
                 placeholder='Description...'
                 placeholderTextColor={appStyle.placeholderColor}
-                autoCapitalize="words"
+                autoCapitalize="sentences"
             />
 
         </>

@@ -1,5 +1,6 @@
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { useFocusEffect } from 'expo-router';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -10,8 +11,6 @@ import useRefreshControl from '@hooks/useRefreshControl';
 import useDaysScheduleContext from '@components/pages/days-schedule/mainContainer/useDaysScheduleContext';
 
 import StickyHeader from '@components/pages/days-schedule/mainContainer/StickyHeader';
-import WeekDatePicker from '@components/pages/days-schedule/week-date-picker/WeekDatePicker';
-import EmployeeSelection from '@components/pages/days-schedule/mainContainer/EmployeeSelection';
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 import ModalPageWrapper from '@components/layout/ModalPageWrapper';
 import EventRedaction from '@components/pages/days-schedule/event-registration/EventRedaction';
@@ -28,14 +27,16 @@ export default function DaysSchedule() {
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
 
-    const getScheduleInformations = async (clearEtag) => {
-        const data = await request({ path: "pros/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning })
+    const getScheduleInformations = useCallback(async (clearEtag) => {
+        const data = await request({ path: "events/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning })
 
         if (data?.result) {
             setScheduleInformations(data.informations)
-            !selectedEmployee && setSelectedEmployee(data.informations.employees.find(e => e.email === email))
+            setSelectedEmployee(prev =>
+                prev ?? data.informations.employees.find(e => e.email === email)
+            )
         }
-    }
+    }, [jwtToken, email ])
 
 
     // Memoised props for the all the components
@@ -45,10 +46,16 @@ export default function DaysSchedule() {
     const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, email, jwtToken } = daysScheduleContext
 
 
-    // useEffect to execute the function to fetch schedule informations
+    // useEffect for firstRender to fetch datas with a clearEtag (and ref for useFocusEffect)
+    const firstRenderRef = useRef(false)
     useEffect(() => {
         getScheduleInformations(true)
+        setTimeout(()=> firstRenderRef.current = true, 1000)
     }, [])
+    // useFocusEffect to fetch schedule informations every time the screen is seen
+    useFocusEffect(useCallback(() => {
+        if (firstRenderRef.current) getScheduleInformations()
+    }, [getScheduleInformations]))
 
 
     // refreshControl for the ScrollView
