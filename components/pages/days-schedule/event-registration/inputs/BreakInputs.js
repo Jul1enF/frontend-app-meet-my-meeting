@@ -6,7 +6,7 @@ import { appStyle } from '@styles/appStyle';
 
 import DurationPicker from './DurationPicker';
 import Autocomplete from '@components/ui/Autocomplete';
-import useAutocompleteLists from '../useAutocompleteLists';
+import useAutocompleteLists from '../event-update/useAutocompleteLists';
 
 
 export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription }) {

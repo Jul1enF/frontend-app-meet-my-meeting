@@ -8,9 +8,9 @@ import { appStyle } from '@styles/appStyle';
 import useScheduleFreeSlots from '@hooks/useScheduleFreeSlots';
 import useAutocompleteLists from './useAutocompleteLists';
 import Autocomplete from '@components/ui/Autocomplete';
-import AppointmentInputs from './inputs/AppointmentInputs';
-import VacationInputs from './inputs/VacationInputs';
-import BreakInputs from './inputs/BreakInputs';
+import AppointmentInputs from '../inputs/AppointmentInputs';
+import VacationInputs from '../inputs/VacationInputs';
+import BreakInputs from '../inputs/BreakInputs';
 import EventSaving from './EventSaving';
 
 
@@ -64,6 +64,7 @@ export default function EventRedaction({ redactionContext }) {
                     <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
 
 
+                       {!oldEvent &&
                         <Autocomplete
                             data={categoriesList}
                             editable={false}
@@ -72,14 +73,18 @@ export default function EventRedaction({ redactionContext }) {
                             initialValue={"initialValue"}
                             width="100%"
                         />
+                        }
+
 
                         {category === "appointment" &&
                             <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
                         }
 
+
                         {(category === "absence" || category === "closure") &&
                             <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} selectedEmployee={selectedEmployee} />
                         }
+
 
                         {category === "break" &&
                             <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} />

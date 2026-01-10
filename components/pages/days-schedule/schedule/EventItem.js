@@ -10,7 +10,9 @@ import { eventCatTranslation } from 'constants/translations';
 import UpdateButtons from './UpdateButtons';
 
 
-export default memo(function EventItem({ start, end, description, category, appointment_type, client, unregistered_client, _id, minuteHeight, dtDayWorkingHours, setEventStart, setOldEvent, resetAndRenewEvents }) {
+export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours, setEventStart, setOldEvent, resetAndRenewEvents }) {
+
+    const { start, end, description, category, appointment_type, client, unregistered_client, _id } = event
 
     if (!start || !end || !dtDayWorkingHours) return <></>
 
@@ -113,7 +115,7 @@ export default memo(function EventItem({ start, end, description, category, appo
                     justifyContent,
                 }]} >
 
-                    <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} category={category} eventMinDuration={eventMinDuration} paddingTop={paddingTop} _id={_id} resetAndRenewEvents={resetAndRenewEvents} />
+                    <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} event={event} eventMinDuration={eventMinDuration} paddingTop={paddingTop} resetAndRenewEvents={resetAndRenewEvents} />
 
                     {fullDayItemDetails}
 
@@ -132,7 +134,7 @@ export default memo(function EventItem({ start, end, description, category, appo
                 paddingTop,
                 justifyContent,
             }]} >
-                <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} category={category} eventMinDuration={eventMinDuration} _id={_id} resetAndRenewEvents={resetAndRenewEvents} />
+                <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} category={category} eventMinDuration={eventMinDuration} _id={_id} resetAndRenewEvents={resetAndRenewEvents} event={event} />
 
                 <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
                     {eventCatTranslation[category]}

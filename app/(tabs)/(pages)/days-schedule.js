@@ -8,12 +8,12 @@ import request from '@utils/request';
 
 import useSessionExpired from '@hooks/useSessionExpired';
 import useRefreshControl from '@hooks/useRefreshControl';
-import useDaysScheduleContext from '@components/pages/days-schedule/mainContainer/useDaysScheduleContext';
+import useDaysScheduleContext from '@components/pages/days-schedule/main-container/useDaysScheduleContext';
 
-import StickyHeader from '@components/pages/days-schedule/mainContainer/StickyHeader';
+import StickyHeader from '@components/pages/days-schedule/main-container/StickyHeader';
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 import ModalPageWrapper from '@components/layout/ModalPageWrapper';
-import EventRedaction from '@components/pages/days-schedule/event-registration/EventRedaction';
+import EventRedaction from '@components/pages/days-schedule/event-registration/event-update/EventRedaction';
 
 
 export default function DaysSchedule() {

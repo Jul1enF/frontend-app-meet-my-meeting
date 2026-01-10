@@ -111,7 +111,7 @@ export default memo(function Schedule({ scheduleContext }) {
                 {grid}
 
                 {concernedEvents.map((e) =>
-                    <EventItem {...e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} key={toParisDt(e.start).toISO()} resetAndRenewEvents={resetAndRenewEvents} />)}
+                    <EventItem event={e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} key={toParisDt(e.start).toISO()} resetAndRenewEvents={resetAndRenewEvents} />)}
             </View>
         </View>
     )

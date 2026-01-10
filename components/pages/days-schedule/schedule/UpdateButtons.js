@@ -14,7 +14,10 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 
 
-export default memo(function UpdateButtons({ category, setEventStart, setOldEvent, eventMinDuration, paddingTop, _id, resetAndRenewEvents }) {
+export default memo(function UpdateButtons({event, setEventStart, setOldEvent, eventMinDuration, paddingTop, resetAndRenewEvents }) {
+
+    const { category, _id } = event
+
     const jwtToken = useSelector((state)=> state.user.value.jwtToken)
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [fetchWarning, setFetchWarning] = useState({})
@@ -35,6 +38,7 @@ export default memo(function UpdateButtons({ category, setEventStart, setOldEven
         const data = await request({
             path : "events/delete-event",
             method : "DELETE",
+            functionRef : deleteRef,
             jwtToken,
             setSessionExpired,
             params : _id,
@@ -53,7 +57,10 @@ export default memo(function UpdateButtons({ category, setEventStart, setOldEven
     return (
         <>
             <View style={{ width: "100%", position: "absolute", top: phoneDevice ? 0 : -5 }}>
-                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.editContainer, { width: containerWidth }]}>
+                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.editContainer, { width: containerWidth }]} onPress={()=>{
+                    setOldEvent(event)
+                    setEventStart(event.start)
+                }}>
 
                     <MaterialCommunityIcons name="pencil" size={iconSize} color={iconColor} />
 

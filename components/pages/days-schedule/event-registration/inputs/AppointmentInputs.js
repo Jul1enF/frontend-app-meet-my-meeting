@@ -2,7 +2,7 @@ import { TextInput, Text, View } from "react-native";
 import { useEffect, useState, useMemo } from "react";
 
 import Autocomplete from "@components/ui/Autocomplete"
-import useAutocompleteLists from "../useAutocompleteLists"
+import useAutocompleteLists from "../event-update/useAutocompleteLists"
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
