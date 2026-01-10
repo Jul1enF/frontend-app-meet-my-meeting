@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { useMemo, memo, useState } from 'react';
+import { useMemo, memo } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -7,8 +7,10 @@ import { appStyle } from '@styles/appStyle';
 import { getMinDuration } from '@utils/timeFunctions';
 import { eventCatTranslation } from 'constants/translations';
 
+import UpdateButtons from './UpdateButtons';
 
-export default memo(function EventItem({ start, end, description, category, appointment_type, client, unregistered_client, minuteHeight, dtDayWorkingHours }) {
+
+export default memo(function EventItem({ start, end, description, category, appointment_type, client, unregistered_client, _id, minuteHeight, dtDayWorkingHours, setEventStart, setOldEvent, resetAndRenewEvents }) {
 
     if (!start || !end || !dtDayWorkingHours) return <></>
 
@@ -46,11 +48,11 @@ export default memo(function EventItem({ start, end, description, category, appo
                 color = "rgba(183, 162, 2, 1)"
                 break;
             case "closure":
+            case "absence":
                 color = appStyle.darkGrey
                 paddingTop = appStyle.largeMarginTop
                 justifyContent = "flex-start"
                 break;
-            case "absence":
             case "dayOff":
                 color = appStyle.strongGrey
                 paddingTop = appStyle.largeMarginTop
@@ -82,9 +84,9 @@ export default memo(function EventItem({ start, end, description, category, appo
             const numberOfItems = Math.floor(fullHeight / (90 * minuteHeight))
             for (let i = 0; i < numberOfItems; i++) {
                 itemDetails.push(
-                    <View style={{ justifyContent: "center", alignItems: "center", height: height / numberOfItems, maxWidth: "100%", rowGap : phoneDevice ? RPW(3) : 20  }} key={i}>
+                    <View style={{ justifyContent: "center", alignItems: "center", height: height / numberOfItems, maxWidth: "100%", rowGap: phoneDevice ? RPW(3) : 20 }} key={i}>
 
-                        <Text style={[styles.categoryTitle, {fontSize : categoryFontSize}]}>
+                        <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
                             {eventCatTranslation[category]}
                             {description && " :"}
                         </Text>
@@ -111,6 +113,8 @@ export default memo(function EventItem({ start, end, description, category, appo
                     justifyContent,
                 }]} >
 
+                    <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} category={category} eventMinDuration={eventMinDuration} paddingTop={paddingTop} _id={_id} resetAndRenewEvents={resetAndRenewEvents} />
+
                     {fullDayItemDetails}
 
                 </View>
@@ -128,8 +132,9 @@ export default memo(function EventItem({ start, end, description, category, appo
                 paddingTop,
                 justifyContent,
             }]} >
+                <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} category={category} eventMinDuration={eventMinDuration} _id={_id} resetAndRenewEvents={resetAndRenewEvents} />
 
-                <Text style={[styles.categoryTitle, {fontSize : categoryFontSize}]}>
+                <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
                     {eventCatTranslation[category]}
                     {(category === "appointment" || description) && " :"}
                 </Text>
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
         maxWidth: "100%",
     },
     categoryTitle: {
-        letterSpacing : appStyle.largeText.letterSpacing,
+        letterSpacing: appStyle.largeText.letterSpacing,
         color: appStyle.fontColorDarkBg,
         fontWeight: "700",
         textAlign: "center",

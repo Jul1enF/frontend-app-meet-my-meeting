@@ -14,7 +14,7 @@ export default function ConfirmationModal({ visible, closeModal, confirmationTex
         <Modal
             isVisible={visible}
             backdropColor="black"
-            backdropOpacity={0.8}
+            backdropOpacity={0.85}
             deviceWidth={screenWidth}
             deviceHeight={screenHeight}
             statusBarTranslucent={true}

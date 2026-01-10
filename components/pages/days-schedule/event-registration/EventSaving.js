@@ -11,7 +11,7 @@ import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function EventSaving({ setScheduleInformations, selectedEmployee, eventStart, setEventStart, oldEvent, jwtToken, selectedAppointmentType: appType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
+export default function EventSaving({ selectedEmployee, eventStart, setEventStart, oldEvent, jwtToken, selectedAppointmentType: appType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
 
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
@@ -94,7 +94,6 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
             }
         }
 
-        console.log("Event", event)
         setEventToSave(event)
 
         if (!oldEvent) {
@@ -128,7 +127,7 @@ export default function EventSaving({ setScheduleInformations, selectedEmployee,
         if (data?.result) {
             const { eventSaved } = data
             const delay = data.delay ?? 0
-            setTimeout(() => resetAndRenewEvents(eventSaved), delay)
+            setTimeout(() => resetAndRenewEvents(eventSaved, "create"), delay)
         }
         else if (data.delay) {
             setTimeout(() => resetAndRenewEvents(), data.delay)

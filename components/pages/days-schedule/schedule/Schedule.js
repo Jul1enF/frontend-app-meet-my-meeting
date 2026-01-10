@@ -15,7 +15,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
 
     // Memoised props
-    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, defaultSchedule, setEventStart, setOldEvent } = scheduleContext
+    const { events, closures, absences, appointmentGapMs, selectedEmployee, selectedDate, defaultSchedule, setEventStart, setOldEvent, resetAndRenewEvents } = scheduleContext
 
 
     // Height of one minutes and appointment gap duration in minutes
@@ -111,7 +111,7 @@ export default memo(function Schedule({ scheduleContext }) {
                 {grid}
 
                 {concernedEvents.map((e) =>
-                    <EventItem {...e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} key={toParisDt(e.start).toISO()} />)}
+                    <EventItem {...e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} key={toParisDt(e.start).toISO()} resetAndRenewEvents={resetAndRenewEvents} />)}
             </View>
         </View>
     )

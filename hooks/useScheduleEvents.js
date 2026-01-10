@@ -67,7 +67,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
             )
             if (employeeAbsence) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ ...employeeAbsence, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd })})
+                concernedAbsenceEvents.push({ ...employeeAbsence, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }), vacationEvent : employeeAbsence })
 
                 return
             }
@@ -128,7 +128,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
         if (closureHappening) {
             // add an event to be displayed on the employee schedule
-            concernedClosureEvents.push({ ...closureHappening, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }) })
+            concernedClosureEvents.push({ ...closureHappening, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }), vacationEvent : closureHappening })
 
             return { noAvailabilities: true, concernedClosureEvents }
         }

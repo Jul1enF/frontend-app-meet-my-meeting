@@ -23,7 +23,6 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
         if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            console.log("app slots lists :", appointmentsSlotsList)
             setSlotWarning("Erreur : le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :")
             setTimeout(() => setSlotWarning(""), 5000)
         }
