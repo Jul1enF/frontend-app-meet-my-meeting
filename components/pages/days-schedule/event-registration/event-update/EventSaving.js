@@ -17,8 +17,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     const [eventWarning, setEventWarning] = useState("")
     const [fetchWarning, setFetchWarning] = useState({})
     const [eventToSave, setEventToSave] = useState(null)
-    const [path, setPath] = useState("null")
-    const [method, setMethod] = useState("")
+
 
     // Function to display a warning message if the form is not valid
     const displayWarning = (message) => {
@@ -90,6 +89,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 return
             }
 
+            // For a closure all employees are concerned, not juste one, so we don't put that field
             category === "closure" && delete event.employee
 
             event = {
@@ -106,19 +106,10 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
             delete event.defaultEnd
         }
 
-        // Settings of the path and method depending on if it is a new event, an updated one or a lunchBreak
-        if (!oldEvent) {
-            setPath("events/event-registration")
-            setMethod("POST")
-        } else if (category === "lunchBreak") {
-            event.lunch_break_modification = "update"
-            setPath("events/modify-lunch-break")
-            setMethod("PUT")
-        }
+        // If it is a creation of a lunch break we put the marker to signal that it's and update and not a suppression of the default one
+         if (category === "lunchBreak") event.lunch_break_modification = "update"
 
-        console.log("EVENT :", event)
         setEventToSave(event)
-
 
         setConfirmationModalVisible(true)
     }
@@ -134,8 +125,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     const registerEvent = async () => {
 
         const data = await request({
-            path,
-            method,
+            path : "events/create-or-update",
+            method : "PUT",
             body: { eventToSave },
             jwtToken,
             setSessionExpired,
