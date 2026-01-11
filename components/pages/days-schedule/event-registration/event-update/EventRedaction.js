@@ -12,21 +12,29 @@ import AppointmentInputs from '../inputs/AppointmentInputs';
 import VacationInputs from '../inputs/VacationInputs';
 import BreakInputs from '../inputs/BreakInputs';
 import EventSaving from './EventSaving';
+import { toParisDt, getMinDuration } from '@utils/timeFunctions';
 
 
 export default function EventRedaction({ redactionContext }) {
 
     const { selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
 
-    const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
-    const [client, setClient] = useState(null)
-    const [unregisteredClient, setUnregisteredClient] = useState({ first_name: "", last_name: "" })
-    const [category, setCategory] = useState("appointment")
-    const [description, setDescription] = useState("")
-    const [vacationStart, setVacationStart] = useState(eventStart ? eventStart.startOf('day') : null)
-    const [vacationEnd, setVacationEnd] = useState(eventStart ? eventStart.endOf('day') : null)
-    const [breakDuration, setBreakDuration] = useState(0)
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
+    const [client, setClient] = useState(oldEvent?.client ?? null)
+    const [unregisteredClient, setUnregisteredClient] = useState(oldEvent?.unregistered_client ?? { first_name: "", last_name: "" })
+    const [category, setCategory] = useState(oldEvent?.category ?? "appointment")
+    const [description, setDescription] = useState(oldEvent?.description ?? "")
 
+    const [vacationStart, setVacationStart] = useState(
+       (oldEvent?.category === ("absence" || "closure")) ? toParisDt(oldEvent.start) : eventStart ? eventStart.startOf('day') : null
+    )
+    const [vacationEnd, setVacationEnd] = useState(
+       ( oldEvent?.category === "absence" || oldEvent?.category === "closure") ? toParisDt(oldEvent.end) : eventStart ? eventStart.endOf('day') : null
+    )
+    const [breakDuration, setBreakDuration] = useState(
+        /break/i.test(oldEvent?.category) ? getMinDuration(oldEvent.start, oldEvent.end) : 0
+    )
+ 
     // Settings of the event duration depending on the last duration to have been modified
     const [eventDuration, setEventDuration] = useState(null)
     const prevDurations = useRef({})
@@ -40,7 +48,7 @@ export default function EventRedaction({ redactionContext }) {
     }, [breakDuration, selectedAppointmentType])
 
 
-    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, events, closures, absences, appointmentGapMs, eventDuration)
+    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e)=> e._id !== oldEvent._id), closures, absences, appointmentGapMs, eventDuration)
 
     const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee)
 
@@ -86,12 +94,12 @@ export default function EventRedaction({ redactionContext }) {
                         }
 
 
-                        {category === "break" &&
+                        {/break/i.test(category) &&
                             <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} />
                         }
 
 
-                        <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} setEventStart={setEventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
+                        <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
 
                     </View>
 

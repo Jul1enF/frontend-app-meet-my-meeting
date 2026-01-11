@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
-export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration) {
+export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreLunchBreak = false) {
 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
@@ -67,6 +67,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
                 end: datefromStringHour(employeeDay.break.end, dtDay),
                 employee: employee._id.toString(),
                 category: "defaultLunchBreak",
+                _id: datefromStringHour(employeeDay.break.start, dtDay).toISO(),
             })
 
 
@@ -134,11 +135,11 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
         // Return in case of lack of informations (null to know that the slots have not been calculated)
         if (!dtDay || !events || !appointmentGapMs || !eventDuration) {
 
-            return { appointmentsSlots : null }
+            return { appointmentsSlots: null }
         }
 
         // Return in case of no availabilities
-        if ( noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
+        if (noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
 
             return { appointmentsSlots }
         }
@@ -148,8 +149,9 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
         const fiveMinutesInMs = 1000 * 60 * 5
 
-        // Array to register pontentials modified lunch break
+         // Array to register pontentials modified or suppressed lunch break
         const modifiedLunchBreaks = []
+        const suppressedLunchBreaks = []
 
         // Var to see how busy is an employee (so that if no one is selected by the user we can selecte the least busy)
         const employeesWorkStatus = {}
@@ -184,8 +186,8 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
             if (isSameDay(event.start, dtDay)
                 && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
-                
-                if(!eventHasBeenFound) eventHasBeenFound = true
+
+                if (!eventHasBeenFound) eventHasBeenFound = true
 
                 const employeeId = event.employee.toString()
 
@@ -200,20 +202,23 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
                 // Block schedule slots
                 setOccupiedSlots(event.start, event.end, employeeId)
 
-                // If the event is a modified lunch break for this day
-                event.category === "lunchBreak" && modifiedLunchBreaks.push(event)
+                // If the event is a modified or suppressed lunch break for this day
+                event.category === "modifiedLunchBreak" && modifiedLunchBreaks.push(event)
 
             }
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
-            else if (eventHasBeenFound) {
+            else if (!isSameDay(event.start, dtDay) && eventHasBeenFound) {
                 break;
             }
         }
 
-        // Add the default lunck breaks if they have not been modified
+        // Add the default lunck breaks if they have not been modified, suppressed or shoud be ignored
         for (let lunchBreak of defaultLunchBreaks) {
 
-            if (!modifiedLunchBreaks.length || !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee)) {
+            if (
+                !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) && !suppressedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) &&
+                !ignoreLunchBreak 
+            ) {
 
                 setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
             }
@@ -269,7 +274,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
                 // Function to remove an employee present in an occupied slot
                 const setSlotAvailabilities = (slot) => workingEmployees.filter(e => !slot.includes(e._id.toString()))
-                
+
 
                 // New array of employees to determine the employees that are free during the all appointment
                 let appointmentFreeEmployees = !slotOccupied ?
@@ -291,7 +296,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
                 // Create a new array to add the work status to the appointmentFreeEmployees
                 const employees = appointmentFreeEmployees.map(e => {
                     const employeeStatus = employeesWorkStatus[e._id.toString()]
-                    
+
                     if (!employeeStatus) return { ...e, eventCount: 0, msOfWork: 0 }
                     else return { ...e, ...employeeStatus }
                 })

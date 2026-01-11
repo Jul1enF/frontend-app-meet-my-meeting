@@ -6,7 +6,7 @@ import { appStyle } from '@styles/appStyle';
 
 import Autocomplete from '@components/ui/Autocomplete';
 
-export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id }) {
+export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id, isInRedactionComponent = false }) {
 
     const employeesAutocompleteList = useMemo(() => {
         if (!employees) return null
@@ -23,7 +23,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
 
 
 
-    // Ref and useEffect to change the selected employee if it has been elsewhere
+    // Ref and useEffect to change the selected employee if it has been changed elsewhere (on the other version of the sticky header or in an event update)
     const autocompleteRef = useRef(null)
     const [autocompleteItem, setAutocompleteItem] = useState(null)
 
@@ -49,7 +49,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
 
 
     return (
-        <View style={styles.mainContainer}>
+        <View style={isInRedactionComponent ? {} : styles.mainContainer}>
 
             {employeesAutocompleteList &&
                 <Autocomplete
@@ -58,11 +58,19 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     editable={false}
                     setSelectedItem={updateSelectedEmployees}
                     initialValue={"default"}
-                    inputStyle={{ fontWeight: "600", color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }}
-                    inputContainerStyle={{ borderColor: appStyle.strongBlack, marginTop: 0 }}
+                    width={isInRedactionComponent ? "100%" : null}
+                    inputStyle={{ 
+                        fontWeight: "600", 
+                        color: isInRedactionComponent ? appStyle.fontColorDarkBg : appStyle.strongBlack, 
+                        fontSize: appStyle.largeText.fontSize 
+                    }}
+                    inputContainerStyle={{ 
+                        borderColor: isInRedactionComponent ? appStyle.lightGrey : appStyle.strongBlack, 
+                        ...(!isInRedactionComponent && {marginTop: 0 })
+                    }}
                     placeholderColor={appStyle.mediumGrey}
-                    iconColor={appStyle.strongBlack}
-                    height={phoneDevice ? null : 70}
+                    iconColor={isInRedactionComponent ? null : appStyle.strongBlack}
+                    height={isInRedactionComponent ? null : (phoneDevice ? null : 70)}
                     ref={autocompleteRef}
                 />}
 

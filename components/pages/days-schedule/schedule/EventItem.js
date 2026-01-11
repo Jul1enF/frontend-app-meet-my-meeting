@@ -12,9 +12,9 @@ import UpdateButtons from './UpdateButtons';
 
 export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours, setEventStart, setOldEvent, resetAndRenewEvents }) {
 
-    const { start, end, description, category, appointment_type, client, unregistered_client, _id } = event
+    const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client } = event
 
-    if (!start || !end || !dtDayWorkingHours) return <></>
+    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours) return <></>
 
     else {
         const { dtDayStart, dtDayEnd } = dtDayWorkingHours
@@ -23,8 +23,8 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
 
 
         // Var for the display of the events (top, height, fonts, etc...)
-        const eventMinFromStart = getMinDuration(dtDayStart, start)
-        const eventMinDuration = getMinDuration(start, end)
+        const eventMinFromStart = defaultStart ? getMinDuration(dtDayStart, defaultStart) : getMinDuration(dtDayStart, start)
+        const eventMinDuration = defaultStart ? getMinDuration(defaultStart, defaultEnd) : getMinDuration(start, end)
 
         const fullHeight = eventMinDuration * minuteHeight
         const height = fullHeight * 0.94
@@ -115,7 +115,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                     justifyContent,
                 }]} >
 
-                    <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} event={event} eventMinDuration={eventMinDuration} paddingTop={paddingTop} resetAndRenewEvents={resetAndRenewEvents} />
+                    <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} event={event} eventMinDuration={eventMinDuration} resetAndRenewEvents={resetAndRenewEvents} />
 
                     {fullDayItemDetails}
 
@@ -134,7 +134,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                 paddingTop,
                 justifyContent,
             }]} >
-                <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} category={category} eventMinDuration={eventMinDuration} _id={_id} resetAndRenewEvents={resetAndRenewEvents} event={event} />
+                <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} eventMinDuration={eventMinDuration} resetAndRenewEvents={resetAndRenewEvents} event={event} />
 
                 <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
                     {eventCatTranslation[category]}

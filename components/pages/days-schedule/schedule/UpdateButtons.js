@@ -8,13 +8,13 @@ import { appStyle } from '@styles/appStyle';
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 import request from '@utils/request';
 import useSessionExpired from '@hooks/useSessionExpired';
-
+import { toParisDt } from "@utils/timeFunctions";
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 
 
-export default memo(function UpdateButtons({event, setEventStart, setOldEvent, eventMinDuration, paddingTop, resetAndRenewEvents }) {
+export default memo(function UpdateButtons({event, setEventStart, setOldEvent, eventMinDuration, resetAndRenewEvents }) {
 
     const { category, _id } = event
 
@@ -25,8 +25,9 @@ export default memo(function UpdateButtons({event, setEventStart, setOldEvent, e
 
     // Var for the conditionnal diplay of the icons depending on the height of the event and it's category (for the different background colors)
     const iconSize = eventMinDuration <= 20 ? (phoneDevice ? RPW(5.2) : 28) : (phoneDevice ? RPW(6.5) : 35)
-    const iconColor = category === ("closure" || "absence") ? appStyle.brightGrey : appStyle.strongGrey
+    const iconColor = (category === "closure" || category === "absence") ? appStyle.brightGrey : appStyle.strongGrey
     const containerWidth = eventMinDuration <= 20 ? (phoneDevice ? RPW(8.5) : 45) : (phoneDevice ? RPW(10) : 50)
+    const top = (category === "closure" || category === "absence") ? (phoneDevice ? RPW(4) : 30) : (phoneDevice ? 0 : -5)
 
 
     // States and function to delete the event
@@ -41,13 +42,14 @@ export default memo(function UpdateButtons({event, setEventStart, setOldEvent, e
             functionRef : deleteRef,
             jwtToken,
             setSessionExpired,
+            setModalVisible : setConfirmationModalVisible,
             params : _id,
             setWarning : setFetchWarning,
         })
 
         if (data?.result){
             const delay = data.delay ?? 0
-            setTimeout(() => resetAndRenewEvents( {_id} , "delete"), delay)
+            setTimeout(() => resetAndRenewEvents( {_id, category} , "delete"), delay)
         }
     }
 
@@ -56,10 +58,10 @@ export default memo(function UpdateButtons({event, setEventStart, setOldEvent, e
     }
     return (
         <>
-            <View style={{ width: "100%", position: "absolute", top: phoneDevice ? 0 : -5 }}>
+            <View style={{ width: "100%", position: "absolute", top}}>
                 <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.editContainer, { width: containerWidth }]} onPress={()=>{
                     setOldEvent(event)
-                    setEventStart(event.start)
+                    setEventStart(toParisDt(event.start))
                 }}>
 
                     <MaterialCommunityIcons name="pencil" size={iconSize} color={iconColor} />

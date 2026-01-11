@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeFunctions";
+import { isBefore, isSameDay, isBetween, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
 export default function useScheduleEvents(dtDay, selectedEmployees, events, closures, absences, defaultSchedule) {
@@ -25,8 +25,8 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
 
     // MEMO OF THE DEFAULT START AND END OF DAYS FOR CLOSURE/ABSENCE
-    const defaultStart = useMemo(()=> defaultSchedule?.start ?? 8, [defaultSchedule])
-    const defaultEnd = useMemo(()=> defaultSchedule?.end ?? 19, [defaultSchedule])
+    const defaultStart = useMemo(() => defaultSchedule?.start ?? 8, [defaultSchedule])
+    const defaultEnd = useMemo(() => defaultSchedule?.end ?? 19, [defaultSchedule])
 
 
 
@@ -55,7 +55,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
             // The employee is not available (day off)
             if (!employeeDay.enabled) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }), employee: employee._id, category : "dayOff" })
+                concernedAbsenceEvents.push({ defaultStart: dtDay.set({ hours: defaultStart }), defaultEnd: dtDay.set({ hours: defaultEnd }), employee: employee._id, category: "dayOff" })
 
                 return
             }
@@ -67,7 +67,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
             )
             if (employeeAbsence) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ ...employeeAbsence, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }), vacationEvent : employeeAbsence })
+                concernedAbsenceEvents.push({ ...employeeAbsence, defaultStart: dtDay.set({ hours: defaultStart }), defaultEnd: dtDay.set({ hours: defaultEnd })  })
 
                 return
             }
@@ -86,6 +86,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
                 end: datefromStringHour(employeeDay.break.end, dtDay),
                 employee: employee._id.toString(),
                 category: "defaultLunchBreak",
+                _id : datefromStringHour(employeeDay.break.start, dtDay).toISO(),
             })
 
 
@@ -119,7 +120,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
         const concernedClosureEvents = []
 
-        if (!dtDay || !closures) return { noAvailabilities: true, concernedClosureEvents}
+        if (!dtDay || !closures) return { noAvailabilities: true, concernedClosureEvents }
 
         // closures are always full-day (00:00 → 23:59 Paris time)
         const closureHappening = closures.find(closure =>
@@ -128,7 +129,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
         if (closureHappening) {
             // add an event to be displayed on the employee schedule
-            concernedClosureEvents.push({ ...closureHappening, start: dtDay.set({ hours: defaultStart }), end: dtDay.set({ hours: defaultEnd }), vacationEvent : closureHappening })
+            concernedClosureEvents.push({ ...closureHappening, defaultStart: dtDay.set({ hours: defaultStart }), defaultEnd: dtDay.set({ hours: defaultEnd }) })
 
             return { noAvailabilities: true, concernedClosureEvents }
         }
@@ -158,17 +159,18 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
         // We add to concernedEvents (used in an employee schedule) the releavant informations depending on the situation (shop closed or employee is absent )
         const isClosed = concernedClosureEvents.length > 0
         concernedEvents = isClosed ? [...concernedClosureEvents] :
-        [...concernedAbsenceEvents]
+            [...concernedAbsenceEvents]
 
         // Return in case of lack of informations or no availabilities
         if (!dtDay || !events || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
 
-            return { concernedEvents, minWorkingHour : isClosed ? null : minWorkingHour, maxWorkingHour: isClosed ? null : maxWorkingHour }
+            return { concernedEvents, minWorkingHour: isClosed ? null : minWorkingHour, maxWorkingHour: isClosed ? null : maxWorkingHour }
         }
 
 
-        // Array to register pontentials modified lunch break
+        // Array to register pontentials modified or suppressed lunch break
         const modifiedLunchBreaks = []
+        const suppressedLunchBreaks = []
 
 
         // LOOP TO GET THE EVENTS OF THE CONCERNED DAY
@@ -179,20 +181,21 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
                 concernedEvents.push(event)
 
-                // If the event is a modified lunch break for this day
-                event.category === "lunchBreak" && modifiedLunchBreaks.push(event)
+                // If the event is a modified or suppressed lunch break for this day
+                event.category === "modifiedLunchBreak" && modifiedLunchBreaks.push(event)
 
             }
+
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
-            else if (concernedEvents.length) {
+            else if (!isSameDay(event.start, dtDay) && concernedEvents.length) {
                 break;
             }
         }
 
-        // Add the default lunck breaks if there is not an existing modified one
+        // Add the default lunck breaks if they have not been modified or suppressed
         for (let lunchBreak of defaultLunchBreaks) {
 
-            if (!modifiedLunchBreaks.length || !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee)) {
+            if (!modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) && !suppressedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee)) {
 
                 concernedEvents.push(lunchBreak)
             }
@@ -200,7 +203,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
         return { concernedEvents, minWorkingHour, maxWorkingHour }
 
-    }, [eventsAvailability, selectedEmployeesAvailabilities, events, dtDay ])
+    }, [eventsAvailability, selectedEmployeesAvailabilities, events, dtDay])
 
 
     return dayEventsSchedule

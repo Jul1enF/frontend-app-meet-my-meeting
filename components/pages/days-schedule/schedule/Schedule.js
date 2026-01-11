@@ -30,8 +30,9 @@ export default memo(function Schedule({ scheduleContext }) {
     const dtDayWorkingHours = useMemo(() => {
         if (!minWorkingHour && !maxWorkingHour && !concernedEvents.length) return null
         return {
-            dtDayStart: minWorkingHour ?? concernedEvents[0]?.start,
-            dtDayEnd: maxWorkingHour ?? concernedEvents[0]?.end,
+            // If we don't have the min and max working hours it means it is a vacation (absence or closure) or a day off so we use the event default start and end (setted on defautlSchedule)
+            dtDayStart: minWorkingHour ?? concernedEvents[0]?.defaultStart,
+            dtDayEnd: maxWorkingHour ?? concernedEvents[0]?.defaultEnd,
         }
     }, [minWorkingHour, maxWorkingHour, concernedEvents])
 
@@ -111,7 +112,7 @@ export default memo(function Schedule({ scheduleContext }) {
                 {grid}
 
                 {concernedEvents.map((e) =>
-                    <EventItem event={e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} key={toParisDt(e.start).toISO()} resetAndRenewEvents={resetAndRenewEvents} />)}
+                    <EventItem event={e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} key={toParisDt(e.start ?? e.defaultStart).toISO()} resetAndRenewEvents={resetAndRenewEvents} />)}
             </View>
         </View>
     )

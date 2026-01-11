@@ -50,7 +50,6 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
         [category]: methodFunctions[method](prev[category])
       }))
 
-
     }
     else {
       getScheduleInformations()
@@ -79,9 +78,9 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
   // PROPS FOR EVENT REDACTION
   const redactionContext = useMemo(() => {
 
-    return { selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents }
+    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents }
   },
-    [selectedEmployee, eventStart, oldEvent, appointmentTypes, scheduleInformations, selectedDate, jwtToken])
+    [selectedEmployee, eventStart, oldEvent, scheduleInformations, selectedDate, jwtToken])
 
 
   return { daysScheduleContext, scheduleContext, redactionContext }

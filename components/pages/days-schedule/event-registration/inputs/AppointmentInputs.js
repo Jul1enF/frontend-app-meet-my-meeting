@@ -1,8 +1,10 @@
 import { TextInput, Text, View } from "react-native";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 
+import EmployeeSelection from "@components/pages/days-schedule/main-container/EmployeeSelection";
 import Autocomplete from "@components/ui/Autocomplete"
 import useAutocompleteLists from "../event-update/useAutocompleteLists"
+import useSetOldEvent from "./useSetOldEvent";
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -10,7 +12,7 @@ import { appStyle } from '@styles/appStyle';
 export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots }) {
 
     // Props coming from the root
-    const { eventStart, setEventStart, appointmentTypes, users, selectedEmployee } = redactionContext
+    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee } = redactionContext
 
     // Creation with a hook of the autocomplete lists
     const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)
@@ -19,7 +21,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
     // Set an error if the appointment start time selected doesn't fit with the appointment selected duration in a schedule slot
     useEffect(() => {
-        if (!selectedAppointmentType || !appointmentsSlotsList ) return
+        if (!selectedAppointmentType || !appointmentsSlotsList) return
         if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
@@ -27,6 +29,11 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             setTimeout(() => setSlotWarning(""), 5000)
         }
     }, [selectedAppointmentType, appointmentsSlotsList])
+
+
+
+    // Hook to set the item of autocompletes and the text inputs if an old event has been charged
+    const { typesAutocompleteRef, usersAutocompleteRef } = useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient })
 
 
 
@@ -52,6 +59,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     const usersAutocomplete = useMemo(() => (
         <Autocomplete
             data={usersList}
+            ref={usersAutocompleteRef}
             placeholderText={"Utilisateur ( inscrit )"}
             setSelectedItem={(item) => setClient(item?.user ?? null)}
             emptyText="Aucun résultat"
@@ -74,6 +82,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
                 data={appointmentsList}
                 placeholderText={"Choix du RDV"}
                 setSelectedItem={(item) => setSelectedAppointmentType(item?.appointment ?? null)}
+                ref={typesAutocompleteRef}
                 emptyText="Aucun résultat"
                 width="100%"
                 inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
@@ -84,6 +93,17 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
                 multiline={true}
             />
 
+             {oldEvent &&
+                <>
+                    <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, fontWeight: "600" }}>
+                        Avec :
+                    </Text>
+
+
+                    <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={selectedEmployee._id} isInRedactionComponent={true} />
+                </>
+            }
+
             <Text style={[appStyle.warning, !slotWarning && { height: 0, marginTop: 0 }]}>
                 {slotWarning}
             </Text>
@@ -93,7 +113,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
             {usersAutocomplete}
 
-            <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, fontWeight : "600" }}>
+            <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, fontWeight: "600" }}>
                 Utilisateur non enregistré :
             </Text>
 
@@ -120,12 +140,14 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             />
 
 
-            <Text style={{...appStyle.regularText, marginTop : appStyle.mediumMarginTop, color : appStyle.fontColorDarkBg, fontWeight : "500"}}>
-                <Text style={{...appStyle.largeText, color : appStyle.fontColorDarkBg, fontWeight : "700"}}>
-                    Avec :
+            {!oldEvent &&
+                <Text style={{ ...appStyle.regularText, marginTop: appStyle.mediumMarginTop, color: appStyle.fontColorDarkBg, fontWeight: "500" }}>
+                    <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, fontWeight: "700" }}>
+                        Avec :
+                    </Text>
+                    {`  ${selectedEmployee.first_name}`}
                 </Text>
-                {`  ${selectedEmployee.first_name}`}
-            </Text>
+            }
 
         </>
     )

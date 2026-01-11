@@ -11,7 +11,7 @@ import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function EventSaving({ selectedEmployee, eventStart, setEventStart, oldEvent, jwtToken, selectedAppointmentType: appType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
+export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
 
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
@@ -93,7 +93,8 @@ export default function EventSaving({ selectedEmployee, eventStart, setEventStar
                 description,
             }
         }
-
+        if (oldEvent) console.log("ID :", oldEvent._id)
+        console.log("EVENT :", event)
         setEventToSave(event)
 
         if (!oldEvent) {
@@ -113,10 +114,13 @@ export default function EventSaving({ selectedEmployee, eventStart, setEventStar
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const registerEvent = async () => {
+        const body = { eventToSave }
+        if (oldEvent) body._id = oldEvent._id
+
         const data = await request({
             path,
             method,
-            body: { eventToSave },
+            body,
             jwtToken,
             setSessionExpired,
             functionRef: registerRef,
@@ -140,10 +144,10 @@ export default function EventSaving({ selectedEmployee, eventStart, setEventStar
                 {eventWarning}
             </Text>
 
-            <Button func={eventValidation} text="Enregistrer l'évènement" marginTop={appStyle.largeMarginTop} style={{ height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25) }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={eventValidation} text={!oldEvent ? "Enregistrer l'évènement" : "Modifier l'évènement"} marginTop={appStyle.largeMarginTop} style={{ height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25) }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
-            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer cet évènement ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />
+            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={`Êtes vous sûr(e) de vouloir ${!oldEvent ? "enregistrer" : "modifier"} cet évènement ?`} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />
         </>
     )
 }

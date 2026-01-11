@@ -75,7 +75,7 @@ export default function useAutocompleteLists(appointmentTypes, users, appointmen
                 boldTitle,
                 titleToDisplay,
                 title : boldTitle + titleToDisplay,
-                id: e._id,
+                id: e._id.toString(),
                 user: e,
             }
         })
