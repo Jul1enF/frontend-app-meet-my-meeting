@@ -12,9 +12,9 @@ import UpdateButtons from './UpdateButtons';
 
 export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours, setEventStart, setOldEvent, resetAndRenewEvents }) {
 
-    const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client } = event
+    const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client, lunch_break_modification } = event
 
-    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours) return <></>
+    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || lunch_break_modification === "suppression") return <></>
 
     else {
         const { dtDayStart, dtDayEnd } = dtDayWorkingHours
@@ -61,7 +61,6 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                 justifyContent = "flex-start"
                 break;
             case "lunchBreak":
-            case "defaultLunchBreak":
             case "break":
                 color = "rgba(119, 166, 0, 1)"
                 justifyContent = "center"

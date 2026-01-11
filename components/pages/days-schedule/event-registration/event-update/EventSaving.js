@@ -26,7 +26,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
         setTimeout(() => setEventWarning(""), 4000)
     }
 
-    // Function to check that the form is valid
+    // Function to check that the form is valid and set the fetch settings
     const eventValidation = () => {
         let event = {
             employee: selectedEmployee._id,
@@ -39,6 +39,10 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 displayWarning("Erreur : Informations manquantes")
                 return
             }
+            if (client && (unregisteredClient.first_name || unregisteredClient.last_name)) {
+                displayWarning("Erreur : Deux clients différents sélectionnés")
+                return
+            }
             if (!appointmentsSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
                 displayWarning("Erreur : Le rdv ne rentre pas dans le créneau")
                 return
@@ -47,7 +51,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
             const unregistered_client = (!unregisteredClient.first_name && !unregisteredClient.last_name) ? null : unregisteredClient
 
             event = {
-                ...event,
+                ...(oldEvent ?? event),
                 start: eventStart.toUTC().toJSDate(),
                 end: eventStart.plus({ minutes: appType.default_duration }).toUTC().toJSDate(),
                 appointment_type: appType._id,
@@ -58,17 +62,17 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
 
         // Break
         if (category === "break" || category === "lunchBreak") {
-            if (!breakDuration || !description) {
+            if (!breakDuration || (!description && category === "break")) {
                 displayWarning("Erreur : Informations manquantes")
                 return
             }
             if (!appointmentsSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
-                displayWarning("Erreur : Le rdv ne rentre pas dans le créneau")
+                displayWarning("Erreur : La pause ne rentre pas dans le créneau")
                 return
             }
 
             event = {
-                ...event,
+                ...(oldEvent ?? event),
                 start: eventStart.toUTC().toJSDate(),
                 end: eventStart.plus({ minutes: breakDuration }).toUTC().toJSDate(),
                 description,
@@ -76,31 +80,45 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
         }
 
         //Vacations
-        if (category === "absence" || category === "closure"){
-            if (vacationEnd < vacationStart){
+        if (category === "absence" || category === "closure") {
+            if (vacationEnd < vacationStart) {
                 displayWarning("Erreur : La date de fin est inférieure à la date de début")
                 return
             }
-            if (!description){
+            if (!description) {
                 displayWarning("Erreur : Description manquante")
                 return
             }
 
+            category === "closure" && delete event.employee
+
             event = {
-                ...event,
+                ...(oldEvent ?? event),
                 start: vacationStart.toUTC().toJSDate(),
                 end: vacationEnd.toUTC().toJSDate(),
                 description,
             }
         }
-        if (oldEvent) console.log("ID :", oldEvent._id)
-        console.log("EVENT :", event)
-        setEventToSave(event)
 
+        // Case where default start and end were setted for an old event (for the schedule display)
+        if (event.defaultStart || event.defaultEnd) {
+            delete event.defaultStart
+            delete event.defaultEnd
+        }
+
+        // Settings of the path and method depending on if it is a new event, an updated one or a lunchBreak
         if (!oldEvent) {
             setPath("events/event-registration")
             setMethod("POST")
+        } else if (category === "lunchBreak") {
+            event.lunch_break_modification = "update"
+            setPath("events/modify-lunch-break")
+            setMethod("PUT")
         }
+
+        console.log("EVENT :", event)
+        setEventToSave(event)
+
 
         setConfirmationModalVisible(true)
     }
@@ -114,13 +132,11 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const registerEvent = async () => {
-        const body = { eventToSave }
-        if (oldEvent) body._id = oldEvent._id
 
         const data = await request({
             path,
             method,
-            body,
+            body: { eventToSave },
             jwtToken,
             setSessionExpired,
             functionRef: registerRef,
@@ -131,7 +147,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
         if (data?.result) {
             const { eventSaved } = data
             const delay = data.delay ?? 0
-            setTimeout(() => resetAndRenewEvents(eventSaved, "create"), delay)
+            setTimeout(() => resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create"), delay)
         }
         else if (data.delay) {
             setTimeout(() => resetAndRenewEvents(), data.delay)

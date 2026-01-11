@@ -59,7 +59,9 @@ export default memo(function Schedule({ scheduleContext }) {
                 if (start.toMillis() === dtDayEnd.toMillis()) shouldDisplayIcon = false
                 else {
                     for (let event of concernedEvents) {
-                        if (isBetween(event.start, start, event.end)) {
+                        const eventStart = event.defaultStart ?? event.start
+                        const eventEnd = event.defaultEnd ?? event.end
+                        if (isBetween(eventStart, start, eventEnd)) {
                             shouldDisplayIcon = false
                             break;
                         }

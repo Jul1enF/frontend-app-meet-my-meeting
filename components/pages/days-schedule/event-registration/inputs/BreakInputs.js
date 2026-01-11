@@ -9,7 +9,7 @@ import Autocomplete from '@components/ui/Autocomplete';
 import useAutocompleteLists from '../event-update/useAutocompleteLists';
 
 
-export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription }) {
+export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription, category }) {
 
     // Creation with a hook of the autocomplete list
     const { appointmentsSlotsList } = useAutocompleteLists(null, null, appointmentsSlots, eventStart)
@@ -70,19 +70,23 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
 
             {slotsAutocomplete}
 
-            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
-                Description :
-            </Text>
+            {category !== "lunchBreak" &&
+                <>
+                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
+                        Description :
+                    </Text>
 
 
-            <TextInput
-                style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
-                onChangeText={(e) => setDescription(e)}
-                value={description}
-                placeholder='Description...'
-                placeholderTextColor={appStyle.placeholderColor}
-                autoCapitalize="sentences"
-            />
+                    <TextInput
+                        style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
+                        onChangeText={(e) => setDescription(e)}
+                        value={description}
+                        placeholder='Description...'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        autoCapitalize="sentences"
+                    />
+                </>
+            }
         </>
     )
 }

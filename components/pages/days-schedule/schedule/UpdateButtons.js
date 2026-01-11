@@ -14,11 +14,11 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 
 
-export default memo(function UpdateButtons({event, setEventStart, setOldEvent, eventMinDuration, resetAndRenewEvents }) {
+export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, eventMinDuration, resetAndRenewEvents }) {
 
     const { category, _id } = event
 
-    const jwtToken = useSelector((state)=> state.user.value.jwtToken)
+    const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [fetchWarning, setFetchWarning] = useState({})
 
@@ -36,30 +36,42 @@ export default memo(function UpdateButtons({event, setEventStart, setOldEvent, e
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const deleteEvent = async () => {
+        // If it as a lunch break suppression we post an event to know later to not display the default one
+        const isLunchBreak = category === "lunchBreak"
+        const body = { eventToSave: { ...event, lunch_break_modification: "suppression" } }
+
         const data = await request({
-            path : "events/delete-event",
-            method : "DELETE",
-            functionRef : deleteRef,
+            path: !isLunchBreak ? "events/delete-event" : "events/modify-lunch-break",
+            method: !isLunchBreak ? "DELETE" : "PUT",
+            functionRef: deleteRef,
             jwtToken,
             setSessionExpired,
-            setModalVisible : setConfirmationModalVisible,
-            params : _id,
-            setWarning : setFetchWarning,
+            setModalVisible: setConfirmationModalVisible,
+            setWarning: setFetchWarning,
+            ...(isLunchBreak && { body }),
+            ...(!isLunchBreak && { params: _id }),
         })
 
-        if (data?.result){
+        if (data?.result) {
             const delay = data.delay ?? 0
-            setTimeout(() => resetAndRenewEvents( {_id, category} , "delete"), delay)
+            if (!isLunchBreak) {
+                setTimeout(() => resetAndRenewEvents({ _id, category }, "delete"), delay)
+            } 
+            // If it is a lunchBreak a new event was created or and old one updated (if the lunch break was already modified)
+            else {
+                setTimeout(() => resetAndRenewEvents(data.eventSaved, _id ? "update" : "create"), delay)
+            }
+
         }
     }
 
-    if (category === "dayOff"){
+    if (category === "dayOff") {
         return <></>
     }
     return (
         <>
-            <View style={{ width: "100%", position: "absolute", top}}>
-                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.editContainer, { width: containerWidth }]} onPress={()=>{
+            <View style={{ width: "100%", position: "absolute", top }}>
+                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.editContainer, { width: containerWidth }]} onPress={() => {
                     setOldEvent(event)
                     setEventStart(toParisDt(event.start))
                 }}>
@@ -69,8 +81,8 @@ export default memo(function UpdateButtons({event, setEventStart, setOldEvent, e
                 </TouchableOpacity>
 
 
-                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.deleteContainer, { width: containerWidth }]} 
-                onPress={()=>setConfirmationModalVisible(true)}>
+                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.deleteContainer, { width: containerWidth }]}
+                    onPress={() => setConfirmationModalVisible(true)}>
 
                     <Entypo name="circle-with-cross" size={iconSize} color={iconColor} />
 

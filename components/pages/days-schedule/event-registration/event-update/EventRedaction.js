@@ -13,6 +13,7 @@ import VacationInputs from '../inputs/VacationInputs';
 import BreakInputs from '../inputs/BreakInputs';
 import EventSaving from './EventSaving';
 import { toParisDt, getMinDuration } from '@utils/timeFunctions';
+import { eventCatTranslation } from 'constants/translations';
 
 
 export default function EventRedaction({ redactionContext }) {
@@ -26,15 +27,15 @@ export default function EventRedaction({ redactionContext }) {
     const [description, setDescription] = useState(oldEvent?.description ?? "")
 
     const [vacationStart, setVacationStart] = useState(
-       (oldEvent?.category === ("absence" || "closure")) ? toParisDt(oldEvent.start) : eventStart ? eventStart.startOf('day') : null
+        (oldEvent?.category === ("absence" || "closure")) ? toParisDt(oldEvent.start) : eventStart ? eventStart.startOf('day') : null
     )
     const [vacationEnd, setVacationEnd] = useState(
-       ( oldEvent?.category === "absence" || oldEvent?.category === "closure") ? toParisDt(oldEvent.end) : eventStart ? eventStart.endOf('day') : null
+        (oldEvent?.category === "absence" || oldEvent?.category === "closure") ? toParisDt(oldEvent.end) : eventStart ? eventStart.endOf('day') : null
     )
     const [breakDuration, setBreakDuration] = useState(
         /break/i.test(oldEvent?.category) ? getMinDuration(oldEvent.start, oldEvent.end) : 0
     )
- 
+
     // Settings of the event duration depending on the last duration to have been modified
     const [eventDuration, setEventDuration] = useState(null)
     const prevDurations = useRef({})
@@ -48,7 +49,7 @@ export default function EventRedaction({ redactionContext }) {
     }, [breakDuration, selectedAppointmentType])
 
 
-    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e)=> e._id !== oldEvent._id), closures, absences, appointmentGapMs, eventDuration)
+    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, appointmentGapMs, eventDuration, oldEvent?.category === "lunchBreak")
 
     const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee)
 
@@ -71,16 +72,24 @@ export default function EventRedaction({ redactionContext }) {
 
                     <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
 
+                        {oldEvent &&
+                            <View style={{borderBottomColor: appStyle.darkWhite, borderBottomWidth: phoneDevice ? 2 : 3, paddingBottom: phoneDevice ? RPW(1) : 6, marginBottom : phoneDevice ? RPW(1) : 10 }}>
+                                <Text style={{ ...appStyle.pageSubtitle, color: appStyle.fontColorDarkBg, fontWeight : "700" }}>
+                                    {eventCatTranslation[category]} :
+                                </Text>
+                            </View>
+                        }
 
-                       {!oldEvent &&
-                        <Autocomplete
-                            data={categoriesList}
-                            editable={false}
-                            showClear={false}
-                            setSelectedItem={(item) => setCategory(item?.category ?? null)}
-                            initialValue={"initialValue"}
-                            width="100%"
-                        />
+
+                        {!oldEvent &&
+                            <Autocomplete
+                                data={categoriesList}
+                                editable={false}
+                                showClear={false}
+                                setSelectedItem={(item) => setCategory(item?.category ?? null)}
+                                initialValue={"initialValue"}
+                                width="100%"
+                            />
                         }
 
 
@@ -95,7 +104,7 @@ export default function EventRedaction({ redactionContext }) {
 
 
                         {/break/i.test(category) &&
-                            <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} />
+                            <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} category={category} />
                         }
 
 
@@ -110,10 +119,3 @@ export default function EventRedaction({ redactionContext }) {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    card: {
-        ...appStyle.card,
-        marginTop: appStyle.largeMarginTop,
-    },
-})

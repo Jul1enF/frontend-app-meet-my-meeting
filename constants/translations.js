@@ -8,8 +8,7 @@ export const roleTranslation = {
 
 export const eventCatTranslation = {
     break : "Pause",
-    modifiedLunchBreak : "Pause déjeuner",
-    defaultLunchBreak : "Pause déjeuner",
+    lunchBreak : "Pause déjeuner",
     dayOff : "Jour Off",
     appointment : "RDV",
     closure : "Fermeture",

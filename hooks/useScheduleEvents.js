@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { isBefore, isSameDay, isBetween, datefromStringHour, toParisDt } from "@utils/timeFunctions";
+import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeFunctions";
 
 
 export default function useScheduleEvents(dtDay, selectedEmployees, events, closures, absences, defaultSchedule) {
@@ -85,8 +85,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
                 start: datefromStringHour(employeeDay.break.start, dtDay),
                 end: datefromStringHour(employeeDay.break.end, dtDay),
                 employee: employee._id.toString(),
-                category: "defaultLunchBreak",
-                _id : datefromStringHour(employeeDay.break.start, dtDay).toISO(),
+                category: "lunchBreak",
             })
 
 
@@ -168,9 +167,8 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
         }
 
 
-        // Array to register pontentials modified or suppressed lunch break
+        // Array to register pontentials modified lunch break
         const modifiedLunchBreaks = []
-        const suppressedLunchBreaks = []
 
 
         // LOOP TO GET THE EVENTS OF THE CONCERNED DAY
@@ -182,7 +180,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
                 concernedEvents.push(event)
 
                 // If the event is a modified or suppressed lunch break for this day
-                event.category === "modifiedLunchBreak" && modifiedLunchBreaks.push(event)
+                event.category === "lunchBreak" && modifiedLunchBreaks.push(event)
 
             }
 
@@ -192,10 +190,10 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
             }
         }
 
-        // Add the default lunck breaks if they have not been modified or suppressed
+        // Add the default lunck breaks if they have not been modified 
         for (let lunchBreak of defaultLunchBreaks) {
 
-            if (!modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) && !suppressedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee)) {
+            if (!modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) ) {
 
                 concernedEvents.push(lunchBreak)
             }

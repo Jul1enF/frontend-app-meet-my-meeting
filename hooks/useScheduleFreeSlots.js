@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
-export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreLunchBreak = false) {
+export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
@@ -66,8 +66,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
                 start: datefromStringHour(employeeDay.break.start, dtDay),
                 end: datefromStringHour(employeeDay.break.end, dtDay),
                 employee: employee._id.toString(),
-                category: "defaultLunchBreak",
-                _id: datefromStringHour(employeeDay.break.start, dtDay).toISO(),
+                category: "lunchBreak",
             })
 
 
@@ -149,9 +148,8 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
         const fiveMinutesInMs = 1000 * 60 * 5
 
-         // Array to register pontentials modified or suppressed lunch break
+        // Array to register pontentials modified lunch break
         const modifiedLunchBreaks = []
-        const suppressedLunchBreaks = []
 
         // Var to see how busy is an employee (so that if no one is selected by the user we can selecte the least busy)
         const employeesWorkStatus = {}
@@ -199,11 +197,13 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
                     employeesWorkStatus[employeeId].msOfWork += getDuration(event.start, event.end)
                 }
 
-                // Block schedule slots
-                setOccupiedSlots(event.start, event.end, employeeId)
+                // Block schedule slots except if the event is a suppressed lunchBreak
+                if (event.lunch_break_modification !== "suppression") {
+                    setOccupiedSlots(event.start, event.end, employeeId)
+                }
 
                 // If the event is a modified or suppressed lunch break for this day
-                event.category === "modifiedLunchBreak" && modifiedLunchBreaks.push(event)
+                event.category === "lunchBreak" && modifiedLunchBreaks.push(event)
 
             }
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
@@ -212,12 +212,12 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
             }
         }
 
-        // Add the default lunck breaks if they have not been modified, suppressed or shoud be ignored
+        // Add the default lunck breaks if they have not been modified or should be ignored
         for (let lunchBreak of defaultLunchBreaks) {
 
             if (
-                !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) && !suppressedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) &&
-                !ignoreLunchBreak 
+                !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) &&
+                !ignoreDefaultLunchBreak
             ) {
 
                 setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
