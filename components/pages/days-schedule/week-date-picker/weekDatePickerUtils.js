@@ -7,14 +7,16 @@ export const getWeekDetails = (selectedDate, firstWeekDay) => {
 
     const now = DateTime.now({ zone: "Europe/Paris" }).startOf("day")
 
+    // Setting of an array with only the dates of all the days in the current week
     const weekDatesArray = []
     for (let i = 0; i < 7; i++) {
         weekDatesArray.push(firstWeekDay.plus({ days: i }))
     }
 
+    // Var to determine what name of month and year should be displayed in the title of the picker
     let dtMonthAndYearViewed
 
-    // If the selected date is displayed, we set the name of the current month and year to its
+    // If the selected date is displayed, we set the name of the current month and year to it's ones
     if (isBetween(weekDatesArray[0], selectedDate, weekDatesArray[6], true)) {
         dtMonthAndYearViewed = selectedDate
     }
@@ -35,7 +37,7 @@ export const getWeekDetails = (selectedDate, firstWeekDay) => {
     }
 
 
-    // Settings to get an array of the days to display
+    // Settings to get an array of the days to display with the informations we need
 
     const dayStatus = (date) => {
         return {

@@ -15,7 +15,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee } = redactionContext
 
     // Creation with a hook of the autocomplete lists
-    const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart)
+    const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart})
 
     const [slotWarning, setSlotWarning] = useState("")
 

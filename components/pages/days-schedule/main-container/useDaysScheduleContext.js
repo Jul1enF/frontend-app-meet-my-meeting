@@ -14,7 +14,7 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
 
 
   // States for the appointment schedule
-  const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }).startOf('day'))
+  const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }))
   const [selectedEmployee, setSelectedEmployee] = useState(null)
 
 

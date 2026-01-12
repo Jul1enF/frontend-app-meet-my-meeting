@@ -4,6 +4,12 @@ import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeF
 
 export default function useScheduleEvents(dtDay, selectedEmployees, events, closures, absences, defaultSchedule) {
 
+
+    // BE CAREFUL TO SET THE DTDAY ALWAYS AT THE START OF THE DAY TO SEE PAST DAY EVENTS
+    // (done by puting a startOf('day') when insering selectedDate here in Schedule)
+
+
+
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
         if (!selectedEmployees) return []
@@ -15,7 +21,7 @@ export default function useScheduleEvents(dtDay, selectedEmployees, events, clos
 
 
 
-    // INDEX OF THE DAY
+    // INDEX OF THE DAY (CONVERT FOR US WITH MONDAY = 0)
     const dayIndex = useMemo(
         () => dtDay ? dtDay.weekday - 1 : null,
         [dtDay]

@@ -4,6 +4,12 @@ import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toPari
 
 export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
 
+
+    // BE CAREFUL TO SET THE DTAY AT THE ACTUAL CURRENT TIME IF THE DAY IS TODAY 
+    // (done in the useState of the selectedDate in days-schedule and in the selection of day in DayItem of the WeekDatePicker)
+
+
+
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
         if (!selectedEmployees) return []
@@ -15,7 +21,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
 
 
-    // INDEX OF THE DAY
+    // INDEX OF THE DAY (CONVERT FOR US WITH MONDAY = 0)
     const dayIndex = useMemo(
         () => dtDay ? dtDay.weekday - 1 : null,
         [dtDay]
@@ -189,7 +195,7 @@ export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, c
 
                 const employeeId = event.employee.toString()
 
-                // Actualise the amount of work of an employee
+                // Actualise the amount of work of an employee (to sort them later by the less busy)
                 if (!employeesWorkStatus[employeeId]) {
                     employeesWorkStatus[employeeId] = { eventCount: 1, msOfWork: getDuration(event.start, event.end) }
                 } else {

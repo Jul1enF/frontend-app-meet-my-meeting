@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-export default function useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee = null) {
+export default function useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee = null}) {
 
     const role = useSelector((state)=>state.user.value.role)
     const _id = useSelector((state)=>state.user.value._id)

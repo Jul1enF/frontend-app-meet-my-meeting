@@ -18,8 +18,10 @@ import { eventCatTranslation } from 'constants/translations';
 
 export default function EventRedaction({ redactionContext }) {
 
-    const { selectedEmployee, eventStart, setEventStart, oldEvent, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
+    // Context to know how to calcul the freeSlots, set an event and post it
+    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
 
+    // States to register the settings of the events
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
     const [client, setClient] = useState(oldEvent?.client ?? null)
     const [unregisteredClient, setUnregisteredClient] = useState(oldEvent?.unregistered_client ?? { first_name: "", last_name: "" })
@@ -36,7 +38,8 @@ export default function EventRedaction({ redactionContext }) {
         /break/i.test(oldEvent?.category) ? getMinDuration(oldEvent.start, oldEvent.end) : 0
     )
 
-    // Settings of the event duration depending on the last duration to have been modified
+    
+    // Settings of the event duration depending on the last duration to have been modified (break or appointment)
     const [eventDuration, setEventDuration] = useState(null)
     const prevDurations = useRef({})
     useEffect(() => {
@@ -49,9 +52,11 @@ export default function EventRedaction({ redactionContext }) {
     }, [breakDuration, selectedAppointmentType])
 
 
+    // Hook to get all the free appointments/breaks slots
     const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, appointmentGapMs, eventDuration, oldEvent?.category === "lunchBreak")
 
-    const { categoriesList } = useAutocompleteLists(appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee)
+    // Hook to get the autocomplete list for the category
+    const { categoriesList } = useAutocompleteLists({ selectedEmployee })
 
 
     return (

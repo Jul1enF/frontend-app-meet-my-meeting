@@ -14,17 +14,21 @@ export default memo(function WeekDatePicker({ selectedDate, setSelectedDate, fir
 
     // const [firstWeekDay, setFirstWeekDay] = useState(null)
 
+
+    // useEffect to set the first day of the week depending on the selected date
     useEffect(() => {
         const daysBeforeMonday = selectedDate.weekday - 1
         const initialFirstWeekDay = selectedDate.minus({ days: daysBeforeMonday })
         setFirstWeekDay(initialFirstWeekDay)
     }, [])
 
+    // Function to update the first day of the week
     const updateFirstWeekDay = (increment) => {
         increment ? setFirstWeekDay(prev => prev.plus({ days: 7 })) :
             setFirstWeekDay(prev => prev.minus({ days: 7 }))
     }
 
+    // Using an util function to get an array the days of the week (with their display needed infos)
     const { daysArray, monthName } = useMemo(() => {
         return getWeekDetails(selectedDate, firstWeekDay)
     }, [selectedDate, firstWeekDay])

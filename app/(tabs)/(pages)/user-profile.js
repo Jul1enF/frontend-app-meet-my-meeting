@@ -32,9 +32,6 @@ export default function UserProfile() {
 
                     <UserInformations user={user} />
 
-
-
-
                 </View>
 
             </View>
