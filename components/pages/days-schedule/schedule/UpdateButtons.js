@@ -41,7 +41,7 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
         const body = { eventToSave: { ...event, lunch_break_modification: "suppression" } }
 
         const data = await request({
-            path: !isLunchBreak ? "events/delete-event" : "events/create-or-update",
+            path: !isLunchBreak ? "/events/delete-event" : "/events/create-or-update",
             method: !isLunchBreak ? "DELETE" : "PUT",
             functionRef: deleteRef,
             jwtToken,

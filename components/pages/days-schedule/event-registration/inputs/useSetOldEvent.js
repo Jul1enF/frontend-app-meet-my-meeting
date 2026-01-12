@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient }) {
+export default function useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient, employees }) {
 
     const typesAutocompleteRef = useRef(null)
     const usersAutocompleteRef = useRef(null)
@@ -21,9 +21,10 @@ export default function useSetOldEvent({ oldEvent, appointmentsList, usersList, 
             // Check that the user still exists in db and so in our list
             if (oldEvent.client) {
                 const userFound = usersList.find(e => e.id === oldEvent.client._id.toString())
+                const employeeFound = employees.find(e => e._id.toString() === oldEvent.client._id.toString())
 
                 const suppressedUser = {
-                    title: `SUPPRIMÉ : ${oldEvent.client.last_name} - ${oldEvent.client.first_name} • ${oldEvent.client.email}`,
+                    title: `${employeeFound ? "Employé" : "SUPPRIMÉ"} : ${oldEvent.client.last_name} - ${oldEvent.client.first_name} • ${oldEvent.client.email}`,
                     id: "suppressedUser",
                 }
 

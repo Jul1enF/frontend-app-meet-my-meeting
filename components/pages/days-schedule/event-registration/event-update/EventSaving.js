@@ -125,7 +125,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     const registerEvent = async () => {
 
         const data = await request({
-            path : "events/create-or-update",
+            path : "/events/create-or-update",
             method : "PUT",
             body: { eventToSave },
             jwtToken,

@@ -34,7 +34,7 @@ export default function Signin({ setSignForm, func }) {
         }
 
         const data = await request({
-            path: "users/signin", method: "POST", functionRef: signinRef, setWarning,
+            path: "/users/signin", method: "POST", functionRef: signinRef, setWarning,
             body: {
                 email,
                 password,

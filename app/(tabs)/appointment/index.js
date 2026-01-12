@@ -37,7 +37,7 @@ export default function AppointmentPage() {
 
   // LOAD APPOINTMENTS INFORMATIONS FUNCTION AND USEEFFECT
   const getAppointmentInformations = async (clearEtag) => {
-    const data = await request({ path: "appointments/appointment-informations", clearEtag, setWarning })
+    const data = await request({ path: "/appointments/appointment-informations", clearEtag, setWarning })
     if (data?.result) {
       setAppointmentInfos(data.informations)
       setSelectedEmployees(prev =>  prev ?? data.informations.employees)

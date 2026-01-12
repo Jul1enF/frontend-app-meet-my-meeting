@@ -57,7 +57,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
         const body = { appointmentTypeToSave, newAppointmentType, _id }
 
-        const data = await request({ path: "pros/appointment-types-modification", method: "PUT", body, jwtToken, setSessionExpired, functionRef: appointmentTypesModificationRef, setWarning: setFetchWarning, setModalVisible: setConfirmationModalVisible })
+        const data = await request({ path: "/pros/appointment-types-modification", method: "PUT", body, jwtToken, setSessionExpired, functionRef: appointmentTypesModificationRef, setWarning: setFetchWarning, setModalVisible: setConfirmationModalVisible })
 
         if (data?.result) {
             const { appointmentTypeSaved } = data
@@ -75,7 +75,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
     const deleteAppointmentTypeRef = useRef(true)
     const deleteAppointmentType = async () =>{
 
-        const data = await request({ path: "pros/delete-appointment-type", method: "DELETE", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, params : selectedType._id})
+        const data = await request({ path: "/pros/delete-appointment-type", method: "DELETE", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, params : selectedType._id})
 
         if (data?.result){
             setTypes(prev => prev.filter(e=> e._id !== selectedType._id))

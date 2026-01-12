@@ -48,7 +48,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
         }
 
         const data = await request({
-            path: "appointments/appointment-registration",
+            path: "/appointments/appointment-registration",
             method: "POST",
             body: { eventToSave },
             jwtToken,

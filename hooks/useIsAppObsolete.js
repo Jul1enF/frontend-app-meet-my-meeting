@@ -31,7 +31,7 @@ export default function useIsAppObsolete() {
     const [appObsolete, setAppObsolete] = useState(false)
 
     const updateAppVersionStatus = async () => {
-        const data = await request({ path: 'users/getAppMinimumVersion' })
+        const data = await request({ path: '/users/getAppMinimumVersion' })
         if (data?.result) {
             const appRunningVersion = Application.nativeApplicationVersion
             

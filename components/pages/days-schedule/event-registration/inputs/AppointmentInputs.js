@@ -33,7 +33,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
 
     // Hook to set the item of autocompletes and the text inputs if an old event has been charged
-    const { typesAutocompleteRef, usersAutocompleteRef } = useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient })
+    const { typesAutocompleteRef, usersAutocompleteRef } = useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient, employees })
 
 
 

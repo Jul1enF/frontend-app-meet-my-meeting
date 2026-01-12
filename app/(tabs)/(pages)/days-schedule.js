@@ -28,7 +28,7 @@ export default function DaysSchedule() {
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const getScheduleInformations = useCallback(async (clearEtag) => {
-        const data = await request({ path: "events/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning })
+        const data = await request({ path: "/events/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning })
 
         if (data?.result) {
             setScheduleInformations(data.informations)
