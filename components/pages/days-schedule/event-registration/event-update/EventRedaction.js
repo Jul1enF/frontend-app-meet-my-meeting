@@ -61,7 +61,7 @@ export default function EventRedaction({ redactionContext }) {
 
             <KeyboardAwareScrollView
                 style={{ width: "100%", height: "100%" }}
-                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} 
+                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingTop : appStyle.largeMarginTop }} 
                 keyboardShouldPersistTaps="handled"
                 bounces={false}
                 overScrollMode="never"

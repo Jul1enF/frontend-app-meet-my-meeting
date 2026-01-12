@@ -31,8 +31,8 @@ export const userSlice = createSlice({
         //     state.value.bookmarks = state.value.bookmarks.filter(e => e !== action.payload)
         // },
         changeUserInfos: (state, action) => {
-            state.value.first_name = action.payload.firstName
-            state.value.last_name = action.payload.lastName
+            state.value.first_name = action.payload.first_name
+            state.value.last_name = action.payload.last_name
             state.value.email = action.payload.email
         },
     }

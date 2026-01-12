@@ -20,6 +20,12 @@ export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight,
         { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/home" : "/login", func: jwtToken ? logoutUser : null },
     ]
 
+    if (jwtToken){
+        sectionsArray.splice( 1, 0,
+        { sectionName: "Mes informations", link: "/user-profile" },
+    )
+    }
+
     if (role === "owner" || role === "admin") sectionsArray.splice( 1, 0,
         { sectionName: "Modèles de RDV", link: "/appointments-types" },
         { sectionName: "Liste des utilisateurs", link: "/users" },
