@@ -48,7 +48,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
                 <Text style={{...appStyle.largeText, color : appStyle.fontColorDarkBg, fontWeight : "700"}}>
                     Personne concernée :
                 </Text>
-                {`  ${selectedEmployee.first_name} ${selectedEmployee.last_name ?? ""}`}
+                {`  ${selectedEmployee.first_name ? (selectedEmployee.first_name + " ") : ""}${selectedEmployee.last_name ?? ""}`}
             </Text>
             }
 

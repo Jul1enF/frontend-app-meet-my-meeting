@@ -21,7 +21,7 @@ export default function AppointmentPage() {
     if (!appointmentInfos.employees) return null
     else return appointmentInfos.employees.reduce((acc, e) => {
       acc.push({
-        title: e.first_name,
+        title: `${e.first_name ? (e.first_name + " ") : ""}${e.last_name ?? ""}`,
         id: e._id,
         employee: e,
       })

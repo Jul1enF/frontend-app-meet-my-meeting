@@ -12,7 +12,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
         if (!employees) return null
         else return employees.reduce((acc, e) => {
             acc.push({
-                title: e.first_name,
+                title: `${e.first_name ? (e.first_name + " ") : ""}${e.last_name ?? ""}`,
                 id: e._id === _id ? "default" : e._id,
                 employee: e,
             })

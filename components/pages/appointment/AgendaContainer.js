@@ -18,6 +18,11 @@ export default function AgendaContainer({ agendaContext, selectedAppointmentSlot
         else if (selectedAppointmentSlot) setAgendaVisible(false)
     }, [selectedAppointmentSlot])
 
+    const getNameTitle = (selectedAppointmentSlot) =>{
+        const { first_name, last_name } = selectedAppointmentSlot.employee
+        return `${first_name ? (first_name + " ") : ""}${last_name ?? ""}`
+    }
+
     return (
         <View style={{ width: "100%", alignItems: "center", paddingBottom: selectedAppointmentSlot ? 0 : appStyle.largeMarginTop  }} >
 
@@ -29,7 +34,7 @@ export default function AgendaContainer({ agendaContext, selectedAppointmentSlot
             {selectedAppointmentSlot && <SelectedAppointment informationsArray={[
                 {category : "Date", title : selectedAppointmentSlot.start.toFormat("dd/MM/yy")},
                 {category : "Horaire", title : selectedAppointmentSlot.start.toFormat("HH:mm")}, 
-                {category : "Avec", title : selectedAppointmentSlot.employee.first_name}
+                {category : "Avec", title : getNameTitle(selectedAppointmentSlot)}
                 ]} /> }
 
         </View>
