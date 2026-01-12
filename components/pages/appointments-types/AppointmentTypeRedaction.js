@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, Platform } from "react-native"
 import { useState, useRef, useEffect } from "react"
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller"
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -92,7 +93,14 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
     }
 
     return (
-        <View style={appStyle.pageBody} >
+        <KeyboardAwareScrollView
+                style={{ width: "100%", height: "100%" }}
+                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }}
+                keyboardShouldPersistTaps="handled"
+                bounces={false}
+                overScrollMode="never"
+                bottomOffset={Platform.OS === 'ios' ? 40 : 20}
+            >
             <Text style={[appStyle.pageTitle, { paddingHorizontal: appStyle.cardLateralPadding * 0.9, lineHeight: phoneDevice ? RPW(8) : 60 }]} >
                 {!selectedType ? "Création d'un nouveau modèle" : "Modifier un modèle"}
             </Text>
@@ -115,7 +123,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
 
             < ConfirmationModal visible={deleteModalVisible} closeModal={() => setDeleteModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir supprimer ce modèle ?"} confirmationBtnText={"Oui, supprimer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={deleteAppointmentType} />
-        </View>
+        </KeyboardAwareScrollView>
     )
 }
 

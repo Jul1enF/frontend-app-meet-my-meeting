@@ -6,6 +6,7 @@ import Modal from "react-native-modal"
 import useLayoutSpaces from "@hooks/useLayoutSpaces"
 import GoingBackHeader from "@components/ui/GoingBackHeader";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 
 export default function ModalPageWrapper({ visible, setVisible, closeFunction, backHeaderText, noScrollView, children }) {
@@ -31,18 +32,20 @@ export default function ModalPageWrapper({ visible, setVisible, closeFunction, b
             useNativeDriverForBackdrop={true}
         >
             <AutocompleteDropdownContextProvider>
+                <KeyboardProvider>
 
                 <GoingBackHeader previousPageName={backHeaderText} leftFunction={close} />
 
-                { noScrollView && {children} }
+                { noScrollView && [children] }
 
 
                 { !noScrollView && <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" >
 
-                    {children}
+                    {[children]}
 
                 </ScrollView>}
-
+                
+                </KeyboardProvider>
             </AutocompleteDropdownContextProvider>
         </Modal>
     )

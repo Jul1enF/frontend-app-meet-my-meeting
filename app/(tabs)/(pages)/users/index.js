@@ -95,6 +95,7 @@ export default function UsersPage() {
                             value={searchText}
                             onChangeText={(e) => setSearchText(e)}
                             autoCapitalize='none'
+                            placeholderTextColor={appStyle.placeholderColor}
                             placeholder='Rechercher un utilisateur...'
                         >
                         </TextInput>
@@ -128,7 +129,7 @@ export default function UsersPage() {
                 />
 
 
-                <ModalPageWrapper visible={userModalVisible} setVisible={setUserModalVisible} backHeaderText="Liste des utilisateurs" >
+                <ModalPageWrapper visible={userModalVisible} setVisible={setUserModalVisible} backHeaderText="Liste des utilisateurs" noScrollView={true} >
 
                     <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setAllUsers={setAllUsers} setSessionExpired={setSessionExpired} />
 

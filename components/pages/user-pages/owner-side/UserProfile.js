@@ -1,6 +1,7 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Platform } from "react-native";
 import { useState, useMemo, useRef } from "react";
 
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import Autocomplete from "@components/ui/Autocomplete";
 import UserInformations from "./UserInformations";
 import UserSchedule from "../user-schedule/UserSchedule";
@@ -67,7 +68,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
     }
 
 
- 
+
     const updateUserRef = useRef(true)
 
     const updateUserPress = async () => {
@@ -77,8 +78,8 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
             userToSave: {
                 role,
                 schedule: role === "client" ? null : newSchedule,
-                contract_end: role === "client" ? null : 
-                contractEnd ? contractEnd.toUTC().toJSDate() : null,
+                contract_end: role === "client" ? null :
+                    contractEnd ? contractEnd.toUTC().toJSDate() : null,
             }
         }
 
@@ -97,7 +98,13 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
 
 
     return (
-        <>
+        <KeyboardAwareScrollView
+            style={{ width: "100%", height: "100%" }}
+            bottomOffset={Platform.OS === 'ios' ? 40 : 20}
+            contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }}
+            overScrollMode="never"
+            bounces={false}
+        >
             <View style={appStyle.pageBody}>
 
                 <Text style={appStyle.pageTitle}>
@@ -132,7 +139,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
                 < ConfirmationModal visible={modalVisible} closeModal={() => setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUserPress} />
 
             </View>
-        </>
+        </KeyboardAwareScrollView>
     )
 }
 

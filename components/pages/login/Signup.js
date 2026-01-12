@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useState, useRef } from 'react';
-// import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Button from '@components/ui/Button';
@@ -14,7 +15,7 @@ import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
 
 export default function Signup({ setSignForm, func }) {
-    const router  = useRouter()
+    const router = useRouter()
 
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -49,7 +50,7 @@ export default function Signup({ setSignForm, func }) {
         }
 
         const data = await request({
-            path: "/users/signup", method: "POST", functionRef: signupRef, setWarning, 
+            path: "/users/signup", method: "POST", functionRef: signupRef, setWarning,
             body: {
                 email,
                 password,
@@ -71,114 +72,116 @@ export default function Signup({ setSignForm, func }) {
 
     return (
         <>
-            <KeyboardAvoidingView style={{ width: "100%", height: "100%" }} keyboardVerticalOffset={phoneDevice ? 30 : 150} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
-                <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled" >
+            {/* <KeyboardAvoidingView style={{ width: "100%", height: "100%" }} keyboardVerticalOffset={phoneDevice ? 30 : 150} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
+                <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled" > */}
 
-                    {/* <KeyboardAwareScrollView
+            <KeyboardAwareScrollView
                 style={{ width: "100%", height: "100%" }}
-                contentContainerStyle={[appStyle.pageBody, {flex : "auto"}]}
+                contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled"
+                bounces={false}
+                overScrollMode="never"
                 bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-            > */}
+            >
 
-                    <Text style={appStyle.pageTitle}>S'inscrire</Text>
+                <Text style={appStyle.pageTitle}>S'inscrire</Text>
 
 
-                    <View style={appStyle.card}>
+                <View style={appStyle.card}>
 
-                        <TextInput style={styles.input}
+                    <TextInput style={styles.input}
+                        onChangeText={(e) => {
+                            setFirstName(e)
+                            setWarning({})
+                        }}
+                        value={firstName}
+                        placeholder='Prénom'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        autoCapitalize="words">
+                    </TextInput>
+
+                    <TextInput style={styles.input}
+                        onChangeText={(e) => {
+                            setLastName(e)
+                            setWarning({})
+                        }}
+                        value={lastName}
+                        placeholder='Nom'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        autoCapitalize="words">
+                    </TextInput>
+
+                    <TextInput style={styles.input}
+                        onChangeText={(e) => {
+                            setEmail(e)
+                            setWarning({})
+                        }}
+                        value={email}
+                        placeholder='Email'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        keyboardType='email-address'
+                        autoCapitalize='none'>
+                    </TextInput>
+
+                    <View style={styles.passwordInputContainer} >
+                        <TextInput style={styles.passwordInput}
                             onChangeText={(e) => {
-                                setFirstName(e)
-                                setWarning({})
+                                setPassword(e)
+                                setWarning('')
                             }}
-                            value={firstName}
-                            placeholder='Prénom'
+                            value={password}
+                            autoCapitalize='none'
+                            placeholder='Mot de passe'
                             placeholderTextColor={appStyle.placeholderColor}
-                            autoCapitalize="words">
+                            secureTextEntry={!passwordVisible}>
                         </TextInput>
-
-                        <TextInput style={styles.input}
-                            onChangeText={(e) => {
-                                setLastName(e)
-                                setWarning({})
-                            }}
-                            value={lastName}
-                            placeholder='Nom'
-                            placeholderTextColor={appStyle.placeholderColor}
-                            autoCapitalize="words">
-                        </TextInput>
-
-                        <TextInput style={styles.input}
-                            onChangeText={(e) => {
-                                setEmail(e)
-                                setWarning({})
-                            }}
-                            value={email}
-                            placeholder='Email'
-                            placeholderTextColor={appStyle.placeholderColor}
-                            keyboardType='email-address'
-                            autoCapitalize='none'>
-                        </TextInput>
-
-                        <View style={styles.passwordInputContainer} >
-                            <TextInput style={styles.passwordInput}
-                                onChangeText={(e) => {
-                                    setPassword(e)
-                                    setWarning('')
-                                }}
-                                value={password}
-                                autoCapitalize='none'
-                                placeholder='Mot de passe'
-                                placeholderTextColor={appStyle.placeholderColor}
-                                secureTextEntry={!passwordVisible}>
-                            </TextInput>
-                            <FontAwesome
-                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
-                            </FontAwesome>
-                        </View>
-
-                        <View style={styles.passwordInputContainer} >
-                            <TextInput style={styles.passwordInput}
-                                onChangeText={(e) => {
-                                    setConfirmedPassword(e)
-                                    setWarning('')
-                                }}
-                                value={confirmedPassword}
-                                autoCapitalize='none'
-                                placeholder='Confirmation mot de passe'
-                                placeholderTextColor={appStyle.placeholderColor}
-                                secureTextEntry={!confirmedPasswordVisible}>
-                            </TextInput>
-                            <FontAwesome
-                                name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)}>
-                            </FontAwesome>
-                        </View>
-
-                        <Button text="S'inscrire" func={signupClick} />
-
-                        <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
-                            {warning?.text}
-                        </Text>
-
-
-                        <TouchableOpacity style={{ width: "100%", alignItems: "center", marginTop: phoneDevice ? RPW(5) : 40 }} activeOpacity={0.5} onPress={() => setSignForm("signin")} >
-                            <Text style={[appStyle.regularText, { color: appStyle.fontColorDarkBg }]}>
-                                Déjà un compte  ?
-                            </Text>
-
-                            <View style={styles.signupButton} >
-                                <MaterialIcons name="login" color={appStyle.brightRed} size={phoneDevice ? RPW(4) : 30} />
-                                <Text style={[{ ...appStyle.regularText }, { color: appStyle.brightRed, marginLeft: phoneDevice ? RPW(2) : 15 }]}>
-                                    Se connecter
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-
+                        <FontAwesome
+                            name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
+                        </FontAwesome>
                     </View>
 
-                    {/* </KeyboardAwareScrollView> */}
+                    <View style={styles.passwordInputContainer} >
+                        <TextInput style={styles.passwordInput}
+                            onChangeText={(e) => {
+                                setConfirmedPassword(e)
+                                setWarning('')
+                            }}
+                            value={confirmedPassword}
+                            autoCapitalize='none'
+                            placeholder='Confirmation mot de passe'
+                            placeholderTextColor={appStyle.placeholderColor}
+                            secureTextEntry={!confirmedPasswordVisible}>
+                        </TextInput>
+                        <FontAwesome
+                            name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)}>
+                        </FontAwesome>
+                    </View>
 
-                </ScrollView>
-            </KeyboardAvoidingView>
+                    <Button text="S'inscrire" func={signupClick} />
+
+                    <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>
+                        {warning?.text}
+                    </Text>
+
+
+                    <TouchableOpacity style={{ width: "100%", alignItems: "center", marginTop: phoneDevice ? RPW(5) : 40 }} activeOpacity={0.5} onPress={() => setSignForm("signin")} >
+                        <Text style={[appStyle.regularText, { color: appStyle.fontColorDarkBg }]}>
+                            Déjà un compte  ?
+                        </Text>
+
+                        <View style={styles.signupButton} >
+                            <MaterialIcons name="login" color={appStyle.brightRed} size={phoneDevice ? RPW(4) : 30} />
+                            <Text style={[{ ...appStyle.regularText }, { color: appStyle.brightRed, marginLeft: phoneDevice ? RPW(2) : 15 }]}>
+                                Se connecter
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                </View>
+
+            </KeyboardAwareScrollView>
+
+            {/* </ScrollView>
+            </KeyboardAvoidingView> */}
         </>
     );
 }

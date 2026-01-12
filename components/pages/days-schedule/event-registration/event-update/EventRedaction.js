@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useState, useRef, useEffect } from 'react';
-// import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -56,66 +56,69 @@ export default function EventRedaction({ redactionContext }) {
 
     return (
         <>
-            <KeyboardAvoidingView style={{ width: "100%", height: "100%" }} keyboardVerticalOffset={phoneDevice ? 30 : 150} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
-                <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled">
+            {/* <KeyboardAvoidingView style={{ width: "100%", height: "100%" }} keyboardVerticalOffset={phoneDevice ? 30 : 150} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
+                <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled"> */}
 
-                    {/* <KeyboardAwareScrollView
-                    style={{ width: "100%", height: "100%" }}
-                    contentContainerStyle={[appStyle.pageBody, {flex : "auto"}]}
-                    bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-                > */}
-
-
-                    <Text style={appStyle.pageTitle}>
-                        {!oldEvent ? "Nouvel évènement :" : "Modifier un évènement :"}
-                    </Text>
-
-                    <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
-
-                        {oldEvent &&
-                            <View style={{borderBottomColor: appStyle.darkWhite, borderBottomWidth: phoneDevice ? 2 : 3, paddingBottom: phoneDevice ? RPW(1) : 6, marginBottom : phoneDevice ? RPW(1) : 10 }}>
-                                <Text style={{ ...appStyle.pageSubtitle, color: appStyle.fontColorDarkBg, fontWeight : "700" }}>
-                                    {eventCatTranslation[category]} :
-                                </Text>
-                            </View>
-                        }
+            <KeyboardAwareScrollView
+                style={{ width: "100%", height: "100%" }}
+                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} 
+                keyboardShouldPersistTaps="handled"
+                bounces={false}
+                overScrollMode="never"
+                bottomOffset={Platform.OS === 'ios' ? 40 : 20}
+            >
 
 
-                        {!oldEvent &&
-                            <Autocomplete
-                                data={categoriesList}
-                                editable={false}
-                                showClear={false}
-                                setSelectedItem={(item) => setCategory(item?.category ?? null)}
-                                initialValue={"initialValue"}
-                                width="100%"
-                            />
-                        }
+                <Text style={appStyle.pageTitle}>
+                    {!oldEvent ? "Nouvel évènement :" : "Modifier un évènement :"}
+                </Text>
+
+                <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
+
+                    {oldEvent &&
+                        <View style={{ borderBottomColor: appStyle.darkWhite, borderBottomWidth: phoneDevice ? 2 : 3, paddingBottom: phoneDevice ? RPW(1) : 6, marginBottom: phoneDevice ? RPW(1) : 10 }}>
+                            <Text style={{ ...appStyle.pageSubtitle, color: appStyle.fontColorDarkBg, fontWeight: "700" }}>
+                                {eventCatTranslation[category]} :
+                            </Text>
+                        </View>
+                    }
 
 
-                        {category === "appointment" &&
-                            <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
-                        }
+                    {!oldEvent &&
+                        <Autocomplete
+                            data={categoriesList}
+                            editable={false}
+                            showClear={false}
+                            setSelectedItem={(item) => setCategory(item?.category ?? null)}
+                            initialValue={"initialValue"}
+                            width="100%"
+                        />
+                    }
 
 
-                        {(category === "absence" || category === "closure") &&
-                            <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} selectedEmployee={selectedEmployee} />
-                        }
+                    {category === "appointment" &&
+                        <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
+                    }
 
 
-                        {/break/i.test(category) &&
-                            <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} category={category} />
-                        }
+                    {(category === "absence" || category === "closure") &&
+                        <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} selectedEmployee={selectedEmployee} />
+                    }
 
 
-                        <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
+                    {/break/i.test(category) &&
+                        <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} category={category} />
+                    }
 
-                    </View>
 
-                    {/* </KeyboardAwareScrollView> */}
+                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
 
-                </ScrollView>
-            </KeyboardAvoidingView>
+                </View>
+
+            </KeyboardAwareScrollView>
+
+            {/* </ScrollView>
+            </KeyboardAvoidingView> */}
         </>
     );
 }

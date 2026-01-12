@@ -110,7 +110,7 @@ export default function AppointmentsTypesPage() {
                 contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom, paddingTop: appStyle.largeMarginTop }}
             />
 
-            <ModalPageWrapper visible={typeModalVisible} setVisible={setTypeModalVisible} backHeaderText="Liste des modèles de RDV" >
+            <ModalPageWrapper visible={typeModalVisible} setVisible={setTypeModalVisible} backHeaderText="Liste des modèles de RDV" noScrollView={true} >
 
                 <AppointmentTypeRedaction selectedType={selectedType} setSelectedType={setSelectedType} jwtToken={jwtToken} setTypes={setTypes} setSessionExpired={setSessionExpired} categories={categories} setTypeModalVisible={setTypeModalVisible} />
 

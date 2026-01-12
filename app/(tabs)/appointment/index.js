@@ -1,5 +1,6 @@
-import { ScrollView, View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useEffect, useState, useMemo } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -40,7 +41,7 @@ export default function AppointmentPage() {
     const data = await request({ path: "/appointments/appointment-informations", clearEtag, setWarning })
     if (data?.result) {
       setAppointmentInfos(data.informations)
-      setSelectedEmployees(prev =>  prev ?? data.informations.employees)
+      setSelectedEmployees(prev => prev ?? data.informations.employees)
     }
   }
 
@@ -95,7 +96,13 @@ export default function AppointmentPage() {
 
   return (
     <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }} overScrollMode="never" refreshControl={refreshControl}>
+      <KeyboardAwareScrollView
+        style={{ width: "100%", height: "100%" }}
+        bottomOffset={Platform.OS === 'ios' ? 40 : 20}
+        contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }}
+        overScrollMode="never"
+        refreshControl={refreshControl}
+      >
 
         <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
 
@@ -105,7 +112,7 @@ export default function AppointmentPage() {
           <AppointmentValidation selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndRenewEvents={resetAndRenewEvents} />
         }
 
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   )
 }

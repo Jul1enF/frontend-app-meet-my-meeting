@@ -5,6 +5,7 @@ import { phoneDevice } from "../utils/dimensions"
 import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { Settings } from "luxon";
 import * as Localization from "expo-localization";
@@ -37,12 +38,14 @@ export default function RootLayout() {
     return (
         <Provider store={store}>
             <AutocompleteDropdownContextProvider >
-                <Stack screenOptions={{
-                    header: (props) => <Header {...props} appObsolete={appObsolete} />,
-                }} >
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="(tabs)" />
-                </Stack>
+                <KeyboardProvider>
+                    <Stack screenOptions={{
+                        header: (props) => <Header {...props} appObsolete={appObsolete} />,
+                    }} >
+                        <Stack.Screen name="index" />
+                        <Stack.Screen name="(tabs)" />
+                    </Stack>
+                </KeyboardProvider>
             </AutocompleteDropdownContextProvider>
         </Provider>
     )

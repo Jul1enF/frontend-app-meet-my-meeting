@@ -102,6 +102,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
                 listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
                 bold="700"
                 multiline={true}
+                editable={false}
             />
 
              {oldEvent &&
