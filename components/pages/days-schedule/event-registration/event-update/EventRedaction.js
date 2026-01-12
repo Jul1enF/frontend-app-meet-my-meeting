@@ -108,7 +108,7 @@ export default function EventRedaction({ redactionContext }) {
                         }
 
 
-                        <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
+                        <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
 
                     </View>
 

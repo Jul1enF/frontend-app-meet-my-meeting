@@ -11,7 +11,7 @@ import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
+export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
 
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
@@ -134,14 +134,16 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
             setWarning: setFetchWarning,
             setModalVisible: setConfirmationModalVisible,
         })
-
         if (data?.result) {
             const { eventSaved } = data
             const delay = data.delay ?? 0
             setTimeout(() => resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create"), delay)
         }
         else if (data.delay) {
-            setTimeout(() => resetAndRenewEvents(), data.delay)
+            setTimeout(() => {
+                data.appointmentTypeError && setSelectedAppointmentType(null)
+                resetAndRenewEvents()
+            }, data.delay)
         }
     }
 

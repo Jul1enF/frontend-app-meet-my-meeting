@@ -36,6 +36,14 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     const { typesAutocompleteRef, usersAutocompleteRef } = useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient, employees })
 
 
+    // Clear the appointment type autocomplete selection if selected appointment type has been cleared elsewhere (in case of bad return of the creation of an event). For oldEvent cases (modifications) it is handle in useSetOldEvent by displaying "SUPPRIMÉ"
+    const appointmentTypeRef = useRef(null)
+    useEffect(()=>{
+        if (!selectedAppointmentType && appointmentTypeRef.current && typesAutocompleteRef.current && !oldEvent){
+            typesAutocompleteRef.current.clear()
+        }
+    },[selectedAppointmentType])
+
 
     // Memoisation of the Autocomplete for the appointments slots and the users
 
@@ -81,7 +89,10 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             <Autocomplete
                 data={appointmentsList}
                 placeholderText={"Choix du RDV"}
-                setSelectedItem={(item) => setSelectedAppointmentType(item?.appointment ?? null)}
+                setSelectedItem={(item) => {
+                    setSelectedAppointmentType(item?.appointment ?? null)
+                    appointmentTypeRef.current = item
+                }}
                 ref={typesAutocompleteRef}
                 emptyText="Aucun résultat"
                 width="100%"

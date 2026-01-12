@@ -39,7 +39,11 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
                 return acc
             }, {})
             const categoriesArray = Object.values(categoriesObject)
-            categoriesArray.sort((a, b) => a.types.length - b.types.length)
+            categoriesArray.sort((a, b) => {
+                const diff = b.types.length - a.types.length
+                if (diff !== 0) return diff
+                else return a.title.localeCompare(b.title)
+            })
             return categoriesArray
         }
     }, [appointmentTypes])

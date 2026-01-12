@@ -40,9 +40,16 @@ export default function useAutocompleteLists(appointmentTypes, users, appointmen
             return acc
         },{})
 
-        const sortedArray = category ?
-            [...appointmentTypes].sort((a, b) => categoryCount[b.category] - categoryCount[a.category])
-            : [...appointmentTypes].sort((a, b) => a.default_duration - b.default_duration)
+        let sortedArray
+        if (category){
+            sortedArray = [...appointmentTypes].sort((a, b) => {
+                const diff = categoryCount[b.category] - categoryCount[a.category]
+                if (diff !== 0) return diff
+                else return a.category.localeCompare(b.category)
+            })
+        }else{
+            sortedArray = [...appointmentTypes].sort((a, b) => a.default_duration - b.default_duration)
+        }
 
         const appointmentsArray = sortedArray.map(e => {
             const boldTitle = category ? `${e.category} :  ` : e.title

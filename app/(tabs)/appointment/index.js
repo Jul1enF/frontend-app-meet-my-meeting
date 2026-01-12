@@ -102,7 +102,7 @@ export default function AppointmentPage() {
         {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
 
         {selectedAppointmentType && selectedAppointmentSlot &&
-          <AppointmentValidation selectedAppointmentType={selectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndRenewEvents={resetAndRenewEvents} />
+          <AppointmentValidation selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} selectedAppointmentSlot={selectedAppointmentSlot} resetAndRenewEvents={resetAndRenewEvents} />
         }
 
       </ScrollView>

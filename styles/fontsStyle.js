@@ -52,9 +52,9 @@ export const fontsStyle = {
          textAlign: "center",
     },
     warning: {
-        fontSize: phoneDevice ? RPW(4.3) : 29,
+        fontSize: phoneDevice ? RPW(4.6) : 30,
         letterSpacing: phoneDevice ? 1.5 : 2.5,
-        fontWeight: "500",
+        fontWeight: phoneDevice ? "700" : "500",
         textAlign: "center",
         width: "100%",
         maxWidth : "100%",

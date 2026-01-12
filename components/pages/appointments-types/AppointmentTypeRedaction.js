@@ -40,7 +40,9 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
         }
     }
 
-    // FUNCTION TO SEND DATA TO THE BACKEND
+
+    // CREATE OR MODIFY AN APPOINTMENT IN DATA BASE
+
     const appointmentTypesModificationRef = useRef(true)
 
     const appointmentTypesModification = async () => {
@@ -68,19 +70,24 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
                     else return e
                 }))
             }
+            const delay = data.delay ?? 500
+            setTimeout(()=> setTypeModalVisible(false), delay)
         }
     }
 
-    // FUNCTION TO DELETE AN APPOINTMENT TYPE
+
+
+    // FUNCTION TO DELETE AN APPOINTMENT TYPE (BY PUTING TO IT AN EXPIRATION DATE)
     const deleteAppointmentTypeRef = useRef(true)
     const deleteAppointmentType = async () =>{
 
-        const data = await request({ path: "/pros/delete-appointment-type", method: "DELETE", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, params : selectedType._id})
+        const data = await request({ path: "/pros/delete-appointment-type", method: "PUT", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, body : { _id : selectedType._id}})
 
         if (data?.result){
             setTypes(prev => prev.filter(e=> e._id !== selectedType._id))
             setSelectedType(null)
-            setTimeout(()=> setTypeModalVisible(false), 400)
+            const delay = data.delay ?? 500
+            setTimeout(()=> setTypeModalVisible(false), delay)
         }
     }
 
@@ -90,7 +97,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
                 {!selectedType ? "Création d'un nouveau modèle" : "Modifier un modèle"}
             </Text>
 
-            <View style={[appStyle.card, { paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
+            <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
 
                 <AppointmentsTypesInputs categories={categories} setCategory={setCategory} title={title} setTitle={setTitle} defaultDuration={defaultDuration} setDefaultDuration={setDefaultDuration} price={price} setPrice={setPrice} setWarning={setWarning} selectedType={selectedType} />
 
@@ -98,9 +105,9 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
                     {warning}
                 </Text>
 
-                <Button func={() => validateType()} text={`Enregistrer ${!selectedType ? "le modèle" : "les modifications"}`} marginTop={appStyle.largeMarginTop} fontStyle={{ color: appStyle.fontColorDarkBg }} />
+                <Button func={() => validateType()} text={`Enregistrer ${!selectedType ? "le modèle" : "les modifications"}`} fontStyle={{ color: appStyle.fontColorDarkBg }} style={{height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25), marginTop : appStyle.largeMarginTop}} />
                 
-                {selectedType && <Button func={() => setDeleteModalVisible(true)} text={"Supprimer le modèle"} marginTop={appStyle.largeMarginTop} fontStyle={{ color: appStyle.fontColorDarkBg }} />}
+                {selectedType && <Button func={() => setDeleteModalVisible(true)} text={"Supprimer le modèle"} style={{height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25), marginTop : appStyle.mediumMarginTop}} fontStyle={{ color: appStyle.fontColorDarkBg }} />}
 
             </View>
 

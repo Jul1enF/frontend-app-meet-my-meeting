@@ -14,14 +14,14 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Catégorie :
                 </Text>
 
-                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" height={appStyle.regularItemHeight} width={appStyle.regularItemWidth} inputStyle={{ fontWeight: "400" }} canCreate={true} initialValue={selectedType?.category && {title : selectedType.category, id : selectedType._id} } />
+                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" width={"100%"} inputStyle={{ fontWeight: "400" }} canCreate={true} initialValue={selectedType?.category && {title : selectedType.category, id : selectedType._id} } />
             </View>
 
             <View style={styles.column}>
                 <Text style={styles.label}>
                     Titre :
                 </Text>
-                <TextInput style={[appStyle.input.base, { color: appStyle.fontColorDarkBg }]}
+                <TextInput style={[appStyle.input.baseLarge, { color: appStyle.fontColorDarkBg, width : "100%" }]}
                     onChangeText={(e) => {
                         setTitle(e)
                         setWarning("")
@@ -42,7 +42,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                 <View style={styles.numberInputContainer}>
                     <TextInput style={[appStyle.input.withIcon, { color: appStyle.fontColorDarkBg, width: "50%" }]}
                         onChangeText={(e) => {
-                            e ? setDefaultDuration(Number(e)) : setDefaultDuration("")
+                            !Number.isNaN(Number(e)) ? setDefaultDuration(Number(e)) : setDefaultDuration("")
                             setWarning("")
                         }}
                         value={defaultDuration.toString()}
@@ -66,7 +66,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                 <View style={styles.numberInputContainer}>
                     <TextInput style={[appStyle.input.withIcon, { color: appStyle.fontColorDarkBg, width: "50%" }]}
                         onChangeText={(e) => {
-                            e ? setPrice(Number(e)) : setPrice("")
+                            !Number.isNaN(Number(e)) ? setPrice(Number(e)) : setPrice("")
                             setWarning("")
                         }}
                         value={price.toString()}
@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: phoneDevice ? 2 : 3,
     },
     numberInputContainer: {
-        ...appStyle.input.base,
+        ...appStyle.input.baseLarge,
+        width : "100%",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",

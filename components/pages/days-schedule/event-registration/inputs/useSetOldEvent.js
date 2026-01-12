@@ -4,9 +4,9 @@ export default function useSetOldEvent({ oldEvent, appointmentsList, usersList, 
 
     const typesAutocompleteRef = useRef(null)
     const usersAutocompleteRef = useRef(null)
-    const oldEventSettedRef = useRef(false)
+
     useEffect(() => {
-        if (oldEvent && !oldEventSettedRef.current && typesAutocompleteRef.current && usersAutocompleteRef) {
+        if (oldEvent && typesAutocompleteRef.current ) {
             // Check that the appointment type still exists in our list (it might have been supressed since the event was posted and so not been downloaded from db)
             const oldAppType = oldEvent.appointment_type
             const appTypeFound = appointmentsList.find(e => e.id === oldAppType._id.toString())
@@ -17,6 +17,12 @@ export default function useSetOldEvent({ oldEvent, appointmentsList, usersList, 
             }
 
             typesAutocompleteRef.current.setItem(appTypeFound ?? suppressedType)
+        }
+    }, [oldEvent, appointmentsList])
+
+
+    useEffect(() => {
+        if (oldEvent && usersAutocompleteRef.current) {
 
             // Check that the user still exists in db and so in our list
             if (oldEvent.client) {
@@ -32,8 +38,6 @@ export default function useSetOldEvent({ oldEvent, appointmentsList, usersList, 
             } else {
                 setUnregisteredClient(oldEvent.unregistered_client)
             }
-
-            oldEventSettedRef.current = true
         }
     }, [oldEvent])
 

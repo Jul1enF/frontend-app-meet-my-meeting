@@ -51,7 +51,11 @@ export default async function request({ path, method = "GET", body, params, jwtT
         if (!data.result) {
             displayWarning(data.errorText ?? null)
             sessionExpired = data.sessionExpired
-            if (!sessionExpired) return { delay : readingTime(warningText) + 400}
+            // If the session has not expired (wich mean automatic expulsion of the user), we return the delay during wich the error message will be displayed (in case of an action needed after) and the data in case of a check inside it is needed
+            if (!sessionExpired) return { 
+                delay : readingTime(warningText) + 400,
+                ...(data && data),
+            }
         }
         else if (data.notModified) {
             return
