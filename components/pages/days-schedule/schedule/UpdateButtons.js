@@ -16,7 +16,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 
 export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, eventMinDuration, resetAndRenewEvents }) {
 
-    const { category, _id, client } = event
+    const { category, _id } = event
 
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
@@ -41,8 +41,7 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
         const body = { eventToSave: { ...event, lunch_break_modification: "suppression" } }
 
         // Params for suppression
-        const params = [_id.toString()]
-        client && params.push(client._id.toString())
+        const params = _id.toString()
 
         const data = await request({
             path: !isLunchBreak ? "/events/delete-event" : "/events/create-or-update",

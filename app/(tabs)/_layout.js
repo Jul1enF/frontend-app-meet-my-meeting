@@ -34,6 +34,8 @@ export default function TabsLayout() {
             case 'appointment':
               iconName = 'triangle-outline'
               break;
+            case "user-appointments" :
+              iconName = 'circle-outline'
           }
 
           return <MaterialCommunityIcons name={iconName} size={phoneDevice ? RPW(6.5) : 32} color={color} />;
@@ -63,6 +65,9 @@ export default function TabsLayout() {
       }} />
       <Tabs.Screen name="appointment" options={{
         title: "Rendez-vous",
+      }} />
+      <Tabs.Screen name="user-appointments" options={{
+        title: "Mes RDV",
       }} />
       <Tabs.Screen name="(pages)" options={{
         tabBarItemStyle: { display: "none" },

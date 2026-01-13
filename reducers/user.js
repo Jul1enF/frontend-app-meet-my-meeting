@@ -6,7 +6,6 @@ const defaultUser = {
     email: "",
     jwtToken: "",
     role : "",
-    events: [],
     _id : "",
 }
 
@@ -24,12 +23,6 @@ export const userSlice = createSlice({
         logout: (state, action) => {
             state.value = defaultUser
         },
-        addEvent: (state, action) => {
-            state.value.events.push(action.payload)
-        },
-        // removeBookmark: (state, action) => {
-        //     state.value.bookmarks = state.value.bookmarks.filter(e => e !== action.payload)
-        // },
         changeUserInfos: (state, action) => {
             state.value.first_name = action.payload.first_name
             state.value.last_name = action.payload.last_name
@@ -38,5 +31,5 @@ export const userSlice = createSlice({
     }
 })
 
-export const { login, logout, addEvent, changeUserInfos } = userSlice.actions
+export const { login, logout, changeUserInfos } = userSlice.actions
 export default userSlice.reducer
