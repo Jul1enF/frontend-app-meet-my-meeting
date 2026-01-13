@@ -1,14 +1,13 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { toParisDt } from "@utils/timeFunctions";
 
 
-export default function AppointmentItem({ appointment, employees, setOldEvent }) {
+export default function AppointmentItem({start, employee, appointment_type, employees }) {
 
-    const { start, employee } = appointment
-    const { category, title, price, default_duration } = appointment.appointment_type
+    const { category, title, price, default_duration } = appointment_type
 
     const getEmployeeName = (employee) => {
         const employeeFound = employees.find(e => e._id.toString() === employee.toString())
@@ -18,11 +17,11 @@ export default function AppointmentItem({ appointment, employees, setOldEvent })
     }
     
     return (
-        <TouchableOpacity activeOpacity={0.6} style={styles.mainContainer} onPress={() => setOldEvent(appointment)} >
+        <View style={styles.mainContainer} >
 
             <View style={styles.row} >
                 <Text style={styles.details}>
-
+                    
                     <Text style={styles.label}>
                         Date :
                     </Text>
@@ -59,11 +58,9 @@ export default function AppointmentItem({ appointment, employees, setOldEvent })
                     {getEmployeeName(employee)}
                 </Text>
 
-
-
             </View>
 
-        </TouchableOpacity>
+        </View>
     )
 }
 

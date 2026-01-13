@@ -1,6 +1,5 @@
-import { View, Text, Platform } from 'react-native';
-import { useState, useEffect } from 'react'
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { View, Text, FlatList, TouchableOpacity} from 'react-native';
+import { useState, useEffect, useRef } from 'react'
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -21,7 +20,6 @@ export default function UserAppointments() {
     const [appointmentsInformations, setAppoitmentInformations] = useState({})
     const [userAppointments, setUserAppointments] = useState(null)
     const [fetchWarning, setFetchWarning] = useState({})
-    const [uploading, setUploading] = useState(false)
     const [oldEvent, setOldEvent] = useState(null)
 
     const { employees } = appointmentsInformations
@@ -45,25 +43,18 @@ export default function UserAppointments() {
 
     // useEffect to fetch the user's appointment
     useEffect(() => {
-        setUploading(true)
         getAppointmentsInformations(true)
-        setUploading(false)
     }, [jwtToken])
 
-    // refreshControl for the ScrollView
+    // refreshControl for the Flatlist
     const refreshControl = useRefreshControl(getAppointmentsInformations)
 
-    return (
-        <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
-            <KeyboardAwareScrollView
-                style={{ width: "100%", height: "100%" }}
-                bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-                contentContainerStyle={{ ...appStyle.pageBody, minWidth: "100%", minHeight: "100%", flex: "auto", paddingHorizontal: appStyle.regularLateralPadding }}
-                overScrollMode="never"
-                refreshControl={refreshControl}
-            >
 
-                <Text style={appStyle.pageTitle}>
+    // Header for the flatlist
+    const faltlistHeader = () => {
+        return(
+            <>
+             <Text style={appStyle.pageTitle}>
                     Mes RDV :
                 </Text>
 
@@ -71,7 +62,7 @@ export default function UserAppointments() {
                     {fetchWarning?.text}
                 </Text>
 
-                {(userAppointments && !userAppointments.length && jwtToken && !uploading) &&
+                {(userAppointments && !userAppointments.length && jwtToken) &&
                     <Text style={{ ...appStyle.pageSubtitle, marginTop: appStyle.largeMarginTop }}>
                         Aucun rendez vous à venir !
                     </Text>
@@ -83,20 +74,35 @@ export default function UserAppointments() {
                     </Text>
                 }
 
-                {userAppointments?.length ?
-                    <View style={{ width: "100%", marginTop: appStyle.largeMarginTop, alignItems : "center" }}>
-                    {userAppointments.map((e,i) =>
-                        <AppointmentItem key={i} appointment={{ ...e }} employees={employees} setOldEvent={setOldEvent} />
-                        )}
-                    </View>
-                    : null
-                }
+            </>
+        )
+    }
 
-                
+    const flatlistRef = useRef(null)
 
+    return (
+        <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
+                <FlatList
+                    data={userAppointments ?? []}
+                    refreshControl={refreshControl}
+                    ref={flatlistRef}
+                    onScrollToIndexFailed={(event) => {
+                        flatlistRef.current.scrollToIndex({ animated: false, index: event.index })
+                    }}
+                    ListHeaderComponent={faltlistHeader}
+                    ListHeaderComponentStyle={{ marginVertical : appStyle.largeMarginTop, paddingHorizontal : appStyle.regularLateralPadding}}
+                    showsVerticalScrollIndicator={false}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item, index }) => 
+                    <TouchableOpacity
+                        onPress={() => setOldEvent(item)}>
+                        <AppointmentItem {...item} employees={employees} />
+                    </TouchableOpacity>}
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom }}
+                />
 
-            </KeyboardAwareScrollView>
         </View >
     )
 }
