@@ -2,12 +2,11 @@ import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeFunctions";
 
 
-export default function useScheduleEvents(dtDay, selectedEmployees, events, closures, absences, defaultSchedule) {
+export default function useScheduleEvents(dtDate, selectedEmployees, events, closures, absences, defaultSchedule) {
 
 
-    // BE CAREFUL TO SET THE DTDAY ALWAYS AT THE START OF THE DAY TO SEE PAST DAY EVENTS
-    // (done by puting a startOf('day') when insering selectedDate here in Schedule)
-
+    // Force the date to be a the begining of the day (to display in the schedule past day events)
+    const dtDay = useMemo(()=> dtDate.startOf('day'),[dtDate])
 
 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)

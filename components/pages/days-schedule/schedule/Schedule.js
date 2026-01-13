@@ -23,7 +23,7 @@ export default memo(function Schedule({ scheduleContext }) {
     const minuteHeight = phoneDevice ? RPW(1.5) : 8
 
     // Hook to get the events, the appointments slots and the working hours
-    const { concernedEvents, minWorkingHour, maxWorkingHour } = useScheduleEvents(selectedDate.startOf("day"), selectedEmployee, events, closures, absences, defaultSchedule)
+    const { concernedEvents, minWorkingHour, maxWorkingHour } = useScheduleEvents(selectedDate, selectedEmployee, events, closures, absences, defaultSchedule)
     
 
     // Memo of the working hours

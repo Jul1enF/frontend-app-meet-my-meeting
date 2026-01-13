@@ -23,12 +23,8 @@ export default memo(function DayItem({ date, currentMonth, disabled, selectedDat
     return (
         <View style={[styles.mainContainer, { opacity }]}>
             <TouchableOpacity style={[styles.dayContainer, isSelected && styles.selected]} activeOpacity={!disabled ? 0.6 : 0.1} onPress={() => {
-                if (isToday) setSelectedDate(DateTime.now({ zone: "Europe/Paris" }))
-                else {
-                    const itemDate = date.startOf("day")
-                    setSelectedDate(itemDate)
-                }
-
+                const itemDate = date.set({ hour: selectedDate.hour, minute: selectedDate.minute, second : selectedDate.second })
+                setSelectedDate(itemDate)
             }}>
                 <Text style={[styles.dayNumber, todayColor, todayFontStyle]} >
                     {date.day}

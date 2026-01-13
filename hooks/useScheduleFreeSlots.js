@@ -1,12 +1,15 @@
 import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
+import { DateTime } from "luxon";
+
+export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
 
 
-export default function useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
-
-
-    // BE CAREFUL TO SET THE DTAY AT THE ACTUAL CURRENT TIME IF THE DAY IS TODAY 
-    // (done in the useState of the selectedDate in days-schedule and in the selection of day in DayItem of the WeekDatePicker)
+    // Force the date to be a the actual time if it is the current day to not propose past slots
+    const dtDay = useMemo(()=>{
+        const now = DateTime.now({ zone: "Europe/Paris" })
+        return isSameDay(now, dtDate) ? now : dtDate.startOf("day")
+    },[dtDate])
 
 
 

@@ -25,7 +25,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
         if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            setSlotWarning("Erreur : le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :")
+            setSlotWarning(`Erreur : ${!appointmentsList.length ? "aucun créneau disponible ce jour pour ces critères !" : "le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :"}`)
             setTimeout(() => setSlotWarning(""), 5000)
         }
     }, [selectedAppointmentType, appointmentsSlotsList])
@@ -46,7 +46,6 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
 
     // Memoisation of the Autocomplete for the appointments slots and the users
-
     const slotsAutocomplete = useMemo(() => (
         <Autocomplete
             key={appointmentsSlotsList ? appointmentsSlotsList.length : "key"}
