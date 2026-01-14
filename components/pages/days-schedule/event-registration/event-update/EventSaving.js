@@ -18,19 +18,16 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     const [fetchWarning, setFetchWarning] = useState({})
     const [eventToSave, setEventToSave] = useState(null)
 
-
     // Function to display a warning message if the form is not valid
     const displayWarning = (message) => {
         setEventWarning(message)
         setTimeout(() => setEventWarning(""), 4000)
     }
 
+    let event = {}
+
     // Function to check that the form is valid and set the fetch settings
     const eventValidation = () => {
-        let event = {
-            employee: selectedEmployee._id,
-            category,
-        }
 
         // Appointment
         if (category === "appointment") {
@@ -56,6 +53,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 appointment_type: appType._id,
                 client,
                 unregistered_client,
+                employee: selectedEmployee._id,
+                category,
             }
         }
 
@@ -75,6 +74,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 start: eventStart.toUTC().toJSDate(),
                 end: eventStart.plus({ minutes: breakDuration }).toUTC().toJSDate(),
                 description,
+                employee: selectedEmployee._id,
+                category,
             }
         }
 
@@ -89,16 +90,18 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 return
             }
 
-            // For a closure all employees are concerned, not juste one, so we don't put that field
-            category === "closure" && delete event.employee
-
             event = {
                 ...(oldEvent ?? event),
                 start: vacationStart.toUTC().toJSDate(),
                 end: vacationEnd.toUTC().toJSDate(),
                 description,
+                employee: selectedEmployee._id,
+                category,
             }
         }
+
+        // For a closure all employees are concerned, not juste one, so we don't put that field
+        category === "closure" && delete event.employee
 
         // Case where default start and end were setted for an old event (for the schedule display)
         if (event.defaultStart || event.defaultEnd) {
@@ -107,7 +110,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
         }
 
         // If it is a creation of a lunch break we put the marker to signal that it's and update and not a suppression of the default one
-         if (category === "lunchBreak") event.lunch_break_modification = "update"
+        if (category === "lunchBreak") event.lunch_break_modification = "update"
 
         setEventToSave(event)
 
@@ -125,8 +128,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     const registerEvent = async () => {
 
         const data = await request({
-            path : "/events/create-or-update",
-            method : "PUT",
+            path: "/events/create-or-update",
+            method: "PUT",
             body: { eventToSave },
             jwtToken,
             setSessionExpired,
@@ -153,7 +156,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 {eventWarning}
             </Text>
 
-            <Button func={eventValidation} text={!oldEvent ? "Enregistrer l'évènement" : "Modifier l'évènement"} style={{ height: appStyle.mediumItemHeight, marginTop : appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={eventValidation} text={!oldEvent ? "Enregistrer l'évènement" : "Modifier l'évènement"} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
             < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={`Êtes vous sûr(e) de vouloir ${!oldEvent ? "enregistrer" : "modifier"} cet évènement ?`} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />

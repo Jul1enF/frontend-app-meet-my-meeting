@@ -15,7 +15,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
 
             <View style={{ marginTop: appStyle.regularMarginTop * 0.5 }}>
                 <DatePicker chosenDate={vacationStart} setChosenDate={setVacationStart}
-                    inputText=" ( inclus ) " />
+                    endInputText=" ( inclus ) " />
             </View>
 
 
@@ -25,7 +25,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
 
             <View style={{ marginTop: appStyle.regularMarginTop * 0.5 }}>
                 <DatePicker chosenDate={vacationEnd} setChosenDate={setVacationEnd}
-                    inputText=" ( inclus ) " />
+                    endInputText=" ( inclus ) " />
             </View>
 
             <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >

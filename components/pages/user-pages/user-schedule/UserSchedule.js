@@ -46,7 +46,7 @@ export default function UserSchedule({ scheduleArray, scheduleActions, contractE
                     <View style={{marginTop : appStyle.mediumMarginTop}} >
                         <DatePicker
                             chosenDate={datePickerDtDate}
-                            inputText=" ( inclus ) "
+                            endInputText=" ( inclus ) "
                             setChosenDate={(itemDate) => {
                                 const parisItemDate = itemDate.setZone("Europe/Paris", { keepLocalTime: true }).endOf('day');
                                 setContractEnd(parisItemDate)

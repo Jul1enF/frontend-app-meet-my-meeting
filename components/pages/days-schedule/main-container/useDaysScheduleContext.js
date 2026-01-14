@@ -17,7 +17,6 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
   const [selectedDate, setSelectedDate] = useState(DateTime.now({ zone: "Europe/Paris" }))
   const [selectedEmployee, setSelectedEmployee] = useState(null)
 
-
   // States for the event redaction page
   const [eventStart, setEventStart] = useState(null)
   const [oldEvent, setOldEvent] = useState(null)
@@ -78,7 +77,7 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
   // PROPS FOR EVENT REDACTION
   const redactionContext = useMemo(() => {
 
-    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents }
+    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, setSelectedDate, jwtToken, resetAndRenewEvents }
   },
     [selectedEmployee, eventStart, oldEvent, scheduleInformations, selectedDate, jwtToken])
 

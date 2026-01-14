@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 
 import EmployeeSelection from "@components/pages/days-schedule/main-container/EmployeeSelection";
 import Autocomplete from "@components/ui/Autocomplete"
+import DatePicker from "@components/ui/DatePicker/DatePicker";
 import useAutocompleteLists from "../event-update/useAutocompleteLists"
 import useSetOldEvent from "./useSetOldEvent";
 
@@ -12,7 +13,7 @@ import { appStyle } from '@styles/appStyle';
 export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots }) {
 
     // Props coming from the root
-    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee } = redactionContext
+    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate} = redactionContext
 
     // Creation with a hook of the autocomplete lists
     const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart})
@@ -25,7 +26,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
         if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            setSlotWarning(`Erreur : ${!appointmentsList.length ? "aucun créneau disponible ce jour pour ces critères !" : "le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :"}`)
+            setSlotWarning(`Erreur : ${!appointmentsSlotsList.length ? "aucun créneau disponible ce jour pour ces critères !" : "le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :"}`)
             setTimeout(() => setSlotWarning(""), 5000)
         }
     }, [selectedAppointmentType, appointmentsSlotsList])
@@ -110,6 +111,16 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
 
                     <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={selectedEmployee._id} isInRedactionComponent={true} />
+
+                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop }}>
+                        Le  :
+                    </Text>
+
+                    <DatePicker chosenDate={selectedDate} setChosenDate={(date)=>{
+                        setSelectedDate(date)
+                        setEventStart(prev => prev.set({ year: date.year, month: date.month, day: date.day }))
+                    }}  
+                    buttonFontStyle={{ fontWeight : "700"}} buttonStyle={{...appStyle.largeCardItem, height : appStyle.mediumItemHeight}} />
                 </>
             }
 
@@ -119,6 +130,10 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
 
             {slotsAutocomplete}
+
+            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, textAlign : "center" }}>
+                Utilisateur inscrit à l'app :
+            </Text>
 
             {usersAutocomplete}
 
