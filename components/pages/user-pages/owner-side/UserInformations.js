@@ -3,8 +3,16 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
 import { DateTime } from "luxon"
+import LabelValue from "@components/text/LabelValue"
 
 export default function UserInformations({ user }) {
+
+    const informationsArray = [
+        { label: "Nom :", details: user?.last_name },
+        { label: "Prénom :", details: user?.first_name },
+        { label: "Email :", details: user?.email },
+        { label: "Inscription :", details: " le " + DateTime.fromJSDate(new Date(user?.createdAt)).toFormat("dd / MM / yyyy") }
+    ]
 
     return (
         <>
@@ -14,60 +22,11 @@ export default function UserInformations({ user }) {
 
             <View style={styles.row}>
 
-                <View style={styles.col}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>
-                            Nom :
-                        </Text>
-                    </View>
-
-
-                    <Text style={styles.status}>
-                        {user?.last_name}
-                    </Text>
-                </View>
-
-                <View style={styles.col}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>
-                            Prénom :
-                        </Text>
-                    </View>
-
-                    <Text style={styles.status}>
-                        {user?.first_name}
-                    </Text>
-                </View>
-
-            </View>
-
-
-            <View style={styles.row}>
-
-                <View style={styles.col}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>
-                            Email :
-                        </Text>
-                    </View>
-
-
-                    <Text style={styles.status}>
-                        {user?.email}
-                    </Text>
-                </View>
-
-                <View style={[styles.col, {paddingRight : 0, marginRight : - RPW(1.6)}]}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>
-                            Date d'inscription :
-                        </Text>
-                    </View>
-
-                    <Text style={styles.status}>
-                        {DateTime.fromJSDate(new Date(user?.createdAt)).toFormat("dd / MM / yyyy")}
-                    </Text>
-                </View>
+                {
+                    informationsArray.map((e, i) =>
+                        <LabelValue key={i} {...e} labelStyle={styles.label} detailsStyle={styles.details} index={i} lastIndex={informationsArray.length - 1} underlineColor={appStyle.fontColorDarkBg} margin={phoneDevice ? RPW(5) : 35} extraSpace={phoneDevice ? false : true} marginMult={0.25} />
+                    )
+                }
 
             </View>
         </>
@@ -77,32 +36,20 @@ export default function UserInformations({ user }) {
 const styles = StyleSheet.create({
     row: {
         flexDirection: "row",
-        alignItems: "flex-start",
+        justifyContent: "flex-start",
         flexWrap: "wrap",
-        width: "100%",
-        rowGap: appStyle.largeMarginTop,
-        marginTop: appStyle.largeMarginTop,
-    },
-    col: {
-        alignItems: "flex-start",
-        minWidth: "50%",
-        maxWidth: "100%",
-        rowGap: phoneDevice ? RPW(3.7) : 15,
-        paddingRight: phoneDevice ? RPW(1.6) : 8,
+        marginTop : appStyle.largeMarginTop,
     },
     label: {
         ...appStyle.labelText,
-        textAlign : "center",
-        color: appStyle.fontColorDarkBg,
-        paddingBottom: phoneDevice ? RPW(1) : 6,
+        fontWeight: phoneDevice ? "900" : "700",
+        lineHeight: "auto",
+        color : appStyle.fontColorDarkBg,
     },
-    labelContainer: {
-        borderBottomColor: appStyle.darkWhite,
-        borderBottomWidth: phoneDevice ? 2 : 3,
-    },
-    status: {
-        ...appStyle.regularText,
-        letterSpacing : 0,
-        color: appStyle.fontColorDarkBg,
+    details: {
+        ...appStyle.largeText,
+        fontWeight: "500",
+        lineHeight: phoneDevice ? RPW(8) : 48,
+        color : appStyle.fontColorDarkBg,
     }
 })
