@@ -4,8 +4,10 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { toParisDt } from "@utils/timeFunctions";
 
+import LabelValue from "@components/text/LabelValue";
 
-export default function AppointmentItem({start, employee, appointment_type, employees }) {
+
+export default function AppointmentItem({ start, employee, appointment_type, employees }) {
 
     const { category, title, price, default_duration } = appointment_type
 
@@ -15,51 +17,27 @@ export default function AppointmentItem({start, employee, appointment_type, empl
         const { first_name, last_name } = employeeFound
         return `${first_name ? (first_name + " ") : ""}${last_name ?? ""}`
     }
-    
+
+
+    const informationsArray = [
+        {label : "Date :", details : toParisDt(start).toFormat("dd/MM/yy")},
+        {label : "Heure :", details : toParisDt(start).toFormat("HH:mm")},
+        {label : "RDV :", details : ` ${!category ? "" : category + "  -  "}${title}  -  ${price} €  •  ${default_duration} min`},
+        {label : "Avec :", details : getEmployeeName(employee)}
+
+    ]
+
     return (
         <View style={styles.mainContainer} >
 
             <View style={styles.row} >
-                <Text style={styles.details}>
-                    
-                    <Text style={styles.label}>
-                        Date :
-                    </Text>
-                    {" "}
-                    {toParisDt(start).toFormat("dd/MM/yy")}
-                </Text>
-
-                <Text style={styles.details}>
-
-                    <Text style={styles.label}>
-                        Heure :
-                    </Text>
-                    {" "}
-                    {toParisDt(start).toFormat("HH:mm")}
-                </Text>
-
-
-                <Text style={styles.details}>
-
-                    <Text style={styles.label}>
-                        RDV :
-                    </Text>
-
-                    { `  ${!category ? "" : category + "  -  "}${title}  -  ${price} € • ${default_duration} min` }
-                </Text>
-
-
-                <Text style={styles.details}>
-
-                    <Text style={styles.label}>
-                        Avec :
-                    </Text>
-                    {" "}
-                    {getEmployeeName(employee)}
-                </Text>
+                {
+                    informationsArray.map((e,i)=>
+                        <LabelValue key={i} {...e} labelStyle={styles.label} detailsStyle={styles.details} index={i} lastIndex={informationsArray.length - 1} />
+                    )
+                }
 
             </View>
-
         </View>
     )
 }
@@ -77,22 +55,19 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
-        rowGap: phoneDevice ? RPW(1.5) : 10,
         justifyContent: "flex-start",
-        alignItems: "flex-end",
         flexWrap: "wrap",
     },
     label: {
         ...appStyle.labelText,
         fontWeight: phoneDevice ? "900" : "700",
-        marginRight: phoneDevice ? RPW(2) : 10,
-        textAlign : "left",
+        textAlign: "left",
+        lineHeight : "auto"
     },
     details: {
         ...appStyle.largeText,
         fontWeight: "500",
-        color: appStyle.strongBlack,
-        textAlign : "left",
-        minWidth : "50%"
+        textAlign: "left",
+        lineHeight: phoneDevice ? RPW(8) : 48,
     }
 })

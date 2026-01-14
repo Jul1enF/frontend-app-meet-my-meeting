@@ -21,8 +21,9 @@ export const fontsStyle = {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(4.65) : 28,
         fontWeight: "700",
-        letterSpacing: phoneDevice ? RPW(0.45) : 1.4,
+        letterSpacing: phoneDevice ? RPW(0.3) : 1.4,
         textAlign: "center",
+        lineHeight: phoneDevice ? RPW(6.8) : 40,
     },
     largeText: {
         color: strongBlack,

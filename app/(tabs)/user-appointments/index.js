@@ -84,7 +84,7 @@ export default function UserAppointments() {
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
                 <FlatList
-                    data={userAppointments ?? []}
+                    data={(jwtToken && userAppointments) ? userAppointments : []}
                     refreshControl={refreshControl}
                     ref={flatlistRef}
                     onScrollToIndexFailed={(event) => {
