@@ -5,59 +5,29 @@ import { appStyle } from "@styles/appStyle"
 
 import { roleTranslation } from "constants/translations";
 
+import LabelValue from "@components/text/LabelValue";
+
 
 export default function UserItem(props) {
+
+    const informationsArray = [
+        { label: "Nom :", details: props.last_name },
+        { label: "Prénom :", details: props.first_name },
+        { label: "Email :", details: props.email },
+        { label: "Satut :", details: roleTranslation[props.role] },
+    ]
 
     return (
         <View style={styles.mainContainer} >
 
-            <View style={styles.fullRow} >
-
-                <View style={styles.row}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>Nom :</Text>
-                    </View>
-
-                    <Text style={styles.userInfo}>
-                        {props.last_name}
-                    </Text>
-                </View>
-
-                <View style={styles.row}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>Prénom :</Text>
-                    </View>
-
-                    <Text style={styles.userInfo}>
-                        {props.first_name}
-                    </Text>
-                </View>
-
-            </View>
-
-
-             <View style={styles.fullRow} >
-                       <View style={styles.row}>
-                <View style={styles.labelContainer}>
-                    <Text style={styles.label}>Email :</Text>
-                </View>
-
-                <Text style={styles.userInfo}>
-                    {props.email}
-                </Text>
-            </View>
-
             <View style={styles.row}>
-                <View style={styles.labelContainer}>
-                    <Text style={styles.label}>Statut :</Text>
-                </View>
-
-                <Text style={styles.userInfo}>
-                    {roleTranslation[props.role]}
-                </Text>
+                {
+                    informationsArray.map((e, i) =>
+                        <LabelValue key={i} {...e} labelStyle={styles.label} detailsStyle={styles.details} index={i} lastIndex={informationsArray.length - 1} extraSpace={phoneDevice ? false : true} />
+                    )
+                }
             </View>
-             </View>
-         
+
         </View>
     )
 }
@@ -70,35 +40,22 @@ const styles = StyleSheet.create({
         width: phoneDevice ? RPW(90) : 600,
         paddingHorizontal: appStyle.regularItem.paddingHorizontal,
         paddingBottom: phoneDevice ? RPW(3) : 15,
-        paddingTop : phoneDevice ? RPW(4) : 25,
+        paddingTop: phoneDevice ? RPW(4) : 25,
         marginBottom: phoneDevice ? RPW(4) : 20,
-    },
-    fullRow: {
-        flexDirection: "row",
-        alignItems: "flex-start",
-        flexWrap : "wrap",
-        width : "100%",
-        rowGap : phoneDevice ? RPW(2) : 15,
-        marginBottom : phoneDevice ? RPW(2) : 15,
     },
     row: {
         flexDirection: "row",
-        alignItems: "flex-start",
-        minWidth : "50%",
-        maxWidth : "100%",
+        justifyContent: "flex-start",
+        flexWrap: "wrap",
     },
-    labelContainer: {
-        borderBottomColor: appStyle.strongBlack,
-        borderBottomWidth: phoneDevice ? 2 : 3,
-        marginRight: phoneDevice ? RPW(3) : 15,
-    },
-    label: {
+     label: {
         ...appStyle.regularText,
-        fontWeight: "600"
+        fontWeight: phoneDevice ? "800" : "700",
+        lineHeight: "auto"
     },
-    userInfo: {
+    details: {
         ...appStyle.regularText,
-        maxWidth : "82%",
-        paddingRight : phoneDevice ? RPW(1) : 8,
+        fontWeight: "500",
+        lineHeight: phoneDevice ? RPW(8) : 48,
     }
 })

@@ -3,66 +3,28 @@ import { View, StyleSheet, Text } from "react-native";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
+import LabelValue from "@components/text/LabelValue";
 
 export default function AppointmentTypeItem(props) {
+
+    const informationsArray = [
+        { label: "Catégorie :", details: props.category },
+        { label: "Titre :", details: props.title },
+        { label: "Durée :", details: `${props.default_duration} min` },
+        { label: "Prix :", details: `${props.price} euros` },
+    ]
 
     return (
         <View style={styles.mainContainer} >
 
-            <View style={styles.fullRow} >
+            <View style={styles.row} >
+                {
+                    informationsArray.map((e, i) =>
+                        <LabelValue key={i} {...e} labelStyle={styles.label} detailsStyle={styles.details} index={i} lastIndex={informationsArray.length - 1}
+                            margin={phoneDevice ? RPW(2) : 12} />
+                    )
+                }
 
-                {props.category && <View style={styles.row}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>Catégorie :</Text>
-                    </View>
-
-                    <Text style={styles.typeInfo}>
-                        {props.category}
-                    </Text>
-                </View>}
-
-                <View style={styles.row}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>Titre :</Text>
-                    </View>
-
-                    <Text style={styles.typeInfo}>
-                        {props.title}
-                    </Text>
-                </View>
-
-            </View>
-
-
-            <View style={styles.fullRow} >
-                <View style={styles.row}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>Durée :</Text>
-                    </View>
-
-                    <Text style={styles.typeInfo}>
-                        {props.default_duration}
-                    </Text>
-
-                    <Text style={[appStyle.regularText, { marginLeft: phoneDevice ? RPW(1.5) : 8 }]}>
-                        min
-                    </Text>
-                </View>
-
-
-                <View style={styles.row}>
-                    <View style={styles.labelContainer}>
-                        <Text style={styles.label}>Prix :</Text>
-                    </View>
-
-                    <Text style={styles.typeInfo}>
-                        {props.price}
-                    </Text>
-
-                    <Text style={[appStyle.regularText, { marginLeft: phoneDevice ? RPW(1.5) : 8 }]}>
-                        euros
-                    </Text>
-                </View>
             </View>
 
         </View>
@@ -80,32 +42,21 @@ const styles = StyleSheet.create({
         paddingTop: phoneDevice ? RPW(4) : 25,
         marginBottom: phoneDevice ? RPW(4) : 20,
     },
-    fullRow: {
-        flexDirection: "row",
-        alignItems: "flex-start",
-        flexWrap: "wrap",
-        width: "100%",
-        rowGap: phoneDevice ? RPW(3) : 15,
-        marginBottom: phoneDevice ? RPW(3) : 15,
-    },
     row: {
         flexDirection: "row",
-        alignItems: "flex-start",
-        minWidth: "50%",
-        maxWidth: "100%",
-    },
-    labelContainer: {
-        borderBottomColor: appStyle.strongBlack,
-        borderBottomWidth: phoneDevice ? 2 : 3,
-        marginRight: phoneDevice ? RPW(3) : 15,
+        justifyContent: "flex-start",
+        flexWrap: "wrap",
     },
     label: {
-        ...appStyle.regularText,
-        fontWeight: "600"
+        ...appStyle.labelText,
+        fontWeight: phoneDevice ? "900" : "700",
+        textAlign: "left",
+        lineHeight: "auto"
     },
-    typeInfo: {
-        ...appStyle.regularText,
-        maxWidth: "82%",
-        paddingRight: phoneDevice ? RPW(1) : 8,
+    details: {
+        ...appStyle.largeText,
+        fontWeight: "500",
+        textAlign: "left",
+        lineHeight: phoneDevice ? RPW(8) : 48,
     }
 })
