@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import useScheduleFreeSlots from '@hooks/useScheduleFreeSlots';
+import useScheduleFreeSlots from '@hooks/appointments-schedule/useScheduleFreeSlots';
 import useAutocompleteLists from './useAutocompleteLists';
 import Autocomplete from '@components/ui/Autocomplete';
 import AppointmentInputs from '../inputs/AppointmentInputs';

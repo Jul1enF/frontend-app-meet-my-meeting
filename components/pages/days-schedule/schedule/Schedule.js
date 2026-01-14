@@ -4,7 +4,7 @@ import { useMemo, memo, useState, useCallback, useEffect } from 'react';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import useScheduleEvents from '@hooks/useScheduleEvents';
+import useScheduleEvents from '@hooks/appointments-schedule/useScheduleEvents';
 import EventItem from './EventItem';
 
 import { toParisDt, isBetween } from '@utils/timeFunctions';
