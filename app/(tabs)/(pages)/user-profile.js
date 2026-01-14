@@ -11,30 +11,29 @@ import UserInformations from "@components/pages/user-pages/client-side/UserInfor
 
 export default function UserProfile() {
 
-    const user = useSelector((state)=> state.user.value)
+    const user = useSelector((state) => state.user.value)
 
     return (
         <KeyboardAwareScrollView
-            style={{ width: "100%", height: "100%" }}
+            style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
+            contentContainerStyle={[
+                appStyle.pageBody,
+                { flex : "auto" }
+            ]}
             bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-            contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }}
             overScrollMode="never"
             bounces={false}
         >
-
-            <View style={appStyle.pageBody}>
 
                 <Text style={appStyle.pageTitle}>
                     Mes informations
                 </Text>
 
-                <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
+                <View style={appStyle.largeCard}>
 
                     <UserInformations user={user} />
 
                 </View>
-
-            </View>
 
         </KeyboardAwareScrollView>
     )

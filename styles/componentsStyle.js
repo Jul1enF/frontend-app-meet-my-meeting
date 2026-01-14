@@ -9,6 +9,8 @@ const regularItemWidth = phoneDevice ? RPW(67) : 510
 const regularItemHeight = phoneDevice ? RPW(9) : 55
 const regularItemBorderRadius = phoneDevice ? RPW(2.5) : 18
 
+const mediumItemHeight = phoneDevice ? RPW(10.8) : 68
+
 const largeItemWidth = phoneDevice ? RPW(92) : 700
 const largeItemHeight = phoneDevice ? RPW(12) : 78
 
@@ -16,11 +18,31 @@ const regularLateralPadding = phoneDevice ? RPW(3) : 20
 const cardLateralPadding = phoneDevice ? RPW(5) : 30
 
 const regularMarginTop = phoneDevice ? RPW(3) : 25
+const mediumMarginTop = phoneDevice ? RPW(4.75) : 38
 const largeMarginTop = phoneDevice ? RPW(7) : 50
+const veryLargeMarginTop = phoneDevice ? RPW(9.5) : 70
+
 const pagePaddingBottom = phoneDevice ? RPW(15) : 120
 
 
 // Styles called multiple times in this file or called on their own in the app
+
+const card = {
+    paddingTop: phoneDevice ? RPW(6) : 45,
+    paddingBottom: phoneDevice ? RPW(6.5) : 50,
+    paddingHorizontal: cardLateralPadding,
+    borderRadius: regularItemBorderRadius,
+    marginTop: largeMarginTop,
+    alignItems: "center",
+    width: (cardLateralPadding * 2) + regularItemWidth,
+    backgroundColor: darkGrey,
+}
+
+const largeCard = {
+    ...card,
+    width : largeItemWidth,
+    paddingBottom: phoneDevice ? RPW(12) : 80,
+}
 
 const regularItem = {
     height: regularItemHeight,
@@ -36,6 +58,11 @@ const largeItem = {
     borderRadius: regularItemBorderRadius,
     marginTop: regularMarginTop,
     paddingHorizontal: regularLateralPadding,
+}
+
+const largeCardItem = {
+    ...largeItem,
+    width : "100%",
 }
 
 const inputVertPadding = {
@@ -58,8 +85,6 @@ export const componentsStyle = {
     secondHeaderHorizPadd: phoneDevice ? RPW(4) : 30,
     inputIconSize: phoneDevice ? RPW(5.2) : 35,
 
-    mediumMarginTop : phoneDevice ? RPW(4.75) : 38,
-    veryLargeMarginTop : phoneDevice ? RPW(9.5) : 70,
 
     // Components Style
     pageBody: {
@@ -68,16 +93,6 @@ export const componentsStyle = {
         paddingTop: largeMarginTop,
         paddingBottom: pagePaddingBottom,
         alignItems: "center",
-    },
-    card: {
-        paddingTop: phoneDevice ? RPW(6) : 45,
-        paddingBottom: phoneDevice ? RPW(6.5) : 50,
-        paddingHorizontal: cardLateralPadding,
-        borderRadius: regularItemBorderRadius,
-        marginTop: largeMarginTop,
-        alignItems: "center",
-        width: (cardLateralPadding * 2) + regularItemWidth,
-        backgroundColor: darkGrey,
     },
     input: {
         base: {
@@ -91,6 +106,13 @@ export const componentsStyle = {
             ...inputVertPadding,
             ...lightGreyBorder,
             ...regularText,
+        },
+        baseLargeCard : {
+            ...largeCardItem,
+             ...inputVertPadding,
+            ...lightGreyBorder,
+            ...regularText,
+            fontWeight : "700",
         },
         withIcon: {
             width: "90%",
@@ -115,19 +137,31 @@ export const componentsStyle = {
     },
     lightGreyBorder,
 
-    // Export of sizes and styles that can be called in specific places
+    // Export of sizes called multiple times in this file or called on their own in the app
     regularItemWidth,
     regularItemHeight,
     regularItemBorderRadius,
+
+    mediumItemHeight,
+
     largeItemWidth,
     largeItemHeight,
+
     regularLateralPadding,
     cardLateralPadding,
     pagePaddingBottom,
+
     regularMarginTop,
+    mediumMarginTop,
     largeMarginTop,
+    veryLargeMarginTop,
 
     regularItem,
     largeItem,
+    largeCardItem,
+
+    card,
+    largeCard,
+
     inputVertPadding,
 }

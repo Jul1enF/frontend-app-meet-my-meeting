@@ -29,8 +29,8 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
             setDefaultDuration((selectedType.default_duration).toString())
             setPrice((selectedType.price).toString())
         }
-    },[])
-   
+    }, [])
+
     const validateType = () => {
         if (!title || !price || !defaultDuration) {
             setWarning("Erreur : Titre, Durée et Prix obligatoires")
@@ -72,7 +72,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
                 }))
             }
             const delay = data.delay ?? 500
-            setTimeout(()=> setTypeModalVisible(false), delay)
+            setTimeout(() => setTypeModalVisible(false), delay)
         }
     }
 
@@ -80,32 +80,35 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
     // FUNCTION TO DELETE AN APPOINTMENT TYPE (BY PUTING TO IT AN EXPIRATION DATE)
     const deleteAppointmentTypeRef = useRef(true)
-    const deleteAppointmentType = async () =>{
+    const deleteAppointmentType = async () => {
 
-        const data = await request({ path: "/pros/delete-appointment-type", method: "PUT", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, body : { _id : selectedType._id}})
+        const data = await request({ path: "/pros/delete-appointment-type", method: "PUT", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, body: { _id: selectedType._id } })
 
-        if (data?.result){
-            setTypes(prev => prev.filter(e=> e._id !== selectedType._id))
+        if (data?.result) {
+            setTypes(prev => prev.filter(e => e._id !== selectedType._id))
             setSelectedType(null)
             const delay = data.delay ?? 500
-            setTimeout(()=> setTypeModalVisible(false), delay)
+            setTimeout(() => setTypeModalVisible(false), delay)
         }
     }
 
     return (
         <KeyboardAwareScrollView
-                style={{ width: "100%", height: "100%" }}
-                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingTop : appStyle.largeMarginTop }}
-                keyboardShouldPersistTaps="handled"
-                bounces={false}
-                overScrollMode="never"
-                bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-            >
+            style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
+            contentContainerStyle={[
+                appStyle.pageBody,
+                { flex : "auto" }
+            ]}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+            overScrollMode="never"
+            bottomOffset={Platform.OS === 'ios' ? 40 : 20}
+        >
             <Text style={[appStyle.pageTitle, { paddingHorizontal: appStyle.cardLateralPadding * 0.9, lineHeight: phoneDevice ? RPW(8) : 60 }]} >
                 {!selectedType ? "Création d'un nouveau modèle" : "Modifier un modèle"}
             </Text>
 
-            <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
+            <View style={appStyle.largeCard}>
 
                 <AppointmentsTypesInputs categories={categories} setCategory={setCategory} title={title} setTitle={setTitle} defaultDuration={defaultDuration} setDefaultDuration={setDefaultDuration} price={price} setPrice={setPrice} setWarning={setWarning} selectedType={selectedType} />
 
@@ -113,9 +116,9 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
                     {warning}
                 </Text>
 
-                <Button func={() => validateType()} text={`Enregistrer ${!selectedType ? "le modèle" : "les modifications"}`} fontStyle={{ color: appStyle.fontColorDarkBg }} style={{height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25), marginTop : appStyle.largeMarginTop}} />
-                
-                {selectedType && <Button func={() => setDeleteModalVisible(true)} text={"Supprimer le modèle"} style={{height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25), marginTop : appStyle.mediumMarginTop}} fontStyle={{ color: appStyle.fontColorDarkBg }} />}
+                <Button func={() => validateType()} text={`Enregistrer ${!selectedType ? "le modèle" : "les modifications"}`} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop }} />
+
+                {selectedType && <Button func={() => setDeleteModalVisible(true)} text={"Supprimer le modèle"} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.mediumMarginTop }} />}
 
             </View>
 

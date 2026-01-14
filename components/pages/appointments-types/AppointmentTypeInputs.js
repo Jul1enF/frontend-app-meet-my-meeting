@@ -21,7 +21,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                 <Text style={styles.label}>
                     Titre :
                 </Text>
-                <TextInput style={[appStyle.input.baseLarge, { color: appStyle.fontColorDarkBg, width : "100%" }]}
+                <TextInput style={[appStyle.input.baseLargeCard, { color: appStyle.fontColorDarkBg, fontWeight : "400"}]}
                     onChangeText={(e) => {
                         setTitle(e)
                         setWarning("")
@@ -101,8 +101,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: phoneDevice ? 2 : 3,
     },
     numberInputContainer: {
-        ...appStyle.input.baseLarge,
-        width : "100%",
+        ...appStyle.input.baseLargeCard,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",

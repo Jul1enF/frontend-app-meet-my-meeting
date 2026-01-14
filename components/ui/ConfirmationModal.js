@@ -32,7 +32,7 @@ export default function ConfirmationModal({ visible, closeModal, confirmationTex
                 </Text>
                 <View style={styles.line} />
 
-                <Button func={closeModal} text={cancelBtnText} marginTop={0} />
+                <Button func={closeModal} text={cancelBtnText} style={{marginTop : 0}} />
                 <Button func={confirmationFunc} text={confirmationBtnText} />
 
                 <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop : 0 }]}>
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     },
     confirmationText: {
         ...appStyle.largeText,
+        textAlign : "center",
         color: appStyle.fontColorDarkBg,
     },
     line: {

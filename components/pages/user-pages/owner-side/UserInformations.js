@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
         paddingRight: phoneDevice ? RPW(1.6) : 8,
     },
     label: {
-        ...appStyle.largeText,
-        fontWeight: "700",
+        ...appStyle.labelText,
+        textAlign : "center",
         color: appStyle.fontColorDarkBg,
         paddingBottom: phoneDevice ? RPW(1) : 6,
     },

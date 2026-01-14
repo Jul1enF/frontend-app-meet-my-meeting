@@ -75,7 +75,6 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             inputContainerStyle={{ height: "auto" }}
             suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
             listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-            bold="700"
             multiline={true}
         />
     ), [usersList])
@@ -99,14 +98,13 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
                 inputContainerStyle={{ height: "auto" }}
                 suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6.5) : 40 }}
                 listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
-                bold="700"
                 multiline={true}
                 editable={false}
             />
 
              {oldEvent &&
                 <>
-                    <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, fontWeight: "600" }}>
+                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop }}>
                         Avec :
                     </Text>
 
@@ -124,12 +122,12 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
             {usersAutocomplete}
 
-            <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, fontWeight: "600" }}>
+            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, textAlign : "center" }}>
                 Utilisateur non enregistré :
             </Text>
 
             <TextInput
-                style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
+                style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
                     setUnregisteredClient(prev => ({ ...prev, last_name: e }))
                 }}
@@ -140,7 +138,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             />
 
             <TextInput
-                style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
+                style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
                     setUnregisteredClient(prev => ({ ...prev, first_name: e }))
                 }}
@@ -153,7 +151,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
             {!oldEvent &&
                 <Text style={{ ...appStyle.regularText, marginTop: appStyle.mediumMarginTop, color: appStyle.fontColorDarkBg, fontWeight: "500" }}>
-                    <Text style={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, fontWeight: "700" }}>
+                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, fontWeight: "700", textAlign : "center" }}>
                         Avec :
                     </Text>
                     {`  ${selectedEmployee.first_name ? (selectedEmployee.first_name + " ") : ""}${selectedEmployee.last_name ?? ""}`}

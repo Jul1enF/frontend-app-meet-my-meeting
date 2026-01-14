@@ -12,7 +12,7 @@ import useAutocompleteLists from '../event-update/useAutocompleteLists';
 export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription, category }) {
 
     // Creation with a hook of the autocomplete list
-    const { appointmentsSlotsList } = useAutocompleteLists(null, null, appointmentsSlots, eventStart)
+    const { appointmentsSlotsList } = useAutocompleteLists({ appointmentsSlots, eventStart})
 
 
     const [slotWarning, setSlotWarning] = useState("")
@@ -78,7 +78,7 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
 
 
                     <TextInput
-                        style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
+                        style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                         onChangeText={(e) => setDescription(e)}
                         value={description}
                         placeholder='Description...'

@@ -6,7 +6,7 @@ import { appStyle } from "@styles/appStyle"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
-export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, listItemStyle, suggestionTextStyle, bold, iconColor, canCreate, editable = true, showClear = true, multiline = false, ref = null }) {
+export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputStyle, inputContainerStyle, listItemStyle, suggestionTextStyle, boldTitleWeight, iconColor, canCreate, editable = true, showClear = true, multiline = false, ref = null }) {
 
     const inputWidth = width ?? appStyle.largeItemWidth
     const inputHeight = height ?? appStyle.largeItemHeight
@@ -54,7 +54,7 @@ export default function Autocomplete({ data, setSelectedItem, placeholderText, p
                     <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle]}>
 
                         {item.boldTitle && 
-                        <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle, bold && {fontWeight : bold} ]} >
+                        <Text style={[styles.suggestionsListText, suggestionTextStyle && suggestionTextStyle, {fontWeight : boldTitleWeight ?? "700"} ]} >
                             {item.boldTitle}
                         </Text>
                         }

@@ -50,13 +50,11 @@ const styles = StyleSheet.create({
     label: {
         ...appStyle.labelText,
         fontWeight: phoneDevice ? "900" : "700",
-        textAlign: "left",
         lineHeight: "auto"
     },
     details: {
         ...appStyle.largeText,
         fontWeight: "500",
-        textAlign: "left",
         lineHeight: phoneDevice ? RPW(8) : 48,
     }
 })

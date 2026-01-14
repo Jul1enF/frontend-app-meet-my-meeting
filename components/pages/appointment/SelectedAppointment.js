@@ -56,12 +56,10 @@ const styles = StyleSheet.create({
         ...(phoneDevice ? appStyle.pageSubtitle : appStyle.largeText),
         fontWeight: phoneDevice ? "900" : "700",
         marginRight: phoneDevice ? RPW(2) : 10,
-        textAlign : "left",
     },
     selectedAppointmentTitle: {
         ...appStyle.largeText,
         fontWeight: "500",
         color: appStyle.strongBlack,
-        textAlign : "left",
     }
 })

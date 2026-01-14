@@ -193,7 +193,7 @@ export default function UserInformations({ user }) {
                 {formWarning}
             </Text>
 
-            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"} marginTop={appStyle.largeMarginTop} style={{ height: appStyle.regularItemHeight * (phoneDevice ? 1.2 : 1.25), width: "100%" }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"}  style={{ height: appStyle.mediumItemHeight, width: "100%", marginTop : appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
             < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUser} />
@@ -204,14 +204,13 @@ export default function UserInformations({ user }) {
 const styles = StyleSheet.create({
     label: {
         ...appStyle.labelText,
+        textAlign : "center",
         color: appStyle.fontColorDarkBg,
         marginTop: appStyle.regularMarginTop,
     },
     input: {
-        ...appStyle.input.baseLarge,
-        width: "100%",
+        ...appStyle.input.baseLargeCard,
         color: appStyle.fontColorDarkBg,
-        fontWeight: "700"
     },
     passwordContainer: {
         flexDirection: "row",
@@ -220,6 +219,7 @@ const styles = StyleSheet.create({
     },
     passwordInput: {
         ...appStyle.input.withIcon,
+        fontWeight : "700",
         color: appStyle.fontColorDarkBg,
     },
 })

@@ -26,7 +26,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
             <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => toggleEnabled(day, index)} />
 
             <View style={[styles.underline, { marginTop : appStyle.mediumMarginTop }]}>
-                <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
+                <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg}]}>
                     {dayName} :
                 </Text>
             </View>
@@ -60,7 +60,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                 </Text>
 
                 <View style={{ width: "100%", alignItems: "center", marginTop: appStyle.largeMarginTop }}>
-                    <Text style={[appStyle.largeText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
+                    <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                         Pause :
                     </Text>
 
@@ -123,10 +123,9 @@ const styles = StyleSheet.create({
         height: "100%",
     },
     label: {
-        ...appStyle.largeText,
+        ...appStyle.labelText,
         color: appStyle.fontColorDarkBg,
         padding: phoneDevice ? RPW(2) : 15,
-        textAlign : "left",
     },
     timeContainer: {
         marginLeft: phoneDevice ? RPW(2) : 15,

@@ -76,8 +76,11 @@ export default function Signup({ setSignForm, func }) {
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled" > */}
 
             <KeyboardAwareScrollView
-                style={{ width: "100%", height: "100%" }}
-                contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled"
+                style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
+                contentContainerStyle={[
+                    appStyle.pageBody,
+                    { flex : "auto" }
+                ]} keyboardShouldPersistTaps="handled"
                 bounces={false}
                 overScrollMode="never"
                 bottomOffset={Platform.OS === 'ios' ? 40 : 20}

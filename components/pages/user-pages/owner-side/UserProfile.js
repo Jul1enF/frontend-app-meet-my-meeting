@@ -99,46 +99,47 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
 
     return (
         <KeyboardAwareScrollView
-            style={{ width: "100%", height: "100%" }}
+            style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
+            contentContainerStyle={[
+                appStyle.pageBody,
+                { flex : "auto" }
+            ]}
             bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-            contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center" }}
             overScrollMode="never"
             bounces={false}
         >
-            <View style={appStyle.pageBody}>
 
-                <Text style={appStyle.pageTitle}>
-                    Utilisateur
+            <Text style={appStyle.pageTitle}>
+                Utilisateur
+            </Text>
+
+            <View style={appStyle.largeCard}>
+
+                <UserInformations user={user} />
+
+
+                <Text style={[appStyle.pageSubtitle, { color: appStyle.fontColorDarkBg, marginTop: appStyle.largeMarginTop }]}>
+                    Statut :
                 </Text>
 
-                <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
+                <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} emptyText="Aucun résultat" />
 
-                    <UserInformations user={user} />
+                {(newRole?.role && newRole?.role !== "client") &&
+                    <UserSchedule scheduleArray={scheduleArray} scheduleActions={scheduleActions}
+                        contractEnd={contractEnd} setContractEnd={setContractEnd}
+                    />
+                }
 
+                <Text style={[appStyle.warning, !warning && { height: 0, marginTop: 0 }]}>
+                    {warning}
+                </Text>
 
-                    <Text style={[appStyle.pageSubtitle, { color: appStyle.fontColorDarkBg, marginTop: appStyle.largeMarginTop }]}>
-                        Statut :
-                    </Text>
-
-                    <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} emptyText="Aucun résultat" />
-
-                    {(newRole?.role && newRole?.role !== "client") &&
-                        <UserSchedule scheduleArray={scheduleArray} scheduleActions={scheduleActions}
-                            contractEnd={contractEnd} setContractEnd={setContractEnd}
-                        />
-                    }
-
-                    <Text style={[appStyle.warning, !warning && { height: 0, marginTop: 0 }]}>
-                        {warning}
-                    </Text>
-
-                    <Button func={() => validateUpdate()} text="Enregistrer les modifications" marginTop={appStyle.largeMarginTop} style={{ width: "100%", height: appStyle.largeItemHeight }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg }} />
-
-                </View>
-
-                < ConfirmationModal visible={modalVisible} closeModal={() => setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUserPress} />
+                <Button func={() => validateUpdate()} text="Enregistrer les modifications" style={{ ...appStyle.largeCardItem, marginTop : appStyle.largeMarginTop}} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg }} />
 
             </View>
+
+            < ConfirmationModal visible={modalVisible} closeModal={() => setModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUserPress} />
+
         </KeyboardAwareScrollView>
     )
 }

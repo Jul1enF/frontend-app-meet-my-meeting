@@ -9,7 +9,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
     
     return (
         <>
-            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
+            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, textAlign : "center"}} >
                 {`${category === "closure" ? "Fermeture" : "Congé"} du :`}
             </Text>
 
@@ -34,7 +34,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
 
 
             <TextInput
-                style={{ ...appStyle.input.baseLarge, width: "100%", fontWeight: "700", color: appStyle.fontColorDarkBg }}
+                style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => setDescription(e)}
                 value={description}
                 placeholder='Description...'
@@ -45,7 +45,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
 
             { category === "absence" && 
             <Text style={{...appStyle.regularText, marginTop : appStyle.mediumMarginTop, color : appStyle.fontColorDarkBg, fontWeight : "500"}}>
-                <Text style={{...appStyle.largeText, color : appStyle.fontColorDarkBg, fontWeight : "700"}}>
+                <Text style={{...appStyle.largeText, color : appStyle.fontColorDarkBg, fontWeight : "700", textAlign : "center"}}>
                     Personne concernée :
                 </Text>
                 {`  ${selectedEmployee.first_name ? (selectedEmployee.first_name + " ") : ""}${selectedEmployee.last_name ?? ""}`}

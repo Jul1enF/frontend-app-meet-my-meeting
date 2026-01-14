@@ -38,7 +38,7 @@ export default function EventRedaction({ redactionContext }) {
         /break/i.test(oldEvent?.category) ? getMinDuration(oldEvent.start, oldEvent.end) : 0
     )
 
-    
+
     // Settings of the event duration depending on the last duration to have been modified (break or appointment)
     const [eventDuration, setEventDuration] = useState(null)
     const prevDurations = useRef({})
@@ -65,8 +65,11 @@ export default function EventRedaction({ redactionContext }) {
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled"> */}
 
             <KeyboardAwareScrollView
-                style={{ width: "100%", height: "100%" }}
-                contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minWidth: "100%", minHeight: "100%", alignItems: "center", paddingTop : appStyle.largeMarginTop }} 
+                style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
+                contentContainerStyle={[
+                    appStyle.pageBody,
+                    { flex : "auto" }
+                ]}
                 keyboardShouldPersistTaps="handled"
                 bounces={false}
                 overScrollMode="never"
@@ -78,7 +81,7 @@ export default function EventRedaction({ redactionContext }) {
                     {!oldEvent ? "Nouvel évènement :" : "Modifier un évènement :"}
                 </Text>
 
-                <View style={[appStyle.card, { width: appStyle.largeItemWidth, paddingBottom: phoneDevice ? RPW(12) : 80 }]}>
+                <View style={appStyle.largeCard}>
 
                     {oldEvent &&
                         <View style={{ borderBottomColor: appStyle.darkWhite, borderBottomWidth: phoneDevice ? 2 : 3, paddingBottom: phoneDevice ? RPW(1) : 6, marginBottom: phoneDevice ? RPW(1) : 10 }}>
