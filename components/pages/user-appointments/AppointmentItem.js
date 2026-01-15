@@ -13,7 +13,7 @@ export default function AppointmentItem({ start, employee, appointment_type, emp
 
     const getEmployeeName = (employee) => {
         const employeeFound = employees.find(e => e._id.toString() === employee.toString())
-        if (!employeeFound) return "Employé absent"
+        if (!employeeFound) return "Ce professionnel ne fait plus partie de l'équipe !"
         const { first_name, last_name } = employeeFound
         return `${first_name ? (first_name + " ") : ""}${last_name ?? ""}`
     }

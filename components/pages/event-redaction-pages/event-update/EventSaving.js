@@ -40,7 +40,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
                 return
             }
             if (!appointmentsSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
-                displayWarning("Erreur : Le rdv ne rentre pas dans le créneau")
+                displayWarning(appointmentsSlots.length ? "Erreur : Le rdv ne rentre pas dans le créneau" : "Erreur : Aucun créneau disponible ce jour pour ces critères !")
                 return
             }
 

@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { DateTime } from "luxon";
 import { useSelector } from "react-redux";
 
-export default function useDaysScheduleContext(scheduleInformations = {}, setScheduleInformations, getScheduleInformations) {
+export default function usePlanningContext(planningInformations = {}, setPlanningInformations, getPlanningInformations) {
 
   // Informations on the current user
   const jwtToken = useSelector((state) => state.user.value.jwtToken)
@@ -10,7 +10,7 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
 
 
   // Informations on the registered events and their context
-  const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = scheduleInformations
+  const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = planningInformations
 
 
   // States for the appointment schedule
@@ -44,23 +44,23 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
         delete: (prevEvents) => [...prevEvents].filter(e => e._id !== event._id),
       }
 
-      setScheduleInformations(prev => ({
+      setPlanningInformations(prev => ({
         ...prev,
         [category]: methodFunctions[method](prev[category])
       }))
 
     }
     else {
-      getScheduleInformations()
+      getPlanningInformations()
     }
 
-  }, [getScheduleInformations])
+  }, [getPlanningInformations])
 
 
 
 
-  // PROPS FOR THE DAYS SCHEDULE CONTAINER
-  const daysScheduleContext = useMemo(() => {
+  // PROPS FOR THE ROOT CONTAINER
+  const rootContext = useMemo(() => {
     return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, jwtToken }
   }, [eventStart, selectedDate, employees, selectedEmployee, _id])
 
@@ -70,7 +70,7 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
   const scheduleContext = useMemo(() => {
     return { events, closures, absences, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, setEventStart, setOldEvent, resetAndRenewEvents }
   },
-    [scheduleInformations, selectedEmployee, selectedDate])
+    [planningInformations, selectedEmployee, selectedDate])
 
 
 
@@ -79,8 +79,8 @@ export default function useDaysScheduleContext(scheduleInformations = {}, setSch
 
     return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, setSelectedDate, jwtToken, resetAndRenewEvents }
   },
-    [selectedEmployee, eventStart, oldEvent, scheduleInformations, selectedDate, jwtToken])
+    [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate, jwtToken])
 
 
-  return { daysScheduleContext, scheduleContext, redactionContext }
+  return { rootContext, scheduleContext, redactionContext }
 }

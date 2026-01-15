@@ -1,16 +1,17 @@
 import { TextInput, Text, View } from "react-native";
 import { useEffect, useState, useMemo, useRef } from "react";
 
-import EmployeeSelection from "@components/pages/days-schedule/main-container/EmployeeSelection";
+import EmployeeSelection from "@components/selection/EmployeeSelection";
+import ProsAppointmentInputs from "./ProsAppointmentInputs";
 import Autocomplete from "@components/ui/Autocomplete"
 import DatePicker from "@components/ui/DatePicker/DatePicker";
-import useAutocompleteLists from "../event-update/useAutocompleteLists"
+import useAutocompleteLists from "../event-update/useAutocompleteLists";
 import useSetOldEvent from "./useSetOldEvent";
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots }) {
+export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots, clientRedaction }) {
 
     // Props coming from the root
     const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate} = redactionContext
@@ -37,7 +38,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     const { typesAutocompleteRef, usersAutocompleteRef } = useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient, employees })
 
 
-    // Clear the appointment type autocomplete selection if selected appointment type has been cleared elsewhere (in case of bad return of the creation of an event). For oldEvent cases (modifications) it is handle in useSetOldEvent by displaying "SUPPRIMÉ"
+    // Clear the appointment type autocomplete if the selected type has been cleared in EventSaving after an attempt to save an event with a suppressed type. For oldEvent cases (modifications) it is handle in useSetOldEvent by displaying "SUPPRIMÉ"
     const appointmentTypeRef = useRef(null)
     useEffect(()=>{
         if (!selectedAppointmentType && appointmentTypeRef.current && typesAutocompleteRef.current && !oldEvent){
@@ -46,7 +47,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     },[selectedAppointmentType])
 
 
-    // Memoisation of the Autocomplete for the appointments slots and the users
+    // Memoisation of the Autocomplete for the appointments slots
     const slotsAutocomplete = useMemo(() => (
         <Autocomplete
             key={appointmentsSlotsList ? appointmentsSlotsList.length : "key"}
@@ -62,23 +63,6 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
         />
     ), [appointmentsSlotsList, eventStart, selectedAppointmentType])
-
-
-    const usersAutocomplete = useMemo(() => (
-        <Autocomplete
-            data={usersList}
-            ref={usersAutocompleteRef}
-            placeholderText={"Utilisateur ( inscrit )"}
-            setSelectedItem={(item) => setClient(item?.user ?? null)}
-            emptyText="Aucun résultat"
-            width="100%"
-            inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight }}
-            inputContainerStyle={{ height: "auto" }}
-            suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
-            listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-            multiline={true}
-        />
-    ), [usersList])
 
 
 
@@ -131,39 +115,12 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
 
             {slotsAutocomplete}
 
-            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, textAlign : "center" }}>
-                Utilisateur inscrit à l'app :
-            </Text>
 
-            {usersAutocomplete}
+            {!clientRedaction &&
+                <ProsAppointmentInputs usersList={usersList} usersAutocompleteRef={usersAutocompleteRef} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} />
+            }
 
-            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, textAlign : "center" }}>
-                Utilisateur non enregistré :
-            </Text>
-
-            <TextInput
-                style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
-                onChangeText={(e) => {
-                    setUnregisteredClient(prev => ({ ...prev, last_name: e }))
-                }}
-                value={unregisteredClient.last_name}
-                placeholder='Nom'
-                placeholderTextColor={appStyle.placeholderColor}
-                autoCapitalize="words"
-            />
-
-            <TextInput
-                style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
-                onChangeText={(e) => {
-                    setUnregisteredClient(prev => ({ ...prev, first_name: e }))
-                }}
-                value={unregisteredClient.first_name}
-                placeholder='Prénom'
-                placeholderTextColor={appStyle.placeholderColor}
-                autoCapitalize="words"
-            />
-
-
+            
             {!oldEvent &&
                 <Text style={{ ...appStyle.regularText, marginTop: appStyle.mediumMarginTop, color: appStyle.fontColorDarkBg, fontWeight: "500" }}>
                     <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, fontWeight: "700", textAlign : "center" }}>

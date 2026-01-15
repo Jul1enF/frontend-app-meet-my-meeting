@@ -8,12 +8,12 @@ import request from '@utils/request';
 
 import useSessionExpired from '@hooks/useSessionExpired';
 import useRefreshControl from '@hooks/useRefreshControl';
-import useDaysScheduleContext from '@components/pages/days-schedule/main-container/useDaysScheduleContext';
+import usePlanningContext from '@hooks/appointments-schedule/usePlanningContext';
 
 import StickyHeader from '@components/pages/days-schedule/main-container/StickyHeader';
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 import ModalPageWrapper from '@components/layout/ModalPageWrapper';
-import EventRedaction from '@components/pages/days-schedule/event-registration/event-update/EventRedaction';
+import EventRedaction from '@components/pages/event-redaction-pages/event-update/EventRedaction';
 
 
 export default function DaysSchedule() {
@@ -40,10 +40,10 @@ export default function DaysSchedule() {
 
 
     // Memoised props for the all the components
-    const { daysScheduleContext, scheduleContext, redactionContext } = useDaysScheduleContext(scheduleInformations, setScheduleInformations, getScheduleInformations)
+    const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, setScheduleInformations, getScheduleInformations)
 
     // Memoised props for this component
-    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, jwtToken } = daysScheduleContext
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, jwtToken } = rootContext
 
 
     // useEffect for firstRender to fetch datas with a clearEtag (and ref for useFocusEffect)
@@ -70,7 +70,7 @@ export default function DaysSchedule() {
     return (
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
-            {/* Modal to set or modify an appointment */}
+            {/* Modal to set or modify an event */}
             <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
                 <EventRedaction redactionContext={redactionContext} />
             </ModalPageWrapper>

@@ -28,13 +28,29 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
     const [autocompleteItem, setAutocompleteItem] = useState(null)
 
     useEffect(() => {
-        if (selectedEmployee?._id
+        if (
+            selectedEmployee?._id
             && autocompleteItem?.employee?._id
-            && selectedEmployee._id !== autocompleteItem.employee._id) {
+            && selectedEmployee._id.toString() !== autocompleteItem.employee._id.toString()
+        ) {
+            const employeeFound = employeesAutocompleteList.find(e =>
+                e.employee._id.toString() === selectedEmployee._id.toString()
+            )
 
-            autocompleteRef.current.setItem(employeesAutocompleteList.find(e =>
-                e.employee._id === selectedEmployee._id
-            ))
+            // If the employee is no longer in the team
+            if (!employeeFound){
+                const suppressedEmployee = {
+                title: "Ce professionnel ne fait plus partie de l'équipe à cette date !",
+                id: "suppressedEmployee",
+            }
+
+            autocompleteRef.current.setItem(suppressedEmployee)
+
+            setSelectedEmployee(null)
+            }
+            else{
+                autocompleteRef.current.setItem(employeeFound)
+            }
 
         }
     }, [selectedEmployee])
@@ -59,14 +75,14 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     setSelectedItem={updateSelectedEmployees}
                     initialValue={"default"}
                     width={isInRedactionComponent ? "100%" : null}
-                    inputStyle={{ 
-                        fontWeight: "600", 
-                        color: isInRedactionComponent ? appStyle.fontColorDarkBg : appStyle.strongBlack, 
-                        fontSize: appStyle.largeText.fontSize 
+                    inputStyle={{
+                        fontWeight: "600",
+                        color: isInRedactionComponent ? appStyle.fontColorDarkBg : appStyle.strongBlack,
+                        fontSize: appStyle.largeText.fontSize
                     }}
-                    inputContainerStyle={{ 
-                        borderColor: isInRedactionComponent ? appStyle.lightGrey : appStyle.strongBlack, 
-                        ...(!isInRedactionComponent && {marginTop: 0 })
+                    inputContainerStyle={{
+                        borderColor: isInRedactionComponent ? appStyle.lightGrey : appStyle.strongBlack,
+                        ...(!isInRedactionComponent && { marginTop: 0 })
                     }}
                     placeholderColor={appStyle.mediumGrey}
                     iconColor={isInRedactionComponent ? null : appStyle.strongBlack}

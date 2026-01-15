@@ -4,7 +4,7 @@ import { useState } from "react";
 import { appStyle } from '@styles/appStyle';
 
 import WeekDatePicker from "../week-date-picker/WeekDatePicker";
-import EmployeeSelection from "./EmployeeSelection";
+import EmployeeSelection from "../../../selection/EmployeeSelection";
 
 
 export default function StickyHeader({stickyComponent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, firstWeekDay, setFirstWeekDay, isSticky = false}) {

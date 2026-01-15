@@ -16,7 +16,7 @@ import { toParisDt, getMinDuration } from '@utils/timeFunctions';
 import { eventCatTranslation } from 'constants/translations';
 
 
-export default function EventRedaction({ redactionContext }) {
+export default function EventRedaction({ redactionContext, clientRedaction = false }) {
 
     // Context to know how to calcul the freeSlots, set an event and post it
     const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
@@ -105,7 +105,7 @@ export default function EventRedaction({ redactionContext }) {
 
 
                     {category === "appointment" &&
-                        <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} />
+                        <AppointmentInputs redactionContext={redactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} clientRedaction={clientRedaction} />
                     }
 
 
