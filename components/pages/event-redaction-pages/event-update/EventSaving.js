@@ -1,5 +1,7 @@
 import { View, Text } from 'react-native';
 import { useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateEvent } from '@reducers/user';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -13,6 +15,7 @@ import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents, clientRedaction }) {
 
+    const dispatch = useDispatch()
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
     const [fetchWarning, setFetchWarning] = useState({})
@@ -143,7 +146,10 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
         if (data?.result) {
             const { eventSaved } = data
             const delay = data.delay ?? 0
-            setTimeout(() => resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create"), delay)
+            setTimeout(() => {
+                resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create")
+                clientRedaction && dispatch(updateEvent(eventSaved))
+            }, delay)
         }
         else if (data.delay) {
             setTimeout(() => {

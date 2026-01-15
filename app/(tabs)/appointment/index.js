@@ -42,8 +42,6 @@ export default function AppointmentPage() {
     if (data?.result) {
       setAppointmentInfos(data.informations)
       setSelectedEmployees(prev => prev ?? data.informations.employees)
-    }else{
-      console.log("DATA :", data)
     }
   }
 

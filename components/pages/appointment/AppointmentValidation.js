@@ -4,7 +4,8 @@ import { useState, useRef } from 'react';
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addEvent } from '@reducers/user';
 import request from '@utils/request';
 import useSessionExpired from '@hooks/useSessionExpired';
 
@@ -19,6 +20,7 @@ import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 export default function AppointmentValidation({ selectedAppointmentType: type, setSelectedAppointmentType, selectedAppointmentSlot: slot, resetAndRenewEvents }) {
 
+    const dispatch = useDispatch()
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const [userIsConnecting, setUserIsConnecting] = useState(false)
     const [signForm, setSignForm] = useState("signin")
@@ -56,7 +58,10 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
         })
         if (data?.result) {
             const { eventSaved } = data
-            setTimeout(()=> resetAndRenewEvents(eventSaved), data.delay)
+            setTimeout(()=> {
+                resetAndRenewEvents(eventSaved)
+                dispatch(addEvent(eventSaved))
+            }, data.delay)
         }
         else if (data.delay){
             setTimeout(()=> {

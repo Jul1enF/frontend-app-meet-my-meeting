@@ -7,6 +7,7 @@ const defaultUser = {
     jwtToken: "",
     role : "",
     _id : "",
+    events : [],
 }
 
 const initialState = {
@@ -18,7 +19,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.value = action.payload
+            state.value = {...action.payload, events : []}
         },
         logout: (state, action) => {
             state.value = defaultUser
@@ -28,8 +29,25 @@ export const userSlice = createSlice({
             state.value.last_name = action.payload.last_name
             state.value.email = action.payload.email
         },
+        loadEvents: (state, action) => {
+            state.value.events = action.payload
+        },
+        addEvent: (state, action)=>{
+            state.value.events = [...state.value.events, action.payload].sort((a,b)=> 
+                new Date(a.start) - new Date(b.start)
+        )},
+        updateEvent: (state, action)=>{
+            state.value.events = [...state.value.events].map(e=>{
+                if (e._id.toString() === action.payload._id.toString()) return action.payload
+                else return e
+            }).sort((a,b)=> 
+                new Date(a.start) - new Date(b.start)
+        )},
+        deleteEvent: (state, action) =>{
+            state.value.events = [...state.value.events].filter(e => e._id.toString() !== action.payload.toString())
+        }
     }
 })
 
-export const { login, logout, changeUserInfos } = userSlice.actions
+export const { login, logout, changeUserInfos, loadEvents, addEvent, updateEvent, deleteEvent } = userSlice.actions
 export default userSlice.reducer

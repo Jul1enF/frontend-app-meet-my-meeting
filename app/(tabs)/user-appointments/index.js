@@ -1,6 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadEvents } from '@reducers/user';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -21,11 +22,12 @@ export default function UserAppointments() {
 
 
     const [appointmentsInformations, setAppointmentInformations] = useState({})
-    const [userAppointments, setUserAppointments] = useState(null)
     const [fetchWarning, setFetchWarning] = useState({})
 
+    const dispatch = useDispatch()
     const _id = useSelector((state) => state.user.value._id)
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const events = useSelector((state) => state.user.value.events)
 
 
     // Function to search for user appointments
@@ -40,10 +42,12 @@ export default function UserAppointments() {
         if (data?.result) {
             setAppointmentInformations(data.informations)
 
-            setUserAppointments(data.informations.events.filter(e =>
+            const userAppointments = data.informations.events.filter(e =>
                 e.category === "appointment" && e.client?.toString() === _id.toString()
                 && !isBefore(toParisDt(e.start), DateTime.now({ zone: "Europe/Paris" }))
-            ))
+            )
+
+            dispatch(loadEvents(userAppointments))
         }
     }, [jwtToken, _id])
 
@@ -52,7 +56,7 @@ export default function UserAppointments() {
     const { rootContext, redactionContext } = usePlanningContext(appointmentsInformations, setAppointmentInformations, getAppointmentsInformations)
 
     // Memoised props of this component
-    const { eventStart, setEventStart, setOldEvent, setSelectedDate, employees, setSelectedEmployee, oldEvent } = rootContext
+    const { eventStart, setEventStart, setOldEvent, setSelectedDate, employees, setSelectedEmployee, oldEvent, resetAndRenewEvents } = rootContext
 
 
     // useEffect to fetch the user's appointment
@@ -67,8 +71,8 @@ export default function UserAppointments() {
     // Function trigerred when an appointment item is pressed
     const appointmentPress = (item) => {
         // If the employee is no longer part of the team, it's dealed in EmployeeSelection
-        setSelectedEmployee( employees.find(e => e._id.toString() === item.employee.toString())
-        ?? { _id: item.employee.toString() })
+        setSelectedEmployee(employees.find(e => e._id.toString() === item.employee.toString())
+            ?? { _id: item.employee.toString() })
 
         setOldEvent(item)
         const start = toParisDt(item.start)
@@ -89,10 +93,11 @@ export default function UserAppointments() {
                     {fetchWarning?.text}
                 </Text>
 
-                {(userAppointments && !userAppointments.length && jwtToken) &&
+                {(!events.length && jwtToken) ?
                     <Text style={{ ...appStyle.pageSubtitle, marginTop: appStyle.largeMarginTop }}>
                         Aucun rendez vous à venir !
                     </Text>
+                    : null
                 }
 
                 {!jwtToken &&
@@ -118,7 +123,7 @@ export default function UserAppointments() {
 
 
             <FlatList
-                data={(jwtToken && userAppointments) ? userAppointments : []}
+                data={events}
                 refreshControl={refreshControl}
                 ref={flatlistRef}
                 onScrollToIndexFailed={(event) => {
@@ -130,7 +135,7 @@ export default function UserAppointments() {
                 keyExtractor={(item) => item._id}
                 renderItem={({ item, index }) =>
                     <TouchableOpacity onPress={() => appointmentPress(item)}>
-                        <AppointmentItem {...item} employees={employees} />
+                        <AppointmentItem {...item} employees={employees} jwtToken={jwtToken} resetAndRenewEvents={resetAndRenewEvents} />
                     </TouchableOpacity>}
                 style={{ flex: 1 }}
                 contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom }}

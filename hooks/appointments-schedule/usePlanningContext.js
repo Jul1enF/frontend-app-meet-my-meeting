@@ -42,7 +42,7 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
         // Delete event function
         delete: (prevEvents) => [...prevEvents].filter(e => e._id !== event._id),
       }
-      console.log("HERE ", methodFunctions[method])
+
       setPlanningInformations(prev => ({
         ...prev,
         [category]: methodFunctions[method](prev[category])
@@ -60,8 +60,8 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
 
   // PROPS FOR THE ROOT CONTAINER
   const rootContext = useMemo(() => {
-    return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, oldEvent }
-  }, [eventStart, selectedDate, employees, selectedEmployee ])
+    return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, oldEvent, resetAndRenewEvents }
+  }, [eventStart, selectedDate, employees, selectedEmployee, oldEvent ])
 
 
 
