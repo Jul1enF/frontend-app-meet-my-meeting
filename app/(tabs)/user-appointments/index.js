@@ -1,5 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSelector } from 'react-redux';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -19,9 +20,12 @@ import EventRedaction from '@components/pages/event-redaction-pages/event-update
 export default function UserAppointments() {
 
 
-    const [appointmentsInformations, setAppoitmentInformations] = useState({})
+    const [appointmentsInformations, setAppointmentInformations] = useState({})
     const [userAppointments, setUserAppointments] = useState(null)
     const [fetchWarning, setFetchWarning] = useState({})
+
+    const _id = useSelector((state) => state.user.value._id)
+    const jwtToken = useSelector((state) => state.user.value.jwtToken)
 
 
     // Function to search for user appointments
@@ -34,26 +38,27 @@ export default function UserAppointments() {
         const data = await request({ path: "/appointments/user-appointment-informations", jwtToken, setSessionExpired, setWarning: setFetchWarning, clearEtag })
 
         if (data?.result) {
-            setAppoitmentInformations(data.informations)
+            setAppointmentInformations(data.informations)
 
             setUserAppointments(data.informations.events.filter(e =>
                 e.category === "appointment" && e.client?.toString() === _id.toString()
                 && !isBefore(toParisDt(e.start), DateTime.now({ zone: "Europe/Paris" }))
             ))
         }
-    }, [jwtToken])
+    }, [jwtToken, _id])
+
+
+    // Memoised props for this component and the redaction one
+    const { rootContext, redactionContext } = usePlanningContext(appointmentsInformations, setAppointmentInformations, getAppointmentsInformations)
+
+    // Memoised props of this component
+    const { eventStart, setEventStart, setOldEvent, setSelectedDate, employees, setSelectedEmployee, oldEvent } = rootContext
+
 
     // useEffect to fetch the user's appointment
     useEffect(() => {
         getAppointmentsInformations(true)
-    }, [jwtToken])
-
-
-    // Memoised props for this component and the redaction one
-    const { rootContext, redactionContext } = usePlanningContext(appointmentsInformations, setAppoitmentInformations, getAppointmentsInformations)
-
-    // Memoised props of this component
-    const { eventStart, setEventStart, setOldEvent, setSelectedDate, employees, setSelectedEmployee, _id, jwtToken } = rootContext
+    }, [getAppointmentsInformations, jwtToken])
 
 
     // refreshControl for the Flatlist
@@ -62,9 +67,9 @@ export default function UserAppointments() {
     // Function trigerred when an appointment item is pressed
     const appointmentPress = (item) => {
         // If the employee is no longer part of the team, it's dealed in EmployeeSelection
-        // setSelectedEmployee({ _id: item.employee.toString() })
-        setSelectedEmployee(employees.find(e => e._id.toString() === item.employee.toString()))
-        
+        setSelectedEmployee( employees.find(e => e._id.toString() === item.employee.toString())
+        ?? { _id: item.employee.toString() })
+
         setOldEvent(item)
         const start = toParisDt(item.start)
         setEventStart(start)
@@ -106,7 +111,7 @@ export default function UserAppointments() {
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
             {/* Modal to set or modify an appointment */}
-            <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Liste des RDV" noScrollView={true}>
+            <ModalPageWrapper visible={eventStart && jwtToken && oldEvent} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Liste des RDV" noScrollView={true}>
                 <EventRedaction redactionContext={redactionContext} clientRedaction={true} />
             </ModalPageWrapper>
 

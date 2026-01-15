@@ -11,10 +11,12 @@ import useSetOldEvent from "./useSetOldEvent";
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
+import { DateTime } from "luxon";
+
 export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots, clientRedaction }) {
 
     // Props coming from the root
-    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate} = redactionContext
+    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate, maxFuturDays } = redactionContext
 
     // Creation with a hook of the autocomplete lists
     const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart})
@@ -65,8 +67,6 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
     ), [appointmentsSlotsList, eventStart, selectedAppointmentType])
 
 
-
-
     return (
         <>
             <Autocomplete
@@ -94,7 +94,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
                     </Text>
 
 
-                    <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={selectedEmployee._id} isInRedactionComponent={true} />
+                    <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={selectedEmployee?._id} isInRedactionComponent={true} />
 
                     <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop }}>
                         Le  :
@@ -104,7 +104,8 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
                         setSelectedDate(date)
                         setEventStart(prev => prev.set({ year: date.year, month: date.month, day: date.day }))
                     }}  
-                    buttonFontStyle={{ fontWeight : "700"}} buttonStyle={{...appStyle.largeCardItem, height : appStyle.mediumItemHeight}} />
+                    buttonFontStyle={{ fontWeight : "700"}} buttonStyle={{...appStyle.largeCardItem, height : appStyle.mediumItemHeight}}
+                    maxDate={(clientRedaction && maxFuturDays) ? DateTime.now({zone : "Europe/Paris"}).endOf('day').plus({days : maxFuturDays}) : null} />
                 </>
             }
 
@@ -121,7 +122,7 @@ export default function AppointmentInputs({ redactionContext, setClient, unregis
             }
 
             
-            {!oldEvent &&
+            {(!oldEvent && selectedEmployee) &&
                 <Text style={{ ...appStyle.regularText, marginTop: appStyle.mediumMarginTop, color: appStyle.fontColorDarkBg, fontWeight: "500" }}>
                     <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, fontWeight: "700", textAlign : "center" }}>
                         Avec :

@@ -11,12 +11,13 @@ import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents }) {
+export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents, clientRedaction }) {
 
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
     const [fetchWarning, setFetchWarning] = useState({})
     const [eventToSave, setEventToSave] = useState(null)
+    const [path, setPath] = useState("")
 
     // Function to display a warning message if the form is not valid
     const displayWarning = (message) => {
@@ -114,6 +115,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
 
         setEventToSave(event)
 
+        setPath(!clientRedaction ? "/events/create-or-update" : "/appointments/user-appointment-saving")
+
         setConfirmationModalVisible(true)
     }
 
@@ -128,7 +131,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
     const registerEvent = async () => {
 
         const data = await request({
-            path: "/events/create-or-update",
+            path,
             method: "PUT",
             body: { eventToSave },
             jwtToken,
@@ -159,7 +162,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
             <Button func={eventValidation} text={!oldEvent ? "Enregistrer l'évènement" : "Modifier l'évènement"} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
-            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={`Êtes vous sûr(e) de vouloir ${!oldEvent ? "enregistrer" : "modifier"} cet évènement ?`} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />
+            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={`Êtes vous sûr(e) de vouloir ${!oldEvent ? "enregistrer" : "modifier"} ${clientRedaction ? "ce RDV" : "cet évènement"} ?`} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />
         </>
     )
 }

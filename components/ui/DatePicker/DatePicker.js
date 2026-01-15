@@ -11,7 +11,7 @@ import Button from "../Button";
 import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-export default function DatePicker({ chosenDate, setChosenDate, startInputText = "" , endInputText = "", buttonStyle = {}, buttonFontStyle = {} }) {
+export default function DatePicker({ chosenDate, setChosenDate, startInputText = "" , endInputText = "", buttonStyle = {}, buttonFontStyle = {}, maxDate = null }) {
     const { height: screenHeight, width: screenWidth } = useSafeAreaFrame()
     const {top} = useSafeAreaInsets()
 
@@ -48,7 +48,7 @@ export default function DatePicker({ chosenDate, setChosenDate, startInputText =
                 onBackdropPress={() => setCalendarVisible(false)}
                 useNativeDriverForBackdrop={false}
             >
-                <Calendar chosenDate={chosenDate} setChosenDate={setChosenDate} setCalendarVisible={setCalendarVisible} />
+                <Calendar chosenDate={chosenDate} setChosenDate={setChosenDate} setCalendarVisible={setCalendarVisible} maxDate={maxDate} />
             </Modal>
         </>
     )

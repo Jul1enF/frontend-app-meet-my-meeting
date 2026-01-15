@@ -1,6 +1,7 @@
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useFocusEffect } from 'expo-router';
+import { useSelector } from 'react-redux';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -21,6 +22,8 @@ export default function DaysSchedule() {
     const [warning, setWarning] = useState({})
     const [scheduleInformations, setScheduleInformations] = useState({})
 
+    const _id = useSelector((state) => state.user.value._id)
+    const jwtToken = useSelector((state) => state.user.value.jwtToken)
 
     // LOAD SCHEDULE INFORMATIONS FUNCTION
 
@@ -43,7 +46,7 @@ export default function DaysSchedule() {
     const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, setScheduleInformations, getScheduleInformations)
 
     // Memoised props for this component
-    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, jwtToken } = rootContext
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee } = rootContext
 
 
     // useEffect for firstRender to fetch datas with a clearEtag (and ref for useFocusEffect)

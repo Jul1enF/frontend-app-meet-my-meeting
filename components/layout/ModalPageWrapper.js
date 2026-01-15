@@ -27,6 +27,7 @@ export default function ModalPageWrapper({ visible, setVisible, closeFunction, b
             animationIn="slideInRight"
             animationOut="slideOutRight"
             onBackButtonPress={close}
+            onModalHide={close}
             deviceWidth={screenWidth}
             deviceHeight={screenHeight}
             useNativeDriverForBackdrop={true}

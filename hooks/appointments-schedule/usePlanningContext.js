@@ -6,11 +6,10 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
 
   // Informations on the current user
   const jwtToken = useSelector((state) => state.user.value.jwtToken)
-  const _id = useSelector((state) => state.user.value._id)
 
 
   // Informations on the registered events and their context
-  const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule } = planningInformations
+  const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule, maxFuturDays = null } = planningInformations
 
 
   // States for the appointment schedule
@@ -43,7 +42,7 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
         // Delete event function
         delete: (prevEvents) => [...prevEvents].filter(e => e._id !== event._id),
       }
-
+      console.log("HERE ", methodFunctions[method])
       setPlanningInformations(prev => ({
         ...prev,
         [category]: methodFunctions[method](prev[category])
@@ -61,8 +60,8 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
 
   // PROPS FOR THE ROOT CONTAINER
   const rootContext = useMemo(() => {
-    return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, jwtToken }
-  }, [eventStart, selectedDate, employees, selectedEmployee, _id])
+    return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, oldEvent }
+  }, [eventStart, selectedDate, employees, selectedEmployee ])
 
 
 
@@ -77,7 +76,7 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
   // PROPS FOR EVENT REDACTION
   const redactionContext = useMemo(() => {
 
-    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, selectedDate, setSelectedDate, jwtToken, resetAndRenewEvents }
+    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, maxFuturDays, selectedDate, setSelectedDate, jwtToken, resetAndRenewEvents}
   },
     [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate, jwtToken])
 

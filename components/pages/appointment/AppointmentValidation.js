@@ -45,8 +45,8 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
         }
 
         const data = await request({
-            path: "/appointments/appointment-registration",
-            method: "POST",
+            path: "/appointments/user-appointment-saving",
+            method: "PUT",
             body: { eventToSave },
             jwtToken,
             setSessionExpired,
@@ -72,7 +72,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
             <View style={{ paddingBottom: appStyle.largeMarginTop, width: "100%", alignItems: "center" }} >
                 <StepTitle title="3. Valider votre RDV" noChevron={true} marginTop={appStyle.regularMarginTop * 1.5} />
 
-                <Button func={buttonFunction} text={buttonText} style={{ height: appStyle.largeItemHeight, marginTop : appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+                <Button func={buttonFunction} text={buttonText} style={{ height: appStyle.largeItemHeight, marginTop : appStyle.largeMarginTop }} fontStyle={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
                 < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ce rendez-vous ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerAppointment} />

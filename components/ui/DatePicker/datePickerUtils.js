@@ -1,6 +1,6 @@
 import { DateTime } from "luxon"
 
-export const getMonthDays = (viewedYear, viewedMonth) => {
+export const getMonthDays = (viewedYear, viewedMonth, maxDate) => {
     const firstDayOfMonth = DateTime.now({zone : "Europe/Paris"}).set({ year : viewedYear, month : viewedMonth, day : 1})
     const firstDayOfMonthIndex = firstDayOfMonth.weekday
 
@@ -12,7 +12,10 @@ export const getMonthDays = (viewedYear, viewedMonth) => {
 
     const today = setToMidnight(DateTime.now({zone : "Europe/Paris"}))
 
-    const isDisabled = (date) => date < today
+    const isDisabled = (date) => {
+        if (!maxDate) return date < today
+        else return date < today || date > maxDate
+    }
 
     // Add days of the previous month
     for (let i = firstDayOfMonthIndex - 1; i > 0; i--) {

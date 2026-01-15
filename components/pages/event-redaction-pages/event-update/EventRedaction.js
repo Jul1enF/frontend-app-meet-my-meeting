@@ -78,7 +78,7 @@ export default function EventRedaction({ redactionContext, clientRedaction = fal
 
 
                 <Text style={appStyle.pageTitle}>
-                    {!oldEvent ? "Nouvel évènement :" : "Modifier un évènement :"}
+                    {!oldEvent ? "Nouvel évènement :" : `Modifier un ${clientRedaction ? "RDV" : "évènement"} :`}
                 </Text>
 
                 <View style={appStyle.largeCard}>
@@ -119,7 +119,7 @@ export default function EventRedaction({ redactionContext, clientRedaction = fal
                     }
 
 
-                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} />
+                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
 
                 </View>
 

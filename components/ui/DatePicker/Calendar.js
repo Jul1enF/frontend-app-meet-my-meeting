@@ -12,13 +12,13 @@ import { DateTime } from "luxon";
 import { getMonthDays } from "@components/ui/DatePicker/datePickerUtils";
 import { upperCaseInitial } from "@utils/timeFunctions";
 
-export default memo(function Calendar({ chosenDate, setChosenDate, setCalendarVisible }) {
+export default memo(function Calendar({ chosenDate, setChosenDate, setCalendarVisible, maxDate }) {
     // ALL DATES ARE IN EUROPE PARIS ZONE TO BE RELEAVANT TO THE SHOP TIMEZONE
     const [viewedDate, setViewedDate] = useState(chosenDate)
     const viewedYear = viewedDate.year
     const viewedMonth = viewedDate.month
 
-    const daysItems = useMemo(() => getMonthDays(viewedYear, viewedMonth), [viewedYear, viewedMonth])
+    const daysItems = useMemo(() => getMonthDays(viewedYear, viewedMonth, maxDate), [viewedYear, viewedMonth, maxDate])
 
     const updateViewedDate = (increment) => {
         setViewedDate(prev => increment ? prev.plus({ months: 1 }) : prev.minus({ months: 1 }))

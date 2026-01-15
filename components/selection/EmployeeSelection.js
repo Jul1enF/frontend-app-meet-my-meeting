@@ -30,8 +30,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
     useEffect(() => {
         if (
             selectedEmployee?._id
-            && autocompleteItem?.employee?._id
-            && selectedEmployee._id.toString() !== autocompleteItem.employee._id.toString()
+            && selectedEmployee._id.toString() !== autocompleteItem?.employee?._id?.toString()
         ) {
             const employeeFound = employeesAutocompleteList.find(e =>
                 e.employee._id.toString() === selectedEmployee._id.toString()
@@ -40,7 +39,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
             // If the employee is no longer in the team
             if (!employeeFound){
                 const suppressedEmployee = {
-                title: "Ce professionnel ne fait plus partie de l'équipe à cette date !",
+                title: "Ce professionnel ne fait plus partie de l'équipe !",
                 id: "suppressedEmployee",
             }
 
@@ -78,16 +77,19 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     inputStyle={{
                         fontWeight: "600",
                         color: isInRedactionComponent ? appStyle.fontColorDarkBg : appStyle.strongBlack,
-                        fontSize: appStyle.largeText.fontSize
+                        fontSize: appStyle.largeText.fontSize,
+                        ...(isInRedactionComponent && {height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight})
                     }}
                     inputContainerStyle={{
                         borderColor: isInRedactionComponent ? appStyle.lightGrey : appStyle.strongBlack,
-                        ...(!isInRedactionComponent && { marginTop: 0 })
+                        ...(!isInRedactionComponent && { marginTop: 0 }),
+                        ...(isInRedactionComponent && { height : "auto"})
                     }}
                     placeholderColor={appStyle.mediumGrey}
                     iconColor={isInRedactionComponent ? null : appStyle.strongBlack}
                     height={isInRedactionComponent ? null : (phoneDevice ? null : 70)}
                     ref={autocompleteRef}
+                    multiline={isInRedactionComponent ? true : false}
                 />}
 
         </View>

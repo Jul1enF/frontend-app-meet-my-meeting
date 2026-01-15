@@ -16,6 +16,10 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
     const selectedEmployeesArray = useMemo(() => {
         if (!selectedEmployees) return []
+
+        // Case where user-appointments page just send an id to selectedEmployee because a former employee that is no longer part of the team was registered for the appointment
+        if (selectedEmployees?._id && !selectedEmployees?.schedule) return []
+
         return Array.isArray(selectedEmployees)
             ? selectedEmployees
             : [selectedEmployees]
