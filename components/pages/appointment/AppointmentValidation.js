@@ -1,5 +1,6 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { useState, useRef } from 'react';
+import { useRouter } from 'expo-router';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -20,6 +21,7 @@ import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 export default function AppointmentValidation({ selectedAppointmentType: type, setSelectedAppointmentType, selectedAppointmentSlot: slot, resetAndRenewEvents }) {
 
+    const router = useRouter()
     const dispatch = useDispatch()
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const [userIsConnecting, setUserIsConnecting] = useState(false)
@@ -61,6 +63,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
             setTimeout(()=> {
                 resetAndRenewEvents(eventSaved)
                 dispatch(addEvent(eventSaved))
+                router.navigate("/user-appointments")
             }, data.delay)
         }
         else if (data.delay){

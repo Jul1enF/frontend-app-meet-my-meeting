@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateEvent } from '@reducers/user';
 
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
@@ -13,9 +13,11 @@ import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jwtToken, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents, clientRedaction }) {
+export default function EventSaving({ selectedEmployee, eventStart, oldEvent, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents, clientRedaction }) {
 
     const dispatch = useDispatch()
+    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
     const [fetchWarning, setFetchWarning] = useState({})
@@ -147,7 +149,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, jw
             const { eventSaved } = data
             const delay = data.delay ?? 0
             setTimeout(() => {
-                resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create")
+                resetAndRenewEvents( eventSaved, oldEvent?._id ? "update" : "create", clientRedaction ? "appointments" : "schedule")
+
                 clientRedaction && dispatch(updateEvent(eventSaved))
             }, delay)
         }

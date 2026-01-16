@@ -1,7 +1,8 @@
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useFocusEffect } from 'expo-router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadInformations } from '@reducers/planning';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -18,47 +19,57 @@ import EventRedaction from '@components/pages/event-redaction-pages/event-update
 
 
 export default function DaysSchedule() {
-
+    const dispatch = useDispatch()
     const [warning, setWarning] = useState({})
-    const [scheduleInformations, setScheduleInformations] = useState({})
 
+    const scheduleInformations = useSelector((state) => state.planning.value.schedule)
+    const employees = useSelector((state) => state.planning.value.schedule.employees)
     const _id = useSelector((state) => state.user.value._id)
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
+
 
     // LOAD SCHEDULE INFORMATIONS FUNCTION
 
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
+    const lastFetchRef = useRef(null)
 
-    const getScheduleInformations = useCallback(async (clearEtag) => {
-        const data = await request({ path: "/events/schedule-informations", jwtToken, setSessionExpired, clearEtag, setWarning })
+    const getScheduleInformations = useCallback(async () => {
+        if (!jwtToken) return
+
+        const scheduleInformationsLoaded = !employees ? true : false
+        const now = new Date()
+
+        // Avoid double fetch when employees (which is in dependances) changes with fresh datas
+        if (lastFetchRef.current && now - lastFetchRef.current < 5000) return
+
+        const data = await request({ path: "/events/schedule-informations", jwtToken, setSessionExpired, setWarning, clearEtag: scheduleInformationsLoaded })
 
         if (data?.result) {
-            setScheduleInformations(data.informations)
+            dispatch(loadInformations({ target: "schedule", informations: data.informations }))
             setSelectedEmployee(prev =>
-                prev ?? data.informations.employees.find(e => e._id === _id)
+                prev ?? data.informations.employees?.find(e => e._id === _id)
             )
+        } else {
+            setSelectedEmployee(prev => prev ?? employees?.find(e => e._id === _id))
         }
-    }, [jwtToken, _id ])
+
+        lastFetchRef.current = now
+    }, [jwtToken, _id, employees])
+
+    // useFocusEffect to fetch the datas every time the screen appears
+    useFocusEffect(useCallback(() => {
+        getScheduleInformations()
+    }, [getScheduleInformations]))
+
 
 
     // Memoised props for the all the components
-    const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, setScheduleInformations, getScheduleInformations)
+    const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, getScheduleInformations)
 
     // Memoised props for this component
-    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee } = rootContext
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, selectedEmployee, setSelectedEmployee } = rootContext
 
-
-    // useEffect for firstRender to fetch datas with a clearEtag (and ref for useFocusEffect)
-    const firstRenderRef = useRef(false)
-    useEffect(() => {
-        getScheduleInformations(true)
-        setTimeout(()=> firstRenderRef.current = true, 1000)
-    }, [])
-    // useFocusEffect to fetch schedule informations every time the screen is seen
-    useFocusEffect(useCallback(() => {
-        if (firstRenderRef.current) getScheduleInformations()
-    }, [getScheduleInformations]))
 
 
     // refreshControl for the ScrollView

@@ -19,7 +19,7 @@ import { eventCatTranslation } from 'constants/translations';
 export default function EventRedaction({ redactionContext, clientRedaction = false }) {
 
     // Context to know how to calcul the freeSlots, set an event and post it
-    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, appointmentGapMs, selectedDate, jwtToken, resetAndRenewEvents } = redactionContext
+    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, appointmentGapMs, selectedDate, resetAndRenewEvents } = redactionContext
 
     // States to register the settings of the events
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
@@ -119,7 +119,7 @@ export default function EventRedaction({ redactionContext, clientRedaction = fal
                     }
 
 
-                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} jwtToken={jwtToken} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
+                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
 
                 </View>
 

@@ -1,12 +1,10 @@
 import { useState, useMemo, useCallback } from "react";
 import { DateTime } from "luxon";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { createEvent, updateEvent, deleteEvent } from "@reducers/planning";
 
-export default function usePlanningContext(planningInformations = {}, setPlanningInformations, getPlanningInformations) {
-
-  // Informations on the current user
-  const jwtToken = useSelector((state) => state.user.value.jwtToken)
-
+export default function usePlanningContext(planningInformations = {}, getPlanningInformations) {
+  const dispatch = useDispatch()
 
   // Informations on the registered events and their context
   const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule, maxFuturDays = null } = planningInformations
@@ -23,7 +21,7 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
 
 
   // Function after event modification to reset the selected criteriums and modify an event in the state or download fresh datas
-  const resetAndRenewEvents = useCallback((event, method) => {
+  const resetAndRenewEvents = useCallback((event, method, target) => {
 
     // An event has been sent, the modification was successfull
     if (event) {
@@ -33,20 +31,19 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
       // Choose the right array to modify in the state depending on the event category
       const category = event.category === "absence" ? "absences" : event.category === "closure" ? "closures" : "events"
 
-      // Functions object to modify the state depending on the method
-      const methodFunctions = {
+      const payload = {target, category, event}
+
+      // Dispatch functions object to modify the reducer depending on the method
+      const methodDispatchers = {
         // Registration event function
-        create: (prevEvents) => [...prevEvents, event].sort((a, b) => new Date(b.start) - new Date(a.start)),
+        create: () => dispatch(createEvent(payload)),
         // Update event function
-        update: (prevEvents) => prevEvents.map(e => e._id === event._id ? event : e),
+        update: () => dispatch(updateEvent(payload)),
         // Delete event function
-        delete: (prevEvents) => [...prevEvents].filter(e => e._id !== event._id),
+        delete: () => dispatch(deleteEvent(payload)),
       }
 
-      setPlanningInformations(prev => ({
-        ...prev,
-        [category]: methodFunctions[method](prev[category])
-      }))
+      methodDispatchers[method]?.()
 
     }
     else {
@@ -60,8 +57,8 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
 
   // PROPS FOR THE ROOT CONTAINER
   const rootContext = useMemo(() => {
-    return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, oldEvent, resetAndRenewEvents }
-  }, [eventStart, selectedDate, employees, selectedEmployee, oldEvent ])
+    return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, selectedEmployee, setSelectedEmployee, oldEvent, resetAndRenewEvents }
+  }, [eventStart, selectedDate, selectedEmployee, oldEvent ])
 
 
 
@@ -76,9 +73,9 @@ export default function usePlanningContext(planningInformations = {}, setPlannin
   // PROPS FOR EVENT REDACTION
   const redactionContext = useMemo(() => {
 
-    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, maxFuturDays, selectedDate, setSelectedDate, jwtToken, resetAndRenewEvents}
+    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
   },
-    [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate, jwtToken])
+    [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate])
 
 
   return { rootContext, scheduleContext, redactionContext }

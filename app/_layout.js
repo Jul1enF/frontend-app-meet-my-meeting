@@ -15,9 +15,10 @@ Settings.defaultLocale = locale;
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import user from '@reducers/user'
+import planning from "@reducers/planning";
 
 const store = configureStore({
-    reducer: { user },
+    reducer: { user, planning },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ serializableCheck: false })
 })

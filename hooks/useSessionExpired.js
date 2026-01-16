@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { logout } from "@reducers/user";
+import { deleteInformations } from "@reducers/planning";
 
 export default function useSessionExpired(sessionExpired, setSessionExpired) {
     const router = useRouter()
@@ -12,6 +13,7 @@ export default function useSessionExpired(sessionExpired, setSessionExpired) {
             setSessionExpired(false)
             router.push("/home")
             dispatch(logout())
+            dispatch(deleteInformations())
         }
     }, [sessionExpired])
 

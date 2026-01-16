@@ -41,13 +41,13 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
     // GET THE WORKING HOURS AND OFF DAY EVENTS OF THE SELECTED EMPLOYEE(S)
     const selectedEmployeesAvailabilities = useMemo(() => {
 
-        if (!selectedEmployeesArray || !dtDay) return {}
-
         let minWorkingHour
         let maxWorkingHour
         const employeesAvailable = []
         const defaultLunchBreaks = []
         const concernedAbsenceEvents = []
+
+        if (!selectedEmployeesArray || !dtDay || !absences) return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability : true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents }
 
 
         // LOOP TO SEARCH FOR POSSIBLE OFF DAY EVENTS
@@ -124,7 +124,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
         const concernedClosureEvents = []
 
-        if (!dtDay || !closures) return { noAvailabilities: true, concernedClosureEvents }
+        if (!dtDay || !closures || !absences) return { noAvailabilities: true, concernedClosureEvents }
 
         // closures are always full-day (00:00 → 23:59 Paris time)
         const closureHappening = closures.find(closure =>
@@ -160,7 +160,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         const { concernedAbsenceEvents, minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
 
 
-        // We add to concernedEvents (used in an employee schedule) the releavant informations depending on the situation (shop closed or employee is absent )
+        // We add to concernedEvents (used in an employee schedule) the releavant informations depending on the situation. A closure (shop is closed) has priority for the display on an absence
         const isClosed = concernedClosureEvents.length > 0
         concernedEvents = isClosed ? [...concernedClosureEvents] :
             [...concernedAbsenceEvents]

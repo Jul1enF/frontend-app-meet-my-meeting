@@ -1,6 +1,8 @@
 import { View, Platform } from 'react-native';
 import { useEffect, useState, useMemo } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadInformations, createEvent } from '@reducers/planning';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -11,60 +13,55 @@ import AgendaContainer from '@components/pages/appointment/AgendaContainer';
 import AppointmentValidation from '@components/pages/appointment/AppointmentValidation';
 
 export default function AppointmentPage() {
+  const dispatch = useDispatch()
+  const appointmentsInformations = useSelector((state)=> state.planning.value.appointments)
+
   const [warning, setWarning] = useState({})
-  const [appointmentInfos, setAppointmentInfos] = useState({})
   const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
   const [selectedEmployees, setSelectedEmployees] = useState(null)
   const [selectedAppointmentSlot, setSelectedAppointmentSlot] = useState(null)
 
 
   const employeesAutocompleteList = useMemo(() => {
-    if (!appointmentInfos.employees) return null
-    else return appointmentInfos.employees.reduce((acc, e) => {
+    if (!appointmentsInformations.employees) return null
+    else return appointmentsInformations.employees.reduce((acc, e) => {
       acc.push({
         title: `${e.first_name ? (e.first_name + " ") : ""}${e.last_name ?? ""}`,
         id: e._id,
         employee: e,
       })
       return acc
-    }, [{ title: "Sans préférence", id: "all", employees: appointmentInfos.employees }])
+    }, [{ title: "Sans préférence", id: "all", employees: appointmentsInformations.employees }])
 
-  }, [appointmentInfos.employees])
+  }, [appointmentsInformations.employees])
 
-  const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = appointmentInfos
 
   const appointmentDuration = useMemo(() => selectedAppointmentType?.default_duration, [selectedAppointmentType])
 
 
   // LOAD APPOINTMENTS INFORMATIONS FUNCTION AND USEEFFECT
-  const getAppointmentInformations = async (clearEtag) => {
+  const getAppointmentInformations = async () => {
+    const clearEtag = !appointmentsInformations.events ? true : false
     const data = await request({ path: "/appointments/appointment-informations", clearEtag, setWarning })
     if (data?.result) {
-      setAppointmentInfos(data.informations)
+      dispatch(loadInformations({target : "appointments", informations : data.informations}))
       setSelectedEmployees(prev => prev ?? data.informations.employees)
+    }else if (!selectedEmployees){
+      setSelectedEmployees(appointmentsInformations.employees)
     }
   }
 
   useEffect(() => {
-    getAppointmentInformations(true)
+    getAppointmentInformations()
   }, [])
 
   // Props in useMemo to pass along children of the agenda
-  const agendaContext = useMemo(() => ({
-    selectedEmployees,
-    setSelectedEmployees,
-    setSelectedAppointmentSlot,
-    events,
-    closures,
-    absences,
-    appointmentGapMs,
-    maxFuturDays,
-    sortFreeEmployees,
-    rolesPriorities,
-    employeesAutocompleteList,
-    appointmentDuration
-  }),
-    [selectedEmployees, appointmentDuration, appointmentInfos, employeesAutocompleteList])
+  const agendaContext = useMemo(() => {
+    const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = appointmentsInformations
+
+    return { selectedEmployees, setSelectedEmployees, setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, employeesAutocompleteList, appointmentDuration }
+  },
+    [selectedEmployees, appointmentDuration, appointmentsInformations, employeesAutocompleteList])
 
 
 
@@ -78,15 +75,10 @@ export default function AppointmentPage() {
 
     // The registration has been successfull, a new event has been retrieved
     if (event) {
-      setSelectedEmployees(appointmentInfos.employees)
+      setSelectedEmployees(appointmentsInformations.employees)
       setSelectedAppointmentType(null)
 
-      const newEvents = [...appointmentInfos.events, event].sort((a, b) => new Date(b.start) - new Date(a.start))
-
-      setAppointmentInfos(prev => ({
-        ...prev,
-        events: newEvents,
-      }))
+      dispatch(createEvent({ target : "appointments", category : "events", event}))
     }
     else {
       getAppointmentInformations()
@@ -104,7 +96,7 @@ export default function AppointmentPage() {
         refreshControl={refreshControl}
       >
 
-        <AppointmentTypesList appointmentTypes={appointmentInfos.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
+        <AppointmentTypesList appointmentTypes={appointmentsInformations.appointmentTypes} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} setSelectedAppointmentSlot={setSelectedAppointmentSlot} warning={warning} />
 
         {selectedAppointmentType && <AgendaContainer agendaContext={agendaContext} selectedAppointmentSlot={selectedAppointmentSlot} />}
 

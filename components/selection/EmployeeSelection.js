@@ -31,8 +31,9 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
         if (
             selectedEmployee?._id
             && selectedEmployee._id.toString() !== autocompleteItem?.employee?._id?.toString()
+            && autocompleteRef.current
         ) {
-            const employeeFound = employeesAutocompleteList.find(e =>
+            const employeeFound = employeesAutocompleteList?.find(e =>
                 e.employee._id.toString() === selectedEmployee._id.toString()
             )
 

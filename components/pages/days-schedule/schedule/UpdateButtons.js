@@ -58,11 +58,11 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
         if (data?.result) {
             const delay = data.delay ?? 0
             if (!isLunchBreak) {
-                setTimeout(() => resetAndRenewEvents({ _id, category }, "delete"), delay)
+                setTimeout(() => resetAndRenewEvents({ _id, category }, "delete", "schedule"), delay)
             } 
             // If it is a lunchBreak a new event was created or and old one updated (if the lunch break was already modified)
             else {
-                setTimeout(() => resetAndRenewEvents(data.eventSaved, _id ? "update" : "create"), delay)
+                setTimeout(() => resetAndRenewEvents( data.eventSaved, _id ? "update" : "create", "schedule"), delay)
             }
 
         }

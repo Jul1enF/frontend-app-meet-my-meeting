@@ -61,7 +61,7 @@ export default function AppointmentItem({ start, employee, appointment_type, _id
         if (data?.result) {
             const delay = data.delay ?? 0
             setTimeout(() => {
-                resetAndRenewEvents({ _id, category }, "delete")
+                resetAndRenewEvents({ _id, category }, "delete", "appointments")
                 dispatch(deleteEvent(_id))
             }, delay)
         }

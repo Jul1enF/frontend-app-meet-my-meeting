@@ -5,6 +5,7 @@ import LateralMenuItem from "./LateralMenuItem"
 import { appStyle } from "@styles/appStyle"
 
 import { logout } from "@reducers/user";
+import { deleteInformations } from "@reducers/planning"
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -13,7 +14,10 @@ export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight,
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const role = useSelector((state) => state.user.value.role)
     const dispatch = useDispatch()
-    const logoutUser = () => dispatch(logout())
+    const logoutUser = () => {
+        dispatch(logout())
+        dispatch(deleteInformations())
+    }
 
     const sectionsArray = [
         { sectionName: "Accueil", link: "/home" },

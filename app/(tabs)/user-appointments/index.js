@@ -2,6 +2,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { loadEvents } from '@reducers/user';
+import { loadInformations } from '@reducers/planning';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
@@ -20,27 +21,34 @@ import EventRedaction from '@components/pages/event-redaction-pages/event-update
 
 export default function UserAppointments() {
 
-
-    const [appointmentsInformations, setAppointmentInformations] = useState({})
     const [fetchWarning, setFetchWarning] = useState({})
 
     const dispatch = useDispatch()
     const _id = useSelector((state) => state.user.value._id)
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const events = useSelector((state) => state.user.value.events)
+    const appointmentsInformations = useSelector((state) => state.planning.value.appointments)
+    const employees = useSelector((state) => state.planning.value.appointments.employees)
 
 
     // Function to search for user appointments
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
+    const lastFetchRef = useRef(null)
 
-    const getAppointmentsInformations = useCallback(async (clearEtag = false) => {
+    const getAppointmentsInformations = useCallback(async () => {
         if (!jwtToken) return
 
-        const data = await request({ path: "/appointments/user-appointment-informations", jwtToken, setSessionExpired, setWarning: setFetchWarning, clearEtag })
+        const appointmentsInformationsLoaded = !employees ? true : false
+        const now = new Date()
+
+        // Avoid double fetch when employees (which is dependances) changes with fresh datas
+        if (lastFetchRef.current && now - lastFetchRef.current < 5000) return
+
+        const data = await request({ path: "/appointments/user-appointment-informations", jwtToken, setSessionExpired, setWarning: setFetchWarning, clearEtag: appointmentsInformationsLoaded })
 
         if (data?.result) {
-            setAppointmentInformations(data.informations)
+            dispatch(loadInformations({ target: "appointments", informations: data.informations }))
 
             const userAppointments = data.informations.events.filter(e =>
                 e.category === "appointment" && e.client?.toString() === _id.toString()
@@ -49,20 +57,37 @@ export default function UserAppointments() {
 
             dispatch(loadEvents(userAppointments))
         }
-    }, [jwtToken, _id])
+
+        lastFetchRef.current = now
+    }, [jwtToken, _id, employees])
+
+
+    // useEffect to fetch the user's appointment or select them
+    useEffect(() => {
+        // The appointments informations can have already been loaded if the user went to the appointment tab => we don't need to fetch but to select the user's appointments
+        const appointmentsInformationsLoaded = appointmentsInformations.events ? true : false
+
+        if (appointmentsInformationsLoaded) {
+            const userAppointments = appointmentsInformations.events.filter(e =>
+                e.category === "appointment" && e.client?.toString() === _id.toString()
+                && !isBefore(toParisDt(e.start), DateTime.now({ zone: "Europe/Paris" }))
+            )
+
+            dispatch(loadEvents(userAppointments))
+        } 
+        // else we need to fetch
+        else {
+            getAppointmentsInformations()
+        }
+    }, [getAppointmentsInformations])
 
 
     // Memoised props for this component and the redaction one
-    const { rootContext, redactionContext } = usePlanningContext(appointmentsInformations, setAppointmentInformations, getAppointmentsInformations)
+    const { rootContext, redactionContext } = usePlanningContext(appointmentsInformations, getAppointmentsInformations)
 
     // Memoised props of this component
-    const { eventStart, setEventStart, setOldEvent, setSelectedDate, employees, setSelectedEmployee, oldEvent, resetAndRenewEvents } = rootContext
+    const { eventStart, setEventStart, setOldEvent, setSelectedDate, setSelectedEmployee, oldEvent, resetAndRenewEvents } = rootContext
 
-
-    // useEffect to fetch the user's appointment
-    useEffect(() => {
-        getAppointmentsInformations(true)
-    }, [getAppointmentsInformations, jwtToken])
 
 
     // refreshControl for the Flatlist
