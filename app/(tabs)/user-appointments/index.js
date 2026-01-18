@@ -28,24 +28,17 @@ export default function UserAppointments() {
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const events = useSelector((state) => state.user.value.events)
     const appointmentsInformations = useSelector((state) => state.planning.value.appointments)
-    const employees = useSelector((state) => state.planning.value.appointments.employees)
+    const { employees } = appointmentsInformations
 
 
     // Function to search for user appointments
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
-    const lastFetchRef = useRef(null)
 
-    const getAppointmentsInformations = useCallback(async () => {
+    const getAppointmentsInformations = useCallback(async (storedData) => {
         if (!jwtToken) return
-
-        const appointmentsInformationsLoaded = !employees ? true : false
-        const now = new Date()
-
-        // Avoid double fetch when employees (which is dependances) changes with fresh datas
-        if (lastFetchRef.current && now - lastFetchRef.current < 5000) return
-
-        const data = await request({ path: "/appointments/user-appointment-informations", jwtToken, setSessionExpired, setWarning: setFetchWarning, clearEtag: appointmentsInformationsLoaded })
+  
+        const data = await request({ path: "/appointments/user-appointment-informations", jwtToken, setSessionExpired, setWarning: setFetchWarning, storedData})
 
         if (data?.result) {
             dispatch(loadInformations({ target: "appointments", informations: data.informations }))
@@ -58,13 +51,12 @@ export default function UserAppointments() {
             dispatch(loadEvents(userAppointments))
         }
 
-        lastFetchRef.current = now
-    }, [jwtToken, _id, employees])
+    }, [jwtToken, _id])
 
 
     // useEffect to fetch the user's appointment or select them
     useEffect(() => {
-        // The appointments informations can have already been loaded if the user went to the appointment tab => we don't need to fetch but to select the user's appointments
+        // The appointments informations can have already been loaded if the user went to the appointment tab before => we don't need to fetch but to select the user's appointments
         const appointmentsInformationsLoaded = appointmentsInformations.events ? true : false
 
         if (appointmentsInformationsLoaded) {
@@ -77,7 +69,7 @@ export default function UserAppointments() {
         } 
         // else we need to fetch
         else {
-            getAppointmentsInformations()
+            getAppointmentsInformations(appointmentsInformations)
         }
     }, [getAppointmentsInformations])
 
@@ -91,7 +83,7 @@ export default function UserAppointments() {
 
 
     // refreshControl for the Flatlist
-    const refreshControl = useRefreshControl(getAppointmentsInformations)
+    const refreshControl = useRefreshControl(()=> getAppointmentsInformations(appointmentsInformations))
 
     // Function trigerred when an appointment item is pressed
     const appointmentPress = (item) => {

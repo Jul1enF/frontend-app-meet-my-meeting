@@ -26,15 +26,15 @@ export default function AppointmentsTypesPage() {
     useSessionExpired(sessionExpired, setSessionExpired)
 
     // LOAD APPOINTMENTS TYPES FUNCTION AND USEEFFECT
-    const getTypes = async () => {
-        const data = await request({ path: "/pros/get-appointments-types", jwtToken, setSessionExpired, setWarning })
+    const getTypes = async (storedData) => {
+        const data = await request({ path: "/pros/get-appointments-types", jwtToken, setSessionExpired, setWarning, storedData })
         if (data?.result) {
             setTypes(sortByCategory(data.appointmentsTypes))
         }
     }
 
     useEffect(() => {
-        getTypes()
+        getTypes(types)
     }, [])
 
     // CATEGORIES LOGIC (IF THERE ARE ONES)
@@ -54,7 +54,7 @@ export default function AppointmentsTypesPage() {
     const typesFlatlistRef = useRef(null)
 
     // refreshControl for the ScrollView
-    const refreshControl = useRefreshControl(getTypes)
+    const refreshControl = useRefreshControl(()=> getTypes(types))
 
     // Header
     const typesListHeader = () => {

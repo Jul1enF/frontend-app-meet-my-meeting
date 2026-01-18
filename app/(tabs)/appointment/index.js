@@ -15,6 +15,7 @@ import AppointmentValidation from '@components/pages/appointment/AppointmentVali
 export default function AppointmentPage() {
   const dispatch = useDispatch()
   const appointmentsInformations = useSelector((state)=> state.planning.value.appointments)
+  const { employees } = appointmentsInformations
 
   const [warning, setWarning] = useState({})
   const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
@@ -40,9 +41,10 @@ export default function AppointmentPage() {
 
 
   // LOAD APPOINTMENTS INFORMATIONS FUNCTION AND USEEFFECT
-  const getAppointmentInformations = async () => {
-    const clearEtag = !appointmentsInformations.events ? true : false
-    const data = await request({ path: "/appointments/appointment-informations", clearEtag, setWarning })
+  const getAppointmentInformations = async (storedData) => {
+
+    const data = await request({ path: "/appointments/appointment-informations", setWarning, storedData })
+ 
     if (data?.result) {
       dispatch(loadInformations({target : "appointments", informations : data.informations}))
       setSelectedEmployees(prev => prev ?? data.informations.employees)
@@ -52,12 +54,15 @@ export default function AppointmentPage() {
   }
 
   useEffect(() => {
-    getAppointmentInformations()
+    // The appointments informations could have already been fetched and loaded in user-appointments, menaning we have the employees list and no need to fetch
+    if (employees) setSelectedEmployees(prev => prev ?? employees)
+    else getAppointmentInformations(appointmentsInformations)
   }, [])
 
   // Props in useMemo to pass along children of the agenda
   const agendaContext = useMemo(() => {
-    const { events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = appointmentsInformations
+    const { events, closures, absences, constants } = appointmentsInformations
+    const { appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = constants ?? {}
 
     return { selectedEmployees, setSelectedEmployees, setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, employeesAutocompleteList, appointmentDuration }
   },
@@ -66,7 +71,7 @@ export default function AppointmentPage() {
 
 
   // refreshControl for the ScrollView
-  const refreshControl = useRefreshControl(getAppointmentInformations)
+  const refreshControl = useRefreshControl(()=> getAppointmentInformations(appointmentsInformations))
 
 
   // Function for Appointment Validation to reset the selected criteriums and add an event or download fresh datas

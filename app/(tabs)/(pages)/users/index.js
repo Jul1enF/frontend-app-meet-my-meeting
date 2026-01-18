@@ -29,15 +29,15 @@ export default function UsersPage() {
     useSessionExpired(sessionExpired, setSessionExpired)
 
     // LOAD USERS FUNCTION AND USEEFFECT
-    const fetchUsers = async (clearEtag) => {
-        const data = await request({ path: "/pros/get-all-users", jwtToken, setSessionExpired, clearEtag, setWarning })
+    const fetchUsers = async (storedData) => {
+        const data = await request({ path: "/pros/get-all-users", jwtToken, setSessionExpired, setWarning, storedData })
         if (data?.result) {
             setAllUsers(data.allUsers)
         }
     }
 
     useEffect(() => {
-        fetchUsers(true)
+        fetchUsers(allUsers)
     }, [])
 
 
@@ -64,7 +64,7 @@ export default function UsersPage() {
     const usersFlatlistRef = useRef(null)
 
     // refreshControl for the ScrollView
-    const refreshControl = useRefreshControl(fetchUsers)
+    const refreshControl = useRefreshControl(()=> fetchUsers(allUsers))
 
     const usersListHeader = () => {
         return (

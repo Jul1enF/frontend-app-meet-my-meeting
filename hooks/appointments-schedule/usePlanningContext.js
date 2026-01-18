@@ -7,7 +7,9 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
   const dispatch = useDispatch()
 
   // Informations on the registered events and their context
-  const { employees, appointmentTypes, users, events, closures, absences, appointmentGapMs, defaultSchedule, maxFuturDays = null } = planningInformations
+  const { employees, appointmentTypes, users, events, closures, absences, constants } = planningInformations
+
+  const { appointmentGapMs, defaultSchedule, maxFuturDays = null } = constants ?? {}
 
 
   // States for the appointment schedule
@@ -47,7 +49,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
 
     }
     else {
-      getPlanningInformations()
+      getPlanningInformations(planningInformations)
     }
 
   }, [getPlanningInformations])

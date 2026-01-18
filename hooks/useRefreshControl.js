@@ -9,7 +9,7 @@ export default function useRefreshControl(func) {
     const onRefresh = async () => {
         try {
             setIsRefreshing(true);
-            await func(false); 
+            await func(); 
         } catch (e) {
             console.error(e);
         } finally {

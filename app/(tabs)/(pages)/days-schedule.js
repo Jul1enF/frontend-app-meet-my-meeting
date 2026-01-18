@@ -1,5 +1,5 @@
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadInformations } from '@reducers/planning';
@@ -23,7 +23,7 @@ export default function DaysSchedule() {
     const [warning, setWarning] = useState({})
 
     const scheduleInformations = useSelector((state) => state.planning.value.schedule)
-    const employees = useSelector((state) => state.planning.value.schedule.employees)
+    const { employees } = scheduleInformations
     const _id = useSelector((state) => state.user.value._id)
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
 
@@ -32,37 +32,28 @@ export default function DaysSchedule() {
 
     const [sessionExpired, setSessionExpired] = useState(false)
     useSessionExpired(sessionExpired, setSessionExpired)
-    const lastFetchRef = useRef(null)
 
-    const getScheduleInformations = useCallback(async () => {
+    const getScheduleInformations = useCallback(async (storedData) => {
         if (!jwtToken) return
 
-        const scheduleInformationsLoaded = !employees ? true : false
-        const now = new Date()
-
-        // Avoid double fetch when employees (which is in dependances) changes with fresh datas
-        if (lastFetchRef.current && now - lastFetchRef.current < 5000) return
-
-        const data = await request({ path: "/events/schedule-informations", jwtToken, setSessionExpired, setWarning, clearEtag: scheduleInformationsLoaded })
+        const data = await request({ path: "/events/schedule-informations", jwtToken, setSessionExpired, setWarning, storedData })
 
         if (data?.result) {
             dispatch(loadInformations({ target: "schedule", informations: data.informations }))
-            setSelectedEmployee(prev =>
-                prev ?? data.informations.employees?.find(e => e._id === _id)
-            )
-        } else {
-            setSelectedEmployee(prev => prev ?? employees?.find(e => e._id === _id))
-        }
-
-        lastFetchRef.current = now
-    }, [jwtToken, _id, employees])
+        } 
+    }, [jwtToken, _id])
 
     // useFocusEffect to fetch the datas every time the screen appears
     useFocusEffect(useCallback(() => {
-        getScheduleInformations()
+        getScheduleInformations(scheduleInformations)
     }, [getScheduleInformations]))
 
 
+    // useEffect to set the selected employee every time employees informations are loaded
+    useEffect(() => {
+        if (employees) setSelectedEmployee(prev => prev ?? employees?.find(e => e._id === _id))
+        else setSelectedEmployee(null)
+    }, [employees])
 
     // Memoised props for the all the components
     const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, getScheduleInformations)
@@ -73,7 +64,7 @@ export default function DaysSchedule() {
 
 
     // refreshControl for the ScrollView
-    const refreshControl = useRefreshControl(getScheduleInformations)
+    const refreshControl = useRefreshControl(()=> getScheduleInformations(scheduleInformations))
 
     // Custom sticky header settings
     const [stickyComponent, setStickyComponent] = useState(false)

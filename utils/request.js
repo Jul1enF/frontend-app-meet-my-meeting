@@ -1,4 +1,50 @@
-export default async function request({ path, method = "GET", body, params, jwtToken, setSessionExpired, functionRef, setWarning, setModalVisible, setUploading, clearEtag }) {
+// Function to count the number of docs (arrays or objects) owned by stored data
+// Same way of counting than in sendIfUpdated middleware in the back end
+const getDocsCount = (storedData) => {
+
+    // Deserialize data if they have been serialized (by redux)
+    const deserializedData = JSON.parse(JSON.stringify(storedData))
+
+    let docsCount = 0
+    const visitedDocs = new WeakSet()
+
+    const extractDocsCount = (doc) => {
+        if (!doc || typeof doc !== "object" || visitedDocs.has(doc)) return
+        visitedDocs.add(doc)
+
+        // Add a doc to the count
+        if (doc._id) docsCount += 1
+
+        if (Array.isArray(doc)) {
+            doc.forEach(e => extractDocsCount(e))
+        }
+        else {
+            // Searching inside an object for other docs
+            for (const key in doc) {
+                const val = doc[key];
+
+                // If it is an array
+                if (Array.isArray(val) && val.length) {
+                    val.forEach(e => extractDocsCount(e))
+                }
+                // If it is an object
+                else if (val && typeof val === "object") {
+                    extractDocsCount(val);
+                }
+            }
+        }
+    }
+
+    extractDocsCount(deserializedData)
+
+    return docsCount
+}
+
+
+
+
+export default async function request(props) {
+    const { path, method = "GET", body, params, jwtToken, setSessionExpired, functionRef, setWarning, setModalVisible, setUploading, clearEtag, storedData } = props
 
     const warning = typeof setWarning === "function"
     const modal = typeof setModalVisible === "function"
@@ -31,6 +77,7 @@ export default async function request({ path, method = "GET", body, params, jwtT
         const options = { method, headers };
 
         if (clearEtag) headers["If-None-Match"] = ""
+        if ("storedData" in props) headers["X-Docs-Count"] = getDocsCount(storedData).toString()
 
         if (body) {
             if (body instanceof FormData) {
