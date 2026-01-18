@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { useState, useRef, useEffect } from 'react';
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
@@ -60,10 +60,6 @@ export default function EventRedaction({ redactionContext, clientRedaction = fal
 
 
     return (
-        <>
-            {/* <KeyboardAvoidingView style={{ width: "100%", height: "100%" }} keyboardVerticalOffset={phoneDevice ? 30 : 150} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
-                <ScrollView style={{ flex: 1 }} contentContainerStyle={[appStyle.pageBody, { flex: "auto" }]} keyboardShouldPersistTaps="handled"> */}
-
             <KeyboardAwareScrollView
                 style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
                 contentContainerStyle={[
@@ -124,9 +120,5 @@ export default function EventRedaction({ redactionContext, clientRedaction = fal
                 </View>
 
             </KeyboardAwareScrollView>
-
-            {/* </ScrollView>
-            </KeyboardAvoidingView> */}
-        </>
     );
 }

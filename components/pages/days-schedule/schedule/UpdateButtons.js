@@ -26,7 +26,7 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
     // Var for the conditionnal diplay of the icons depending on the height of the event and it's category (for the different background colors)
     const iconSize = eventMinDuration <= 20 ? (phoneDevice ? RPW(5.2) : 28) : (phoneDevice ? RPW(6.5) : 35)
     const iconColor = (category === "closure" || category === "absence") ? appStyle.brightGrey : appStyle.strongGrey
-    const containerWidth = eventMinDuration <= 20 ? (phoneDevice ? RPW(8.5) : 45) : (phoneDevice ? RPW(10) : 50)
+    const hitSlop = eventMinDuration <= 20 ? (phoneDevice ? RPW(5) : 25) : (phoneDevice ? RPW(4.5) : 20)
     const top = (category === "closure" || category === "absence") ? (phoneDevice ? RPW(4) : 30) : (phoneDevice ? 0 : -5)
 
 
@@ -74,18 +74,27 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
     return (
         <>
             <View style={{ width: "100%", position: "absolute", top }}>
-                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.editContainer, { width: containerWidth }]} onPress={() => {
+                <TouchableOpacity 
+                activeOpacity={0.6} 
+                style={[styles.iconContainer, styles.editContainer]} 
+                onPress={() => {
                     setOldEvent(event)
                     setEventStart(toParisDt(event.start))
-                }}>
+                }}
+                hitSlop={hitSlop}
+                >
 
                     <MaterialCommunityIcons name="pencil" size={iconSize} color={iconColor} />
 
                 </TouchableOpacity>
 
 
-                <TouchableOpacity activeOpacity={0.6} style={[styles.iconContainer, styles.deleteContainer, { width: containerWidth }]}
-                    onPress={() => setConfirmationModalVisible(true)}>
+                <TouchableOpacity 
+                activeOpacity={0.6} 
+                style={[styles.iconContainer, styles.deleteContainer]}
+                onPress={() => setConfirmationModalVisible(true)}
+                hitSlop={hitSlop}
+                >
 
                     <Entypo name="circle-with-cross" size={iconSize} color={iconColor} />
 
@@ -100,7 +109,6 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
 
 const styles = StyleSheet.create({
     iconContainer: {
-        aspectRatio: 1,
         position: "absolute",
         top: phoneDevice ? RPW(0.5) : 10,
     },

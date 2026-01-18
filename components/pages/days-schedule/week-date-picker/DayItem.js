@@ -22,10 +22,14 @@ export default memo(function DayItem({ date, currentMonth, disabled, selectedDat
 
     return (
         <View style={[styles.mainContainer, { opacity }]}>
-            <TouchableOpacity style={[styles.dayContainer, isSelected && styles.selected]} activeOpacity={!disabled ? 0.6 : 0.1} onPress={() => {
+            <TouchableOpacity 
+            style={[styles.dayContainer, isSelected && styles.selected]} 
+            activeOpacity={!disabled ? 0.6 : 0.1} 
+            onPress={() => {
                 const itemDate = date.set({ hour: selectedDate.hour, minute: selectedDate.minute, second : selectedDate.second })
                 setSelectedDate(itemDate)
-            }}>
+            }}
+            >
                 <Text style={[styles.dayNumber, todayColor, todayFontStyle]} >
                     {date.day}
                 </Text>

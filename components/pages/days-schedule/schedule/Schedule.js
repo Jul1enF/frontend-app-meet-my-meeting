@@ -78,8 +78,11 @@ export default memo(function Schedule({ scheduleContext }) {
                     </Text>}
 
                     {displayPlusIcon &&
-                        <TouchableOpacity activeOpacity={0.6} style={styles.plusIconContainer}
-                            onPress={() => setEventStart(dtSlotStart)}
+                        <TouchableOpacity 
+                        activeOpacity={0.6} 
+                        style={styles.plusIconContainer}
+                        onPress={() => setEventStart(dtSlotStart)}
+                        hitSlop={{bottom : phoneDevice ? RPW(5) : 25, left : phoneDevice ? RPW(5) : 25}}
                         >
 
                             <Feather name="plus-circle" size={phoneDevice ? RPW(6.5) : 40} color={appStyle.strongBlack} />
@@ -133,8 +136,6 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     plusIconContainer: {
-        width: phoneDevice ? RPW(10) : 50,
-        aspectRatio: 1,
         position: "absolute",
         top: phoneDevice ? RPW(2) : 10,
         right: phoneDevice ? RPW(2) : 10,

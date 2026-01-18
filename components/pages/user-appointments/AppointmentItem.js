@@ -71,8 +71,9 @@ export default function AppointmentItem({ start, employee, appointment_type, _id
         <View style={styles.mainContainer} >
 
             <TouchableOpacity activeOpacity={0.6} style={styles.iconContainer}
+                hitSlop={{left : phoneDevice ? RPW(9) : 55, bottom : phoneDevice ? RPW(10) : 55}}
                 onPress={() => setConfirmationModalVisible(true)}>
-
+    
                 <Entypo name="circle-with-cross" size={phoneDevice ? RPW(6) : 37} color={appStyle.strongGrey} />
 
             </TouchableOpacity>
@@ -104,8 +105,6 @@ const styles = StyleSheet.create({
         marginBottom: phoneDevice ? RPW(4) : 20,
     },
     iconContainer: {
-        width: phoneDevice ? RPW(9) : 50,
-        aspectRatio: 1,
         position: "absolute",
         top: phoneDevice ? RPW(0.5) : 4,
         right: phoneDevice ? RPW(0.5) : 4,
