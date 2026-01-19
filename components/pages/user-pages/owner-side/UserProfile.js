@@ -4,11 +4,11 @@ import { useState, useMemo, useRef } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import Autocomplete from "@components/ui/Autocomplete";
 import UserInformations from "./UserInformations";
-import UserSchedule from "../user-schedule/UserSchedule";
+import UserSchedule from "./UserSchedule";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { userDefaultSchedule } from "constants/userDefaultSchedule";
-import { createScheduleActions, dayValidation } from "../user-schedule/scheduleUtils";
+import { dayValidation } from "../../../user-schedule/scheduleUtils";
 import request from "@utils/request";
 
 import Button from "@components/ui/Button";
@@ -33,9 +33,6 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
 
     const [contractEnd, setContractEnd] = useState(user.contract_end)
 
-    const scheduleActions = useMemo(() => {
-        return createScheduleActions(setNewSchedule)
-    }, [])
 
     const [warning, setWarning] = useState(false)
     const [fetchWarning, setFetchWarning] = useState({})
@@ -125,7 +122,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
                 <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} emptyText="Aucun résultat" />
 
                 {(newRole?.role && newRole?.role !== "client") &&
-                    <UserSchedule scheduleArray={scheduleArray} scheduleActions={scheduleActions}
+                    <UserSchedule scheduleArray={scheduleArray} setNewSchedule={setNewSchedule}
                         contractEnd={contractEnd} setContractEnd={setContractEnd}
                     />
                 }

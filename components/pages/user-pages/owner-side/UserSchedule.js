@@ -4,14 +4,25 @@ import { useState } from "react";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
-import DaySchedule from "./DaySchedule";
+import DayScheduleForm from "../../../user-schedule/DayScheduleForm";
 import SmallSwitch from "../../../ui/SmallSwitch";
 import DatePicker from "@components/ui/DatePicker/DatePicker";
 import { DateTime } from "luxon";
+import { upperCaseInitial } from "@utils/timeFunctions";
 
-export default function UserSchedule({ scheduleArray, scheduleActions, contractEnd, setContractEnd }) {
+export default function UserSchedule({ scheduleArray, contractEnd, setContractEnd, setNewSchedule }) {
 
-    const workingHours = scheduleArray.map((e, i) => <DaySchedule index={i} key={i} scheduleActions={scheduleActions} day={e} />)
+    const updateDay = (dayIndex, partialDay) => {
+    setNewSchedule(prev => ({
+      ...prev,
+      [dayIndex]: {
+        ...prev[dayIndex],
+        ...partialDay,
+      },
+    }));
+  }
+
+    const workingHours = scheduleArray.map((e, i) => <DayScheduleForm key={i} onChange={(partialDay) => updateDay(i, partialDay)} day={e} dayTitle={upperCaseInitial(DateTime.utc().set({ weekday: i + 1 }).toFormat("cccc"))} />)
 
     const [changeContractEnd, setChangeContractEnd] = useState(contractEnd ? true : false)
 

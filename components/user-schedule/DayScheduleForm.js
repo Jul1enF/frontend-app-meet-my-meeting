@@ -3,18 +3,14 @@ import { memo, use } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
-import { upperCaseInitial } from "@utils/timeFunctions";
 import useScheduleError from "./useScheduleError";
-import SmallSwitch from "../../../ui/SmallSwitch";
+import SmallSwitch from "../ui/SmallSwitch";
 import TimePicker from "./TimePicker";
 
 import { DateTime } from "luxon";
 
-export default memo(function DaySchedule({ day, index, scheduleActions }) {
+export default memo(function DayScheduleForm({ onChange, day, showDayToggle = true, dayTitle = "" }) {
 
-    const { toggleEnabled, changeStart, changeEnd, toggleBreak, changeBreakStart, changeBreakEnd } = scheduleActions
-
-    const dayName = upperCaseInitial(DateTime.utc().set({ weekday: index + 1 }).toFormat("cccc"))
     const activeDay = day.enabled
     const activeBreak = day.break.enabled
 
@@ -23,13 +19,17 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
     return (
         <View style={styles.mainContainer}>
 
-            <SmallSwitch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => toggleEnabled(day, index)} />
+            {showDayToggle &&
+                <>
+                    <SmallSwitch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => onChange({ enabled: !activeDay })} />
 
-            <View style={[styles.underline, { marginTop : appStyle.mediumMarginTop }]}>
-                <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg}]}>
-                    {dayName} :
-                </Text>
-            </View>
+                    <View style={[styles.underline, { marginTop: appStyle.mediumMarginTop }]}>
+                        <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg }]}>
+                            {dayTitle} :
+                        </Text>
+                    </View>
+                </>
+            }
 
             <View style={[{ width: "100%", marginTop: appStyle.largeMarginTop }, !activeDay && { display: "none" }]}>
 
@@ -40,7 +40,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                             Début :
                         </Text>
 
-                        <TimePicker time={day.start} changeTime={(time) => changeStart(time, index)} />
+                        <TimePicker time={day.start} changeTime={(time) => onChange({ start: time })} />
 
                     </View>
 
@@ -49,7 +49,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                             Fin :
                         </Text>
 
-                        <TimePicker time={day.end} changeTime={(time) => changeEnd(time, index)} />
+                        <TimePicker time={day.end} changeTime={(time) => onChange({ end: time })} />
 
                     </View>
 
@@ -64,7 +64,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                         Pause :
                     </Text>
 
-                    <SmallSwitch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={() => toggleBreak(day, index)} />
+                    <SmallSwitch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={() => onChange({ break: {...day.break, enabled: !activeBreak } })} />
                 </View>
 
 
@@ -75,7 +75,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                             Début :
                         </Text>
 
-                        <TimePicker time={day.break.start} changeTime={(time) => changeBreakStart(time, index)} />
+                        <TimePicker time={day.break.start} changeTime={(time) => onChange({ break: { ...day.break, start: time } })} />
                     </View>
 
                     <View style={styles.row}>
@@ -83,7 +83,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                             Fin :
                         </Text>
 
-                        <TimePicker time={day.break.end} changeTime={(time) => changeBreakEnd(time, index)} />
+                        <TimePicker time={day.break.end} changeTime={(time) => onChange({ break: { ...day.break, end: time } })} />
                     </View>
 
                 </View>
