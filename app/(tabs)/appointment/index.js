@@ -24,17 +24,17 @@ export default function AppointmentPage() {
 
 
   const employeesAutocompleteList = useMemo(() => {
-    if (!appointmentsInformations.employees) return null
-    else return appointmentsInformations.employees.reduce((acc, e) => {
+    if (!employees) return null
+    else return employees.reduce((acc, e) => {
       acc.push({
         title: `${e.first_name ? (e.first_name + " ") : ""}${e.last_name ?? ""}`,
         id: e._id,
         employee: e,
       })
       return acc
-    }, [{ title: "Sans préférence", id: "all", employees: appointmentsInformations.employees }])
+    }, [{ title: "Sans préférence", id: "all", employees, }])
 
-  }, [appointmentsInformations.employees])
+  }, [employees])
 
 
   const appointmentDuration = useMemo(() => selectedAppointmentType?.default_duration, [selectedAppointmentType])
@@ -49,7 +49,7 @@ export default function AppointmentPage() {
       dispatch(loadInformations({target : "appointments", informations : data.informations}))
       setSelectedEmployees(prev => prev ?? data.informations.employees)
     }else if (!selectedEmployees){
-      setSelectedEmployees(appointmentsInformations.employees)
+      setSelectedEmployees(employees)
     }
   }
 
@@ -61,10 +61,10 @@ export default function AppointmentPage() {
 
   // Props in useMemo to pass along children of the agenda
   const agendaContext = useMemo(() => {
-    const { events, closures, absences, constants } = appointmentsInformations
+    const { events, closures, absences, workingOverrides, constants } = appointmentsInformations
     const { appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = constants ?? {}
 
-    return { selectedEmployees, setSelectedEmployees, setSelectedAppointmentSlot, events, closures, absences, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, employeesAutocompleteList, appointmentDuration }
+    return { selectedEmployees, setSelectedEmployees, setSelectedAppointmentSlot, events, closures, absences, workingOverrides, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, employeesAutocompleteList, appointmentDuration }
   },
     [selectedEmployees, appointmentDuration, appointmentsInformations, employeesAutocompleteList])
 
@@ -80,7 +80,7 @@ export default function AppointmentPage() {
 
     // The registration has been successfull, a new event has been retrieved
     if (event) {
-      setSelectedEmployees(appointmentsInformations.employees)
+      setSelectedEmployees(employees)
       setSelectedAppointmentType(null)
 
       dispatch(createEvent({ target : "appointments", category : "events", event}))

@@ -19,7 +19,7 @@ import { eventCatTranslation } from 'constants/translations';
 export default function EventRedaction({ redactionContext, clientRedaction = false }) {
 
     // Context to know how to calcul the freeSlots, set an event and post it
-    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, appointmentGapMs, selectedDate, resetAndRenewEvents } = redactionContext
+    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, workingOverrides, appointmentGapMs, selectedDate, resetAndRenewEvents } = redactionContext
 
     // States to register the settings of the events
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
@@ -53,7 +53,7 @@ export default function EventRedaction({ redactionContext, clientRedaction = fal
 
 
     // Hook to get all the free appointments/breaks slots
-    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, appointmentGapMs, eventDuration, oldEvent?.category === "lunchBreak")
+    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, appointmentGapMs, eventDuration, oldEvent?.category === "lunchBreak")
 
     // Hook to get the autocomplete list for the category
     const { categoriesList } = useAutocompleteLists({ selectedEmployee })
