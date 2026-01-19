@@ -14,7 +14,7 @@ export default function ModalPageWrapper({ visible, setVisible, closeFunction, b
     const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
 
     const close = () =>{
-        setVisible(false)
+        typeof setVisible === "function" && setVisible(false)
         typeof closeFunction === "function" && closeFunction()
     }
 

@@ -3,7 +3,7 @@ import { Text, StyleSheet, TouchableOpacity, View } from "react-native";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 
-export default function Switch({ leftFunction, rightFunction, active, style, height, width}) {
+export default function SmallSwitch({ leftFunction, rightFunction, active, style, height, width}) {
     const thisHeight = height ?? appStyle.regularItemHeight / 2
     const thisWidth = width ?? appStyle.regularItemWidth / 2
 

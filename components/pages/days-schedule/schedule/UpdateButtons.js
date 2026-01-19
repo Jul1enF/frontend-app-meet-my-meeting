@@ -25,9 +25,17 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
 
     // Var for the conditionnal diplay of the icons depending on the height of the event and it's category (for the different background colors)
     const iconSize = eventMinDuration <= 20 ? (phoneDevice ? RPW(5.2) : 28) : (phoneDevice ? RPW(6.5) : 35)
-    const iconColor = (category === "closure" || category === "absence") ? appStyle.brightGrey : appStyle.strongGrey
+    const iconColor = (category === "closure" || category === "absence" || category === "dayOff") ? appStyle.brightGrey : appStyle.strongGrey
     const hitSlop = eventMinDuration <= 20 ? (phoneDevice ? RPW(5) : 25) : (phoneDevice ? RPW(4.5) : 20)
-    const top = (category === "closure" || category === "absence") ? (phoneDevice ? RPW(4) : 30) : (phoneDevice ? 0 : -5)
+    const top = (category === "closure" || category === "absence" || category === "dayOff") ? (phoneDevice ? RPW(4) : 30) : (phoneDevice ? 0 : -5)
+
+
+    // Function trigerred by pressing on delete icon
+    const deletePress = () => {
+        // if the category is dayOff we must go to WorkingOverride redaction so we set an oldEvent
+        if (category === "dayOff") setOldEvent(event)
+        else setConfirmationModalVisible(true)
+    }
 
 
     // States and function to delete the event
@@ -59,41 +67,41 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
             const delay = data.delay ?? 0
             if (!isLunchBreak) {
                 setTimeout(() => resetAndRenewEvents({ _id, category }, "delete", "schedule"), delay)
-            } 
+            }
             // If it is a lunchBreak a new event was created or and old one updated (if the lunch break was already modified)
             else {
-                setTimeout(() => resetAndRenewEvents( data.eventSaved, _id ? "update" : "create", "schedule"), delay)
+                setTimeout(() => resetAndRenewEvents(data.eventSaved, _id ? "update" : "create", "schedule"), delay)
             }
 
         }
     }
 
-    if (category === "dayOff") {
-        return <></>
-    }
+
     return (
         <>
             <View style={{ width: "100%", position: "absolute", top }}>
-                <TouchableOpacity 
-                activeOpacity={0.6} 
-                style={[styles.iconContainer, styles.editContainer]} 
-                onPress={() => {
-                    setOldEvent(event)
-                    setEventStart(toParisDt(event.start))
-                }}
-                hitSlop={hitSlop}
-                >
+                {category !== "dayOff" &&
+                    <TouchableOpacity
+                        activeOpacity={0.6}
+                        style={[styles.iconContainer, styles.editContainer]}
+                        onPress={() => {
+                            setOldEvent(event)
+                            setEventStart(toParisDt(event.start))
+                        }}
+                        hitSlop={hitSlop}
+                    >
 
-                    <MaterialCommunityIcons name="pencil" size={iconSize} color={iconColor} />
+                        <MaterialCommunityIcons name="pencil" size={iconSize} color={iconColor} />
 
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                }
 
 
-                <TouchableOpacity 
-                activeOpacity={0.6} 
-                style={[styles.iconContainer, styles.deleteContainer]}
-                onPress={() => setConfirmationModalVisible(true)}
-                hitSlop={hitSlop}
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    style={[styles.iconContainer, styles.deleteContainer]}
+                    onPress={deletePress}
+                    hitSlop={hitSlop}
                 >
 
                     <Entypo name="circle-with-cross" size={iconSize} color={iconColor} />

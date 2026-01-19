@@ -5,7 +5,7 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
 import DaySchedule from "./DaySchedule";
-import Switch from "./Switch";
+import SmallSwitch from "../../../ui/SmallSwitch";
 import DatePicker from "@components/ui/DatePicker/DatePicker";
 import { DateTime } from "luxon";
 
@@ -30,7 +30,7 @@ export default function UserSchedule({ scheduleArray, scheduleActions, contractE
 
             <View style={styles.contractContainer} >
 
-                <Switch active={changeContractEnd} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop}}
+                <SmallSwitch active={changeContractEnd} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop}}
                     leftFunction={() => {
                         setChangeContractEnd(prev => !prev)
                         contractEnd && changeContractEnd && setContractEnd(null)

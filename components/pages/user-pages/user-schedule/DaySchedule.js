@@ -5,7 +5,7 @@ import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 import { upperCaseInitial } from "@utils/timeFunctions";
 import useScheduleError from "./useScheduleError";
-import Switch from "./Switch";
+import SmallSwitch from "../../../ui/SmallSwitch";
 import TimePicker from "./TimePicker";
 
 import { DateTime } from "luxon";
@@ -23,7 +23,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
     return (
         <View style={styles.mainContainer}>
 
-            <Switch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => toggleEnabled(day, index)} />
+            <SmallSwitch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => toggleEnabled(day, index)} />
 
             <View style={[styles.underline, { marginTop : appStyle.mediumMarginTop }]}>
                 <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg}]}>
@@ -64,7 +64,7 @@ export default memo(function DaySchedule({ day, index, scheduleActions }) {
                         Pause :
                     </Text>
 
-                    <Switch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={() => toggleBreak(day, index)} />
+                    <SmallSwitch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 0.5, top: 0 }} leftFunction={() => toggleBreak(day, index)} />
                 </View>
 
 

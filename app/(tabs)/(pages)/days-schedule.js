@@ -16,6 +16,7 @@ import StickyHeader from '@components/pages/days-schedule/main-container/StickyH
 import Schedule from '@components/pages/days-schedule/schedule/Schedule';
 import ModalPageWrapper from '@components/layout/ModalPageWrapper';
 import EventRedaction from '@components/pages/event-redaction-pages/event-update/EventRedaction';
+import WorkingOverrideRedaction from '@components/pages/event-redaction-pages/working-override/WorkingOverrideRedaction';
 
 
 export default function DaysSchedule() {
@@ -59,7 +60,7 @@ export default function DaysSchedule() {
     const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, getScheduleInformations)
 
     // Memoised props for this component
-    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, selectedEmployee, setSelectedEmployee } = rootContext
+    const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, selectedEmployee, setSelectedEmployee, oldEvent } = rootContext
 
 
 
@@ -78,6 +79,11 @@ export default function DaysSchedule() {
             {/* Modal to set or modify an event */}
             <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
                 <EventRedaction redactionContext={redactionContext} />
+            </ModalPageWrapper>
+
+            {/* Modal to set or modify a workingOverride */}
+            <ModalPageWrapper visible={oldEvent?.category === "dayOff" || oldEvent?.category === "workingOverride"} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
+                <WorkingOverrideRedaction oldEvent={oldEvent} />
             </ModalPageWrapper>
 
 
