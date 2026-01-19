@@ -7,7 +7,6 @@ import UserInformations from "./UserInformations";
 import UserSchedule from "./UserSchedule";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
-import { userDefaultSchedule } from "constants/userDefaultSchedule";
 import { dayValidation } from "../../../user-schedule/scheduleUtils";
 import request from "@utils/request";
 
@@ -15,7 +14,7 @@ import Button from "@components/ui/Button";
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 
 
-export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers, setSessionExpired }) {
+export default function UserProfile({ selectedUser: user, jwtToken, setUserInformations, setSessionExpired, defaultSchedule }) {
 
     const rolesData = [
         { id: "1", title: "Gérant", role: "owner" },
@@ -26,6 +25,13 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
 
     const index = rolesData.findIndex(e => e.role === user.role)
     const [newRole, setNewRole] = useState(rolesData[index])
+
+    let userDefaultSchedule = {}
+    if (defaultSchedule){
+        for (let i = 0 ; i < 7 ; i++){
+            userDefaultSchedule[i] = defaultSchedule
+        }
+    }
 
     const oldSchedule = user.schedule ?? userDefaultSchedule;
     const [newSchedule, setNewSchedule] = useState(oldSchedule)
@@ -83,13 +89,17 @@ export default function UserProfile({ selectedUser: user, jwtToken, setAllUsers,
         const data = await request({ path: "/pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, functionRef: updateUserRef, setWarning: setFetchWarning, setModalVisible })
 
         if (data?.result) {
-            setAllUsers(prev => prev.map(e => {
+            setUserInformations(
+                prev => ({...prev, 
+                allUsers : prev.allUsers.map(e => {
                 if (e._id === user._id) {
                     return data.userSaved
                 } else {
                     return e
                 }
-            }))
+            })
+            })
+        )
         }
     }
 

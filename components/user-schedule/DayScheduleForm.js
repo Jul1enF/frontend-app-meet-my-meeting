@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text } from "react-native";
-import { memo, use } from "react";
+import { memo } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -7,11 +7,10 @@ import useScheduleError from "./useScheduleError";
 import SmallSwitch from "../ui/SmallSwitch";
 import TimePicker from "./TimePicker";
 
-import { DateTime } from "luxon";
 
 export default memo(function DayScheduleForm({ onChange, day, showDayToggle = true, dayTitle = "" }) {
 
-    const activeDay = day.enabled
+    const activeDay = day.enabled !== false
     const activeBreak = day.break.enabled
 
     const { dayError, breakError } = useScheduleError(day)

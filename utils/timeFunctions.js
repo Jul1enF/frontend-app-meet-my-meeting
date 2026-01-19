@@ -63,4 +63,7 @@ export function getMinDuration(start, end) {
 
 
 // Function to create a dtDate from a string hour in Paris time zone
-export const datefromStringHour = (stringHour, dtDay) => DateTime.fromFormat(stringHour, "HH:mm", { zone: "Europe/Paris" }).set({ year: dtDay.year, month: dtDay.month, day: dtDay.day })
+export const datefromStringHour = (stringHour, dtDay) => {
+    const { hour, minute } = DateTime.fromFormat(stringHour, "HH:mm");
+    return dtDay.set({ hour, minute });
+}

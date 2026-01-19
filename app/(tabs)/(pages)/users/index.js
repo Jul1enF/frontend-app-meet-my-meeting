@@ -19,10 +19,13 @@ import UserProfile from "@components/pages/user-pages/owner-side/UserProfile";
 
 export default function UsersPage() {
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
-    const [allUsers, setAllUsers] = useState(null)
+    const [usersInformations, setUsersInformations] = useState(null)
     const [warning, setWarning] = useState({})
     const [searchText, setSearchText] = useState("")
     const [selectedRole, setSelectedRole] = useState("allUsersRoles")
+
+    const { allUsers, constants } = usersInformations ?? {}
+    const { defaultSchedule } = constants ?? {}
 
     // HOOKS TO LOGOUT IF SESSION EXPIRED
     const [sessionExpired, setSessionExpired] = useState(false)
@@ -32,12 +35,12 @@ export default function UsersPage() {
     const fetchUsers = async (storedData) => {
         const data = await request({ path: "/pros/get-all-users", jwtToken, setSessionExpired, setWarning, storedData })
         if (data?.result) {
-            setAllUsers(data.allUsers)
+            setUsersInformations(data.usersInformations)
         }
     }
 
     useEffect(() => {
-        fetchUsers(allUsers)
+        fetchUsers(usersInformations)
     }, [])
 
 
@@ -64,7 +67,7 @@ export default function UsersPage() {
     const usersFlatlistRef = useRef(null)
 
     // refreshControl for the ScrollView
-    const refreshControl = useRefreshControl(()=> fetchUsers(allUsers))
+    const refreshControl = useRefreshControl(()=> fetchUsers(usersInformations))
 
     const usersListHeader = () => {
         return (
@@ -131,7 +134,7 @@ export default function UsersPage() {
 
                 <ModalPageWrapper visible={userModalVisible} setVisible={setUserModalVisible} backHeaderText="Liste des utilisateurs" noScrollView={true} >
 
-                    <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setAllUsers={setAllUsers} setSessionExpired={setSessionExpired} />
+                    <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setUserInformations={setUsersInformations} setSessionExpired={setSessionExpired} defaultSchedule={defaultSchedule} />
 
                 </ModalPageWrapper>
 

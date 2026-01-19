@@ -75,7 +75,7 @@ export default function UserAppointments() {
 
 
     // Memoised props for this component and the redaction one
-    const { rootContext, redactionContext } = usePlanningContext(appointmentsInformations, getAppointmentsInformations)
+    const { rootContext, eventRedactionContext } = usePlanningContext(appointmentsInformations, getAppointmentsInformations)
 
     // Memoised props of this component
     const { eventStart, setEventStart, setOldEvent, setSelectedDate, setSelectedEmployee, oldEvent, resetAndRenewEvents } = rootContext
@@ -134,7 +134,7 @@ export default function UserAppointments() {
 
             {/* Modal to set or modify an appointment */}
             <ModalPageWrapper visible={eventStart && jwtToken && oldEvent} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Liste des RDV" noScrollView={true}>
-                <EventRedaction redactionContext={redactionContext} clientRedaction={true} />
+                <EventRedaction eventRedactionContext={eventRedactionContext} clientRedaction={true} />
             </ModalPageWrapper>
 
 

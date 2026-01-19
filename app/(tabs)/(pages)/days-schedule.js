@@ -56,12 +56,12 @@ export default function DaysSchedule() {
         else setSelectedEmployee(null)
     }, [employees])
 
+
     // Memoised props for the all the components
-    const { rootContext, scheduleContext, redactionContext } = usePlanningContext(scheduleInformations, getScheduleInformations)
+    const { rootContext, scheduleContext, eventRedactionContext, workingOverrideContext } = usePlanningContext(scheduleInformations, getScheduleInformations)
 
     // Memoised props for this component
     const { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, selectedEmployee, setSelectedEmployee, oldEvent } = rootContext
-
 
 
     // refreshControl for the ScrollView
@@ -78,12 +78,12 @@ export default function DaysSchedule() {
 
             {/* Modal to set or modify an event */}
             <ModalPageWrapper visible={eventStart} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
-                <EventRedaction redactionContext={redactionContext} />
+                <EventRedaction eventRedactionContext={eventRedactionContext} />
             </ModalPageWrapper>
 
             {/* Modal to set or modify a workingOverride */}
             <ModalPageWrapper visible={oldEvent?.category === "dayOff" || oldEvent?.category === "workingOverride"} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
-                <WorkingOverrideRedaction oldEvent={oldEvent} />
+                <WorkingOverrideRedaction workingOverrideContext={workingOverrideContext} />
             </ModalPageWrapper>
 
 

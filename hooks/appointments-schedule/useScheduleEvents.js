@@ -30,8 +30,8 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
 
     // MEMO OF THE DEFAULT START AND END OF DAYS FOR CLOSURE/ABSENCE
-    const defaultStart = useMemo(() => defaultSchedule?.start ?? 8, [defaultSchedule])
-    const defaultEnd = useMemo(() => defaultSchedule?.end ?? 19, [defaultSchedule])
+    const defaultStart = useMemo(() => defaultSchedule?.start ?? "09:00", [defaultSchedule])
+    const defaultEnd = useMemo(() => defaultSchedule?.end ?? "19:00", [defaultSchedule])
 
 
 
@@ -60,7 +60,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             // The employee is not available (day off)
             if (!employeeDay.enabled) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ defaultStart: dtDay.set({ hours: defaultStart }), defaultEnd: dtDay.set({ hours: defaultEnd }), employee: employee._id, category: "dayOff" })
+                concernedAbsenceEvents.push({ defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay), employee: employee._id, category: "dayOff" })
 
                 return
             }
@@ -72,7 +72,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             )
             if (employeeAbsence) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ ...employeeAbsence, defaultStart: dtDay.set({ hours: defaultStart }), defaultEnd: dtDay.set({ hours: defaultEnd })  })
+                concernedAbsenceEvents.push({ ...employeeAbsence, defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay),  })
 
                 return
             }
@@ -133,7 +133,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
         if (closureHappening) {
             // add an event to be displayed on the employee schedule
-            concernedClosureEvents.push({ ...closureHappening, defaultStart: dtDay.set({ hours: defaultStart }), defaultEnd: dtDay.set({ hours: defaultEnd }) })
+            concernedClosureEvents.push({ ...closureHappening, defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay) })
 
             return { noAvailabilities: true, concernedClosureEvents }
         }

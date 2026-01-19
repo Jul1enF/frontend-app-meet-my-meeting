@@ -73,12 +73,22 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
 
 
   // PROPS FOR EVENT REDACTION
-  const redactionContext = useMemo(() => {
+  const eventRedactionContext = useMemo(() => {
 
     return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, workingOverrides, appointmentGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
   },
     [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate])
 
 
-  return { rootContext, scheduleContext, redactionContext }
+  // PROP FOR WORKING OVERRIDE REDACTION
+
+  const workingOverrideContext = useMemo(()=>{
+    const defaultWorkingSchedule = {...defaultSchedule}
+    delete defaultWorkingSchedule.enabled
+    
+    return { selectedDate, selectedEmployee, events, closures, absences, workingOverrides, defaultWorkingSchedule, oldEvent }
+  },[selectedDate, selectedEmployee, planningInformations, oldEvent])
+
+
+  return { rootContext, scheduleContext, eventRedactionContext, workingOverrideContext }
 }

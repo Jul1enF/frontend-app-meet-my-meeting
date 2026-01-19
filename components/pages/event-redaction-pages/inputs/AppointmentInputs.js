@@ -13,10 +13,10 @@ import { appStyle } from '@styles/appStyle';
 
 import { DateTime } from "luxon";
 
-export default function AppointmentInputs({ redactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots, clientRedaction }) {
+export default function AppointmentInputs({ eventRedactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots, clientRedaction }) {
 
     // Props coming from the root
-    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate, maxFuturDays } = redactionContext
+    const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate, maxFuturDays } = eventRedactionContext
 
     // Creation with a hook of the autocomplete lists
     const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart})
