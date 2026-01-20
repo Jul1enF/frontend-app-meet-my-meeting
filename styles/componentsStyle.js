@@ -41,7 +41,7 @@ const card = {
 const largeCard = {
     ...card,
     width : largeItemWidth,
-    paddingBottom: phoneDevice ? RPW(12) : 80,
+    paddingBottom: phoneDevice ? RPW(12) : 70,
 }
 
 const regularItem = {

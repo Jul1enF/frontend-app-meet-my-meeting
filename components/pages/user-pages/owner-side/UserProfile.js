@@ -27,8 +27,8 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
     const [newRole, setNewRole] = useState(rolesData[index])
 
     let userDefaultSchedule = {}
-    if (defaultSchedule){
-        for (let i = 0 ; i < 7 ; i++){
+    if (defaultSchedule) {
+        for (let i = 0; i < 7; i++) {
             userDefaultSchedule[i] = defaultSchedule
         }
     }
@@ -45,29 +45,23 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
     const [modalVisible, setModalVisible] = useState(false)
 
     const validateUpdate = () => {
-        let error
+
         if (!newRole) {
             setWarning("Erreur : merci de choisir le statut de l'utilisateur")
-            error = true
-        } else {
-            for (let day of scheduleArray) {
-                const { dayError, breakError } = dayValidation(day, true)
-                if (dayError) {
-                    setWarning(dayError)
-                    error = true
-                    break;
-                } else if (breakError) {
-                    setWarning(breakError)
-                    error = true
-                    break;
-                }
+            setTimeout(() => setWarning(""), 4000)
+            return
+        }
+
+        for (let day of scheduleArray) {
+            const { dayError, breakError } = dayValidation(day, true)
+            if (dayError || breakError) {
+                setWarning(dayError ?? breakError)
+                setTimeout(() => setWarning(""), 5000)
+                return
             }
         }
 
-        if (error) {
-            setTimeout(() => setWarning(false), 5500)
-            return
-        } else setModalVisible(true)
+         setModalVisible(true)
     }
 
 
@@ -90,16 +84,17 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
 
         if (data?.result) {
             setUserInformations(
-                prev => ({...prev, 
-                allUsers : prev.allUsers.map(e => {
-                if (e._id === user._id) {
-                    return data.userSaved
-                } else {
-                    return e
-                }
-            })
-            })
-        )
+                prev => ({
+                    ...prev,
+                    allUsers: prev.allUsers.map(e => {
+                        if (e._id === user._id) {
+                            return data.userSaved
+                        } else {
+                            return e
+                        }
+                    })
+                })
+            )
         }
     }
 
@@ -109,7 +104,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
             style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
             contentContainerStyle={[
                 appStyle.pageBody,
-                { flex : "auto" }
+                { flex: "auto" }
             ]}
             bottomOffset={Platform.OS === 'ios' ? 40 : 20}
             overScrollMode="never"
@@ -141,7 +136,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
                     {warning}
                 </Text>
 
-                <Button func={() => validateUpdate()} text="Enregistrer les modifications" style={{ ...appStyle.largeCardItem, marginTop : appStyle.largeMarginTop}} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg }} />
+                <Button func={() => validateUpdate()} text="Enregistrer les modifications" style={{ ...appStyle.largeCardItem, marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg }} />
 
             </View>
 

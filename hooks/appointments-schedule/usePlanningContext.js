@@ -31,7 +31,17 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
       setOldEvent(null)
 
       // Choose the right array to modify in the state depending on the event category
-      const category = event.category === "absence" ? "absences" : event.category === "closure" ? "closures" : "events"
+      let category = "events"
+      switch (event.category) {
+        case "absence" :
+          category = "absences"
+          break ;
+        case "closure" :
+          category = "closures"
+          break ;
+        case "workingOverride" :
+          category = "workingOverrides"
+      }
 
       const payload = {target, category, event}
 
@@ -60,7 +70,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
   // PROPS FOR THE ROOT CONTAINER
   const rootContext = useMemo(() => {
     return { eventStart, setEventStart, setOldEvent, selectedDate, setSelectedDate, selectedEmployee, setSelectedEmployee, oldEvent, resetAndRenewEvents }
-  }, [eventStart, selectedDate, selectedEmployee, oldEvent ])
+  }, [eventStart, selectedDate, selectedEmployee, oldEvent, resetAndRenewEvents ])
 
 
 
@@ -68,7 +78,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
   const scheduleContext = useMemo(() => {
     return { events, closures, absences, workingOverrides, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, setEventStart, setOldEvent, resetAndRenewEvents }
   },
-    [planningInformations, selectedEmployee, selectedDate])
+    [planningInformations, selectedEmployee, selectedDate, resetAndRenewEvents])
 
 
 
@@ -77,17 +87,18 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
 
     return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, workingOverrides, appointmentGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
   },
-    [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate])
+    [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate, resetAndRenewEvents])
 
 
-  // PROP FOR WORKING OVERRIDE REDACTION
+  // PROPS FOR WORKING OVERRIDE REDACTION
 
   const workingOverrideContext = useMemo(()=>{
     const defaultWorkingSchedule = {...defaultSchedule}
     delete defaultWorkingSchedule.enabled
-    
-    return { selectedDate, selectedEmployee, events, closures, absences, workingOverrides, defaultWorkingSchedule, oldEvent }
-  },[selectedDate, selectedEmployee, planningInformations, oldEvent])
+
+    return { resetAndRenewEvents, defaultWorkingSchedule, oldEvent }
+
+  },[defaultSchedule, oldEvent, resetAndRenewEvents])
 
 
   return { rootContext, scheduleContext, eventRedactionContext, workingOverrideContext }

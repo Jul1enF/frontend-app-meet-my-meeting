@@ -22,7 +22,7 @@ export const dayValidation = (day, finalCheck = false) => {
   let dayError = null;
   let breakError = null;
 
-  if (!day.enabled) return { dayError, breakError }
+  if (day.enabled === false) return { dayError, breakError }
 
   if (!isTimeBefore(day.start, day.end)) {
     dayError = `Erreur : ${one}horaire de début ${ofDay}supérieur à celui de fin !`;

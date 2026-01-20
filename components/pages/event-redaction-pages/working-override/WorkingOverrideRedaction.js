@@ -6,13 +6,13 @@ import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import DayScheduleForm from '@components/user-schedule/DayScheduleForm';
-import useScheduleEvents from '@hooks/appointments-schedule/useScheduleEvents';
+import WorkingOverrideSaving from './WorkingOverrideSaving';
 
 
 export default memo(function WorkingOverrideRedaction({ workingOverrideContext }) {
-    const { oldEvent, defaultWorkingSchedule } = workingOverrideContext
+    const { oldEvent, defaultWorkingSchedule, resetAndRenewEvents } = workingOverrideContext
 
-    const [workingSchedule, setWorkingSchedule] = useState(oldEvent.working_schedule ?? defaultWorkingSchedule)
+    const [workingSchedule, setWorkingSchedule] = useState(oldEvent?.working_schedule ?? defaultWorkingSchedule)
 
     const updateWorkingSchedule = (partialDay) => {
         setWorkingSchedule(prev => ({
@@ -35,7 +35,7 @@ export default memo(function WorkingOverrideRedaction({ workingOverrideContext }
         >
 
             <Text style={appStyle.pageTitle}>
-                {`${oldEvent.category === "dayOff" ? "Rajouter" : "Modifier"} une journée de travail :`}
+                {`${oldEvent?.category === "dayOff" ? "Rajouter" : "Modifier"} une journée de travail :`}
             </Text>
 
             <View style={appStyle.largeCard}>
@@ -51,6 +51,9 @@ export default memo(function WorkingOverrideRedaction({ workingOverrideContext }
                         showDayToggle={false}
                     />
                 </View>
+
+
+                <WorkingOverrideSaving resetAndRenewEvents={resetAndRenewEvents} oldEvent={oldEvent} workingSchedule={workingSchedule} />
 
             </View>
 
