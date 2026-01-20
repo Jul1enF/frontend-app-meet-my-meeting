@@ -82,7 +82,7 @@ export default function DaysSchedule() {
             </ModalPageWrapper>
 
             {/* Modal to set or modify a workingOverride */}
-            <ModalPageWrapper visible={oldEvent?.category === "dayOff" || oldEvent?.category === "workingOverride"} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
+            <ModalPageWrapper visible={oldEvent?.category === "dayOff" || oldEvent?.category === "workingOverride" || oldEvent?.category === "workingDay"} closeFunction={() => setOldEvent(null)} backHeaderText="Agenda" noScrollView={true}>
                 <WorkingOverrideRedaction workingOverrideContext={workingOverrideContext} />
             </ModalPageWrapper>
 

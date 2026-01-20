@@ -103,7 +103,6 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
 
 
             // Comparison of the schedule hours know when the shop opens and closes
-
             if (!minWorkingHour) minWorkingHour = dtEmployeeStart
             else {
                 if (isBefore(dtEmployeeStart, minWorkingHour)) minWorkingHour = dtEmployeeStart
@@ -146,7 +145,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
         return { noAvailabilities: noEmployeesAvailability }
 
 
-    }, [dtDay, closures, selectedEmployeesAvailabilities.noEmployeesAvailability])
+    }, [dtDay, closures, selectedEmployeesAvailabilities])
 
 
 
@@ -251,11 +250,9 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
                 !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) &&
                 !ignoreDefaultLunchBreak
             ) {
-
                 setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
             }
         }
-
 
 
         // SETTINGS FOR A LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
@@ -293,12 +290,10 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
             })
             const employeesNumber = workingEmployees.length
 
-
             const dtAppointmentEndMs = dtAppointmentStart.plus({ minutes: eventDuration }).toMillis()
-
-            // Check if there is an event registered for the start of the event
+            
+            // Check if there is an event registered for the start of the event slot
             const slotOccupied = occupiedSlots.get(dtAppointmentStart.toMillis())
-
 
             // If there is at least an employee available for the start
             if (!slotOccupied || slotOccupied.length !== employeesNumber) {

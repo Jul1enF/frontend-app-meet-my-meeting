@@ -184,6 +184,8 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
     // GET THE EVENTS OF THE DAY AND THE FREE APPOINTMENT SLOTS
     const dayEventsSchedule = useMemo(() => {
 
+        // concernedEvents may include non-displayable context events (workingOverride and suppressed lunchBreaks)
+        // The first event, if it is not a regular working day, must always be a marker of the type of day that will be displayed (closure, absence, dayOff, workingOverride)
         let concernedEvents = []
 
         const { noAvailabilities, concernedClosureEvents } = eventsAvailability

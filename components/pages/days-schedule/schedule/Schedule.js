@@ -6,6 +6,7 @@ import { appStyle } from '@styles/appStyle';
 
 import useScheduleEvents from '@hooks/appointments-schedule/useScheduleEvents';
 import EventItem from './EventItem';
+import WorkingOverrideButtons from './WorkingOverrideButtons';
 
 import { toParisDt, isBetween } from '@utils/timeFunctions';
 import Feather from '@expo/vector-icons/Feather';
@@ -58,7 +59,9 @@ export default memo(function Schedule({ scheduleContext }) {
                 let shouldDisplayIcon = true
                 if (start.toMillis() === dtDayEnd.toMillis()) shouldDisplayIcon = false
                 else {
-                    for (let event of concernedEvents) {
+                    const blockingEvents = concernedEvents.filter(e => e.category !== "workingOverride")
+                    
+                    for (let event of blockingEvents) {
                         const eventStart = event.defaultStart ?? event.start
                         const eventEnd = event.defaultEnd ?? event.end
                         if (isBetween(eventStart, start, eventEnd)) {
@@ -78,11 +81,10 @@ export default memo(function Schedule({ scheduleContext }) {
                     </Text>}
 
                     {displayPlusIcon &&
-                        <TouchableOpacity 
-                        activeOpacity={0.6} 
-                        style={styles.plusIconContainer}
-                        onPress={() => setEventStart(dtSlotStart)}
-                        hitSlop={{bottom : phoneDevice ? RPW(5) : 25, left : phoneDevice ? RPW(5) : 25}}
+                        <TouchableOpacity
+                            activeOpacity={0.6}
+                            style={styles.plusIconContainer}
+                            onPress={() => setEventStart(dtSlotStart)}
                         >
 
                             <Feather name="plus-circle" size={phoneDevice ? RPW(6.5) : 40} color={appStyle.strongBlack} />
@@ -107,19 +109,25 @@ export default memo(function Schedule({ scheduleContext }) {
 
 
     return (
-        <View style={styles.mainContainer}>
-            <View style={{ width: phoneDevice ? RPW(16) : 100, backgroundColor: appStyle.darkWhite2 }}>
-                {timeGrid}
+        <>
+            <WorkingOverrideButtons concernedEvents={concernedEvents} setOldEvent={setOldEvent} selectedDate={selectedDate} selectedEmployee={selectedEmployee} />
+
+            <View style={styles.mainContainer}>
+
+                <View style={{ width: phoneDevice ? RPW(16) : 100, backgroundColor: appStyle.darkWhite2 }}>
+                    {timeGrid}
+                </View>
+
+                <View style={styles.columnContainer}>
+
+                    {grid}
+
+                    {concernedEvents.map((e) =>
+                        <EventItem event={e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} 
+                        key={e._id ?? `${e.category}-${toParisDt(e.start ?? e.defaultStart).toISO()}`} resetAndRenewEvents={resetAndRenewEvents} />)}
+                </View>
             </View>
-
-            <View style={styles.columnContainer}>
-
-                {grid}
-
-                {concernedEvents.map((e) =>
-                    <EventItem event={e} minuteHeight={minuteHeight} dtDayWorkingHours={dtDayWorkingHours} setEventStart={setEventStart} setOldEvent={setOldEvent} key={toParisDt(e.start ?? e.defaultStart).toISO()} resetAndRenewEvents={resetAndRenewEvents} />)}
-            </View>
-        </View>
+        </>
     )
 })
 
@@ -136,9 +144,12 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     plusIconContainer: {
+        top: 0,
         position: "absolute",
-        top: phoneDevice ? RPW(2) : 10,
-        right: phoneDevice ? RPW(2) : 10,
-        alignItems: "flex-end"
+        width: phoneDevice ? RPW(12) : 75,
+        aspectRatio: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        right: 0,
     }
 })

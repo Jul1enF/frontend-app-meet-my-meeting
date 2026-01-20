@@ -30,13 +30,6 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
     const top = (category === "closure" || category === "absence" || category === "dayOff") ? (phoneDevice ? RPW(4) : 30) : (phoneDevice ? 0 : -5)
 
 
-    // Function trigerred by pressing on delete icon
-    const deletePress = () => {
-        // if the category is dayOff we must go to WorkingOverride redaction so we set an oldEvent
-        if (category === "dayOff") setOldEvent(event)
-        else setConfirmationModalVisible(true)
-    }
-
 
     // States and function to delete the event
     const deleteRef = useRef(true)
@@ -76,6 +69,7 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
         }
     }
 
+    if (category === "dayOff") return <></>
 
     return (
         <>
@@ -100,7 +94,7 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
                 <TouchableOpacity
                     activeOpacity={0.6}
                     style={[styles.iconContainer, styles.deleteContainer]}
-                    onPress={deletePress}
+                    onPress={()=> setConfirmationModalVisible(true)}
                     hitSlop={hitSlop}
                 >
 

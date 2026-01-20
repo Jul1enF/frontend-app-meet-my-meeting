@@ -4,7 +4,7 @@ import { useMemo, memo } from 'react';
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import { getMinDuration } from '@utils/timeFunctions';
+import { getMinDuration, toParisDt } from '@utils/timeFunctions';
 import { eventCatTranslation } from 'constants/translations';
 
 import UpdateButtons from './UpdateButtons';
@@ -33,6 +33,8 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
         const detailsFontSize = eventMinDuration > 15 ? appStyle.regularText.fontSize : appStyle.smallText.fontSize
 
         const categoryFontSize = eventMinDuration > 15 ? appStyle.largeText.fontSize : appStyle.regularText.fontSize
+
+        const lineHeight = eventMinDuration > 15 ? phoneDevice ? RPW(6.8) : 40 : "auto"
 
         let color
         let paddingTop = 5
@@ -74,6 +76,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
             letterSpacing: appStyle.regularText.letterSpacing,
             color: appStyle.fontColorDarkBg,
             textAlign: "center",
+            lineHeight,
         }
 
 
@@ -96,92 +99,87 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                                 {description}
                             </Text>
                         }
+
+                        {(category === "closure" || category === "absence") ?
+                            <Text style={[eventDetails, styles.eventDetailsTitle]} >
+                                Du  {toParisDt(start).toFormat("dd / MM / yyyy")}  au  {toParisDt(end).toFormat("dd / MM / yyyy")}
+                            </Text>
+                            : null
+                        }
                     </View>
                 )
             }
             return itemDetails
-        }, [])
+        }, [fullHeight, height, category, end, start, description, categoryFontSize, eventDetails])
 
-        // Return for thoses elements
-        if (category === "closure" || category === "absence" || category === "dayOff") {
-            return (
-                <View style={[styles.mainContainer, {
-                    top: fullTop,
-                    height: fullHeight,
-                    backgroundColor: color,
-                    paddingTop,
-                    justifyContent,
-                }]} >
-
-                    <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} event={event} eventMinDuration={eventMinDuration} resetAndRenewEvents={resetAndRenewEvents} />
-
-                    {fullDayItemDetails}
-
-                </View>
-            )
-        }
+        const isFullDayItem = category === "closure" || category === "absence" || category === "dayOff"
 
 
 
-        // Return for appointments and breaks
         return (
             <View style={[styles.mainContainer, rowGap && { rowGap }, {
-                top,
-                height,
+                top: isFullDayItem ? fullTop : top,
+                height: isFullDayItem ? fullHeight : height,
                 backgroundColor: color,
                 paddingTop,
                 justifyContent,
             }]} >
                 <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} eventMinDuration={eventMinDuration} resetAndRenewEvents={resetAndRenewEvents} event={event} />
 
-                <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
-                    {eventCatTranslation[category]}
-                    {(category === "appointment" || description) && " :"}
-                </Text>
+                {isFullDayItem &&
+                    fullDayItemDetails
+                }
+
+                {!isFullDayItem &&
+                    <>
+                        <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
+                            {eventCatTranslation[category]}
+                            {(category === "appointment" || description) && " :"}
+                        </Text>
 
 
-                <View style={styles.row}>
+                        <View style={styles.row}>
 
-                    {category === "appointment" &&
+                            {category === "appointment" &&
 
-                        <Text style={eventDetails} >
+                                <Text style={eventDetails} >
 
-                            {appCat &&
-                                <Text style={[eventDetails, styles.eventDetailsTitle]} >
-                                    {appCat + " : "}
+                                    {appCat &&
+                                        <Text style={[eventDetails, styles.eventDetailsTitle]} >
+                                            {appCat + " : "}
+                                        </Text>
+                                    }
+
+                                    {`${title} - ${default_duration} min`}
+                                </Text>
+
+                            }
+
+                            {description &&
+                                <Text style={eventDetails} >
+                                    {description}
                                 </Text>
                             }
 
-                            {`${title} - ${default_duration} min`}
-                        </Text>
-
-                    }
-
-                    {description &&
-                        <Text style={eventDetails} >
-                            {description}
-                        </Text>
-                    }
-
-                </View>
+                        </View>
 
 
-                {category === "appointment" &&
-                    <View style={styles.row}>
-                        <Text style={eventDetails} numberOfLines={2} >
-                            <Text style={[eventDetails, styles.eventDetailsTitle]} >
-                                Client•e :
-                            </Text>
+                        {category === "appointment" &&
+                            <View style={styles.row}>
+                                <Text style={eventDetails} numberOfLines={2} >
+                                    <Text style={[eventDetails, styles.eventDetailsTitle]} >
+                                        Client•e :
+                                    </Text>
 
-                            {" "}
-                            {unregistered_client?.last_name ?? client?.last_name ?? null}
-                            {" "}
-                            {unregistered_client?.first_name ?? client?.first_name ?? null}
-                        </Text>
-                    </View>
+                                    {" "}
+                                    {unregistered_client?.last_name ?? client?.last_name ?? null}
+                                    {" "}
+                                    {unregistered_client?.first_name ?? client?.first_name ?? null}
+                                </Text>
+                            </View>
+                        }
+                    </>
                 }
-
-
 
             </View>
         )
