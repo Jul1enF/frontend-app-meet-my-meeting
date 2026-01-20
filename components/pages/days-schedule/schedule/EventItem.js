@@ -14,13 +14,12 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
 
     const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client, lunch_break_modification } = event
 
-    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || lunch_break_modification === "suppression") return <></>
+    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || category === "workingOverride" || lunch_break_modification === "suppression") return <></>
 
     else {
         const { dtDayStart, dtDayEnd } = dtDayWorkingHours
 
         const { category: appCat, title, default_duration } = appointment_type ?? {}
-
 
         // Var for the display of the events (top, height, fonts, etc...)
         const eventMinFromStart = defaultStart ? getMinDuration(dtDayStart, defaultStart) : getMinDuration(dtDayStart, start)

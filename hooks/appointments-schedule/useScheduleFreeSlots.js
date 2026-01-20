@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 import { DateTime } from "luxon";
 
-export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, closures, absences, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
+export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, closures, absences, workingOverrides, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
 
 
     // Force the date to be a the actual time if it is the current day to not propose past slots
-    const dtDay = useMemo(()=>{
+    const dtDay = useMemo(() => {
         const now = DateTime.now({ zone: "Europe/Paris" })
         return isSameDay(now, dtDate) ? now : dtDate.startOf("day")
-    },[dtDate])
+    }, [dtDate])
 
 
 
@@ -55,32 +55,51 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
             // The contract of the employee is over
             if (employee.contract_end && isBefore(employee.contract_end, dtDay)) return
 
-            // The employee is not available (day off)
-            if (!employeeDay.enabled) return
+            // The employee is not available and his dayOff has not been override
+            const workingOverrideEvent = workingOverrides.find(e =>
+                e.employee.toString() === employee._id.toString()
+                && isSameDay(e.start, dtDay)
+            )
+
+            if (!employeeDay.enabled && !workingOverrideEvent) return
 
             // The employee is not available (absence which is always full-day (00:00 → 23:59 Paris time))
             const employeeAbsence = absences.find(absence =>
                 absence.employee.toString() === employee._id.toString() &&
                 isBetween(absence.start, dtDay, absence.end)
             )
+            // Absence always wins over workingOverride (employee is not working at all)
             if (employeeAbsence) return
 
 
             // No return has been made, the employee is available, we push it without useless infos and with his start and end timing
-            const dtEmployeeStart = datefromStringHour(employeeDay.start, dtDay)
-            const dtEmployeeEnd = datefromStringHour(employeeDay.end, dtDay)
+            const dtEmployeeStart = workingOverrideEvent ? toParisDt(workingOverrideEvent.start) : datefromStringHour(employeeDay.start, dtDay)
+
+            const dtEmployeeEnd = workingOverrideEvent ? toParisDt(workingOverrideEvent.end) : datefromStringHour(employeeDay.end, dtDay)
 
             const { __v, schedule, updatedAt, ...employeeInformations } = employee
 
             employeesAvailable.push({ ...employeeInformations, dtEmployeeStart, dtEmployeeEnd })
 
             // Registration of the lunch break
-            employeeDay.break.enabled && defaultLunchBreaks.push({
-                start: datefromStringHour(employeeDay.break.start, dtDay),
-                end: datefromStringHour(employeeDay.break.end, dtDay),
-                employee: employee._id.toString(),
-                category: "lunchBreak",
-            })
+            if (workingOverrideEvent) {
+                const { break: lunchBreak } = workingOverrideEvent.working_schedule
+
+                lunchBreak.enabled && defaultLunchBreaks.push({
+                    start: datefromStringHour(lunchBreak.start, dtDay),
+                    end: datefromStringHour(lunchBreak.end, dtDay),
+                    employee: employee._id.toString(),
+                    category: "lunchBreak",
+                })
+            }
+            else {
+                employeeDay.break.enabled && defaultLunchBreaks.push({
+                    start: datefromStringHour(employeeDay.break.start, dtDay),
+                    end: datefromStringHour(employeeDay.break.end, dtDay),
+                    employee: employee._id.toString(),
+                    category: "lunchBreak",
+                })
+            }
 
 
             // Comparison of the schedule hours know when the shop opens and closes
@@ -101,7 +120,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
 
         return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour }
 
-    }, [selectedEmployeesArray, dtDay, absences])
+    }, [selectedEmployeesArray, dtDay, absences, workingOverrides])
 
 
 

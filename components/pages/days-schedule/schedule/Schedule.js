@@ -24,7 +24,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
     // Hook to get the events, the appointments slots and the working hours
     const { concernedEvents, minWorkingHour, maxWorkingHour } = useScheduleEvents(selectedDate, selectedEmployee, events, closures, absences, workingOverrides, defaultSchedule)
-    
+
 
     // Memo of the working hours
     const dtDayWorkingHours = useMemo(() => {

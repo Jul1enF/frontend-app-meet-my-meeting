@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { isBefore, isSameDay, isBetween, datefromStringHour } from "@utils/timeFunctions";
+import { isBefore, isSameDay, isBetween, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 
 
-export default function useScheduleEvents(dtDate, selectedEmployees, events, closures, absences, defaultSchedule) {
+export default function useScheduleEvents(dtDate, selectedEmployees, events, closures, absences, workingOverrides, defaultSchedule) {
 
 
     // Force the date to be a the begining of the day (to display in the schedule past day events)
@@ -46,23 +46,38 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         const employeesAvailable = []
         const defaultLunchBreaks = []
         const concernedAbsenceEvents = []
+        const workingOverrideEvents = []
 
-        if (!selectedEmployeesArray || !dtDay || !absences) return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability : true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents }
+        if (!selectedEmployeesArray || !dtDay || !absences || !workingOverrides) return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability : true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, workingOverrideEvents }
 
 
         // LOOP TO SEARCH FOR POSSIBLE OFF DAY EVENTS
         selectedEmployeesArray.forEach((employee) => {
+
             const employeeDay = employee.schedule[dayIndex]
 
             // The contract of the employee is over
             if (employee.contract_end && isBefore(employee.contract_end, dtDay)) return
 
-            // The employee is not available (day off)
-            if (!employeeDay.enabled) {
+            // Check of a potential working override event
+            const workingOverrideEvent = workingOverrides.find(e =>
+                e.employee.toString() === employee._id.toString()
+                && isSameDay(e.start, dtDay)
+            )
+           
+            // The employee is not available and his dayOff has not been override
+            if (!employeeDay.enabled && !workingOverrideEvent) {
                 // add an event to be displayed on the employee schedule
                 concernedAbsenceEvents.push({ defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay), employee: employee._id, category: "dayOff" })
 
                 return
+            }
+            else if (workingOverrideEvent){
+                workingOverrideEvents.push({
+                    ...workingOverrideEvent,
+                    start : toParisDt(workingOverrideEvent.start),
+                    end : toParisDt(workingOverrideEvent.end),
+                })
             }
 
             // The employee is not available (absence which is always full-day (00:00 → 23:59 Paris time))
@@ -70,6 +85,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
                 absence.employee.toString() === employee._id.toString() &&
                 isBetween(absence.start, dtDay, absence.end)
             )
+            // Absence always wins over workingOverride (employee is not working at all)
             if (employeeAbsence) {
                 // add an event to be displayed on the employee schedule
                 concernedAbsenceEvents.push({ ...employeeAbsence, defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay),  })
@@ -77,21 +93,36 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
                 return
             }
 
+
             // No return has been made, the employee is available, we push it without useless infos and with his start and end timing
-            const dtEmployeeStart = datefromStringHour(employeeDay.start, dtDay)
-            const dtEmployeeEnd = datefromStringHour(employeeDay.end, dtDay)
+            const dtEmployeeStart = workingOverrideEvent ? toParisDt(workingOverrideEvent.start) : datefromStringHour(employeeDay.start, dtDay)
+
+            const dtEmployeeEnd = workingOverrideEvent ? toParisDt(workingOverrideEvent.end) : datefromStringHour(employeeDay.end, dtDay)
 
             const { __v, schedule, updatedAt, ...employeeInformations } = employee
 
             employeesAvailable.push({ ...employeeInformations, dtEmployeeStart, dtEmployeeEnd })
 
+
             // Registration of the lunch break
-            employeeDay.break.enabled && defaultLunchBreaks.push({
-                start: datefromStringHour(employeeDay.break.start, dtDay),
-                end: datefromStringHour(employeeDay.break.end, dtDay),
-                employee: employee._id.toString(),
-                category: "lunchBreak",
-            })
+            if (workingOverrideEvent) {
+                const { break: lunchBreak } = workingOverrideEvent.working_schedule
+
+                lunchBreak.enabled && defaultLunchBreaks.push({
+                    start: datefromStringHour(lunchBreak.start, dtDay),
+                    end: datefromStringHour(lunchBreak.end, dtDay),
+                    employee: employee._id.toString(),
+                    category: "lunchBreak",
+                })
+            }
+            else {
+                employeeDay.break.enabled && defaultLunchBreaks.push({
+                    start: datefromStringHour(employeeDay.break.start, dtDay),
+                    end: datefromStringHour(employeeDay.break.end, dtDay),
+                    employee: employee._id.toString(),
+                    category: "lunchBreak",
+                })
+            }
 
 
             // Comparison of the schedule hours know when the shop opens and closes
@@ -110,9 +141,9 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
         const noEmployeesAvailability = employeesAvailable.length ? false : true
 
-        return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour, concernedAbsenceEvents }
+        return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, workingOverrideEvents }
 
-    }, [selectedEmployeesArray, dtDay, absences, defaultStart, defaultEnd])
+    }, [selectedEmployeesArray, dtDay, absences, defaultStart, defaultEnd, workingOverrides])
 
 
 
@@ -143,7 +174,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         return { noAvailabilities: noEmployeesAvailability, concernedClosureEvents }
 
 
-    }, [dtDay, closures, selectedEmployeesAvailabilities.noEmployeesAvailability, defaultStart, defaultEnd])
+    }, [dtDay, closures, selectedEmployeesAvailabilities, defaultStart, defaultEnd])
 
 
 
@@ -157,7 +188,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
         const { noAvailabilities, concernedClosureEvents } = eventsAvailability
 
-        const { concernedAbsenceEvents, minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
+        const { concernedAbsenceEvents, workingOverrideEvents, minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
 
 
         // We add to concernedEvents (used in an employee schedule) the releavant informations depending on the situation. A closure (shop is closed) has priority for the display on an absence
@@ -166,10 +197,13 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             [...concernedAbsenceEvents]
 
         // Return in case of lack of informations or no availabilities
-        if (!dtDay || !events || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length || !defaultLunchBreaks) {
+        if (!dtDay || !events || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length) {
 
             return { concernedEvents, minWorkingHour: isClosed ? null : minWorkingHour, maxWorkingHour: isClosed ? null : maxWorkingHour }
         }
+
+        // If there are workingOverrideEvents, we add them to concernedEvents (they will not be directly displayed but we'll have their infos for updates)
+        workingOverrideEvents.length && concernedEvents.push(...workingOverrideEvents)
 
 
         // Array to register pontentials modified lunch break
