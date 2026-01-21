@@ -12,7 +12,7 @@ import useAutocompleteLists from '../event-update/useAutocompleteLists';
 export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription, category }) {
 
     // Creation with a hook of the autocomplete list
-    const { appointmentsSlotsList } = useAutocompleteLists({ appointmentsSlots, eventStart})
+    const { appointmentsSlotsList } = useAutocompleteLists({ appointmentsSlots, eventStart })
 
 
     const [slotWarning, setSlotWarning] = useState("")
@@ -70,23 +70,21 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
 
             {slotsAutocomplete}
 
-            {category !== "lunchBreak" &&
-                <>
-                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
-                        Description :
-                    </Text>
+
+            <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >
+                Description :
+            </Text>
 
 
-                    <TextInput
-                        style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
-                        onChangeText={(e) => setDescription(e)}
-                        value={description}
-                        placeholder='Description...'
-                        placeholderTextColor={appStyle.placeholderColor}
-                        autoCapitalize="sentences"
-                    />
-                </>
-            }
+            <TextInput
+                style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
+                onChangeText={(e) => setDescription(e)}
+                value={description}
+                placeholder='Description...'
+                placeholderTextColor={appStyle.placeholderColor}
+                autoCapitalize="sentences"
+            />
+
         </>
     )
 }

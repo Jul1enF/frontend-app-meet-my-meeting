@@ -12,9 +12,9 @@ import UpdateButtons from './UpdateButtons';
 
 export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours, setEventStart, setOldEvent, resetAndRenewEvents }) {
 
-    const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client, lunch_break_modification } = event
+    const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client } = event
 
-    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || category === "workingOverride" || lunch_break_modification === "suppression") return <></>
+    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || category === "workingOverride" ) return <></>
 
     else {
         const { dtDayStart, dtDayEnd } = dtDayWorkingHours

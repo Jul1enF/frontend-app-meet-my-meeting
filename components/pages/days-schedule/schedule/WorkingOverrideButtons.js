@@ -26,7 +26,7 @@ export default function WorkingOverrideButtons({ concernedEvents, setOldEvent, s
     // Vars to know what is possible to do with the current day displayed :
 
     let dayCategory
-    // If it is a normal working day, there is no special event at the begining of concernedEvents Array, only categories appointment, break or lunchBreak
+    // If it is a normal working day, there is no special event at the begining of concernedEvents Array, only categories : appointment, break or lunchBreak
     if (!concernedEvents.length || firstEvent.category === "break" || firstEvent.category === "lunchBreak" || firstEvent.category === "appointment") {
         dayCategory = "workingDay"
     }

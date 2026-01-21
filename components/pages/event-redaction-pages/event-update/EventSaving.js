@@ -65,7 +65,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
         }
 
         // Break
-        if (category === "break" || category === "lunchBreak") {
+        if (category === "break") {
             if (!breakDuration || (!description && category === "break")) {
                 displayWarning("Erreur : Informations manquantes")
                 return
@@ -114,9 +114,6 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
             delete event.defaultStart
             delete event.defaultEnd
         }
-
-        // If it is a creation of a lunch break we put the marker to signal that it's and update and not a suppression of the default one
-        if (category === "lunchBreak") event.lunch_break_modification = "update"
 
         setEventToSave(event)
 

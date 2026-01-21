@@ -9,13 +9,13 @@ export const roleTranslation = {
 export const eventCatTranslation = {
     // Exist in the backend
     break: "Pause",
-    lunchBreak: "Pause déjeuner",
     appointment: "RDV",
     closure: "Fermeture",
     absence: "Congé",
     workingOverride: "Jour travaillé ( modification )",
 
     // Only for front
+    lunchBreak: "Pause déjeuner",
     dayOff: "Jour Off",
     workingDay: "Jour travaillé"
 }

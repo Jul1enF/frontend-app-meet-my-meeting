@@ -6,7 +6,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
 
     // Force the date to be a the begining of the day (to display in the schedule past day events)
-    const dtDay = useMemo(()=> dtDate.startOf('day'),[dtDate])
+    const dtDay = useMemo(() => dtDate.startOf('day'), [dtDate])
 
 
     // FORCE AN ARRAY FOR THE EMPLOYEE(S)
@@ -48,7 +48,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         const concernedAbsenceEvents = []
         const workingOverrideEvents = []
 
-        if (!selectedEmployeesArray || !dtDay || !absences || !workingOverrides) return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability : true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, workingOverrideEvents }
+        if (!selectedEmployeesArray || !dtDay || !absences || !workingOverrides) return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability: true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, workingOverrideEvents }
 
 
         // LOOP TO SEARCH FOR POSSIBLE OFF DAY EVENTS
@@ -64,7 +64,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
                 e.employee.toString() === employee._id.toString()
                 && isSameDay(e.start, dtDay)
             )
-           
+
             // The employee is not available and his dayOff has not been override
             if (!employeeDay.enabled && !workingOverrideEvent) {
                 // add an event to be displayed on the employee schedule
@@ -72,11 +72,11 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
                 return
             }
-            else if (workingOverrideEvent){
+            else if (workingOverrideEvent) {
                 workingOverrideEvents.push({
                     ...workingOverrideEvent,
-                    start : toParisDt(workingOverrideEvent.start),
-                    end : toParisDt(workingOverrideEvent.end),
+                    start: toParisDt(workingOverrideEvent.start),
+                    end: toParisDt(workingOverrideEvent.end),
                 })
             }
 
@@ -88,7 +88,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             // Absence always wins over workingOverride (employee is not working at all)
             if (employeeAbsence) {
                 // add an event to be displayed on the employee schedule
-                concernedAbsenceEvents.push({ ...employeeAbsence, defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay),  })
+                concernedAbsenceEvents.push({ ...employeeAbsence, defaultStart: datefromStringHour(defaultStart, dtDay), defaultEnd: datefromStringHour(defaultEnd, dtDay), })
 
                 return
             }
@@ -125,7 +125,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             }
 
 
-            // Comparison of the schedule hours know when the shop opens and closes
+            // Comparison of the schedule hours to know when the shop opens and closes
 
             if (!minWorkingHour) minWorkingHour = dtEmployeeStart
             else {
@@ -184,7 +184,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
     // GET THE EVENTS OF THE DAY AND THE FREE APPOINTMENT SLOTS
     const dayEventsSchedule = useMemo(() => {
 
-        // concernedEvents may include non-displayable context events (workingOverride and suppressed lunchBreaks)
+        // concernedEvents may include non-displayable context events (workingOverride)
         // The first event, if it is not a regular working day, must always be a marker of the type of day that will be displayed (closure, absence, dayOff, workingOverride)
         let concernedEvents = []
 
@@ -208,21 +208,14 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         workingOverrideEvents.length && concernedEvents.push(...workingOverrideEvents)
 
 
-        // Array to register pontentials modified lunch break
-        const modifiedLunchBreaks = []
-
 
         // LOOP TO GET THE EVENTS OF THE CONCERNED DAY
         for (let event of events) {
 
             if (isSameDay(event.start, dtDay)
                 && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
-                
+
                 concernedEvents.push(event)
-
-                // If the event is a modified or suppressed lunch break for this day
-                event.category === "lunchBreak" && modifiedLunchBreaks.push(event)
-
             }
 
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
@@ -234,10 +227,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         // Add the default lunck breaks if they have not been modified 
         for (let lunchBreak of defaultLunchBreaks) {
 
-            if (!modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) ) {
-
-                concernedEvents.push(lunchBreak)
-            }
+            concernedEvents.push(lunchBreak)
         }
 
         return { concernedEvents, minWorkingHour, maxWorkingHour }

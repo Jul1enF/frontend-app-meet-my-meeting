@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { isBefore, isSameDay, isBetween, getDuration, datefromStringHour, toParisDt } from "@utils/timeFunctions";
 import { DateTime } from "luxon";
 
-export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, closures, absences, workingOverrides, appointmentGapMs, eventDuration, ignoreDefaultLunchBreak = false) {
+export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, closures, absences, workingOverrides, appointmentGapMs, eventDuration) {
 
 
     // Force the date to be a the actual time if it is the current day to not propose past slots
@@ -179,8 +179,6 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
 
         const fiveMinutesInMs = 1000 * 60 * 5
 
-        // Array to register pontentials modified lunch break
-        const modifiedLunchBreaks = []
 
         // Var to see how busy is an employee (so that if no one is selected by the user we can selecte the least busy)
         const employeesWorkStatus = {}
@@ -228,13 +226,8 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
                     employeesWorkStatus[employeeId].msOfWork += getDuration(event.start, event.end)
                 }
 
-                // Block schedule slots except if the event is a suppressed lunchBreak
-                if (event.lunch_break_modification !== "suppression") {
-                    setOccupiedSlots(event.start, event.end, employeeId)
-                }
-
-                // If the event is a modified or suppressed lunch break for this day
-                event.category === "lunchBreak" && modifiedLunchBreaks.push(event)
+                // Block schedule slots
+                setOccupiedSlots(event.start, event.end, employeeId)
 
             }
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
@@ -243,15 +236,9 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
             }
         }
 
-        // Add the default lunck breaks if they have not been modified or should be ignored
+        // Add the default lunck breaks
         for (let lunchBreak of defaultLunchBreaks) {
-
-            if (
-                !modifiedLunchBreaks.some(e => e.employee.toString() === lunchBreak.employee) &&
-                !ignoreDefaultLunchBreak
-            ) {
-                setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
-            }
+            setOccupiedSlots(lunchBreak.start, lunchBreak.end, lunchBreak.employee)
         }
 
 
@@ -291,7 +278,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
             const employeesNumber = workingEmployees.length
 
             const dtAppointmentEndMs = dtAppointmentStart.plus({ minutes: eventDuration }).toMillis()
-            
+
             // Check if there is an event registered for the start of the event slot
             const slotOccupied = occupiedSlots.get(dtAppointmentStart.toMillis())
 

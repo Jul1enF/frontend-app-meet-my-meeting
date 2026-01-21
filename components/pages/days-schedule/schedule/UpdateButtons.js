@@ -37,39 +37,25 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const deleteEvent = async () => {
-        // If it as a lunch break suppression we post an event to know later to not display the default one
-        const isLunchBreak = category === "lunchBreak"
-        const body = { eventToSave: { ...event, lunch_break_modification: "suppression" } }
-
-        // Params for suppression
-        const params = _id.toString()
 
         const data = await request({
-            path: !isLunchBreak ? "/events/delete-event" : "/events/create-or-update",
-            method: !isLunchBreak ? "DELETE" : "PUT",
+            path: "/events/delete-event",
+            method: "DELETE",
             functionRef: deleteRef,
             jwtToken,
             setSessionExpired,
             setModalVisible: setConfirmationModalVisible,
             setWarning: setFetchWarning,
-            ...(isLunchBreak && { body }),
-            ...(!isLunchBreak && { params }),
+            params : _id.toString(),
         })
 
         if (data?.result) {
             const delay = data.delay ?? 0
-            if (!isLunchBreak) {
-                setTimeout(() => resetAndRenewEvents({ _id, category }, "delete", "schedule"), delay)
-            }
-            // If it is a lunchBreak a new event was created or and old one updated (if the lunch break was already modified)
-            else {
-                setTimeout(() => resetAndRenewEvents(data.eventSaved, _id ? "update" : "create", "schedule"), delay)
-            }
-
+            setTimeout(() => resetAndRenewEvents({ _id, category }, "delete", "schedule"), delay)
         }
     }
 
-    if (category === "dayOff") return <></>
+    if (category === "dayOff" || category === "lunchBreak") return <></>
 
     return (
         <>

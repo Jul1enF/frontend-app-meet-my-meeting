@@ -53,7 +53,7 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
 
 
     // Hook to get all the free appointments/breaks slots
-    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, appointmentGapMs, eventDuration, oldEvent?.category === "lunchBreak")
+    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, appointmentGapMs, eventDuration )
 
     // Hook to get the autocomplete list for the category
     const { categoriesList } = useAutocompleteLists({ selectedEmployee })
