@@ -110,7 +110,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
     return (
         <>
-            <WorkingOverrideButtons concernedEvents={concernedEvents} setOldEvent={setOldEvent} selectedDate={selectedDate} selectedEmployee={selectedEmployee} />
+            <WorkingOverrideButtons concernedEvents={concernedEvents} setOldEvent={setOldEvent} selectedDate={selectedDate} selectedEmployee={selectedEmployee} resetAndRenewEvents={resetAndRenewEvents} />
 
             <View style={styles.mainContainer}>
 

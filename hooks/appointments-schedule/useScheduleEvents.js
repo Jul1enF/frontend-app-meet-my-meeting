@@ -217,7 +217,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
             if (isSameDay(event.start, dtDay)
                 && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
-
+                
                 concernedEvents.push(event)
 
                 // If the event is a modified or suppressed lunch break for this day

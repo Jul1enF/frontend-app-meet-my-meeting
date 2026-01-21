@@ -66,7 +66,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
                 router.navigate("/user-appointments")
             }, data.delay)
         }
-        else if (data.delay){
+        else if (data?.delay){
             setTimeout(()=> {
                 data.appointmentTypeError && setSelectedAppointmentType(null)
                 resetAndRenewEvents()

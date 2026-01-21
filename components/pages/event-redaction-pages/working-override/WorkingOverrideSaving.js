@@ -72,7 +72,7 @@ export default function WorkingOverrideSaving({ oldEvent, workingSchedule, reset
                 resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create", "schedule")
             }, delay)
         }
-        else if (data.delay) {
+        else if (data?.delay) {
             setTimeout(() => {
                 resetAndRenewEvents()
             }, data.delay)

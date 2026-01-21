@@ -154,7 +154,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
                 clientRedaction && dispatch(updateEvent(eventSaved))
             }, delay)
         }
-        else if (data.delay) {
+        else if (data?.delay) {
             setTimeout(() => {
                 data.appointmentTypeError && setSelectedAppointmentType(null)
                 resetAndRenewEvents()
