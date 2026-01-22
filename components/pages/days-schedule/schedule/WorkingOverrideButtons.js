@@ -26,6 +26,7 @@ export default function WorkingOverrideButtons({ concernedEvents, setOldEvent, s
     // Vars to know what is possible to do with the current day displayed :
 
     let dayCategory
+
     // If it is a normal working day, there is no special event at the begining of concernedEvents Array, only categories : appointment, break or lunchBreak
     if (!concernedEvents.length || firstEvent.category === "break" || firstEvent.category === "lunchBreak" || firstEvent.category === "appointment") {
         dayCategory = "workingDay"
@@ -126,7 +127,7 @@ export default function WorkingOverrideButtons({ concernedEvents, setOldEvent, s
                 </TouchableOpacity>
             }
 
-            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir supprimer cette modification ?"} confirmationBtnText={"Oui, supprimer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={deleteWorkingOverride} />
+            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir supprimer les modifications apportées à cette journée ?"} confirmationBtnText={"Oui, supprimer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={deleteWorkingOverride} />
         </View>
     )
 }

@@ -209,6 +209,9 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
 
 
+        // Var to know if at least one event has been found
+        let eventHasBeenFound
+
         // LOOP TO GET THE EVENTS OF THE CONCERNED DAY
         for (let event of events) {
 
@@ -216,10 +219,12 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
                 && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
 
                 concernedEvents.push(event)
+
+                if (!eventHasBeenFound) eventHasBeenFound = true
             }
 
             // Because the events are already sorted by date, if we already found some but not anymore, we break (only futur days events remains)
-            else if (!isSameDay(event.start, dtDay) && concernedEvents.length) {
+            else if (!isSameDay(event.start, dtDay) && eventHasBeenFound) {
                 break;
             }
         }

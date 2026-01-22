@@ -20,7 +20,7 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
     // Set an error if the break start selected doesn't fit with the break duration in a schedule slot
     useEffect(() => {
 
-        if (!breakDuration || !appointmentsSlotsList) return
+        if (!breakDuration || !appointmentsSlotsList || !eventStart) return
         if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {

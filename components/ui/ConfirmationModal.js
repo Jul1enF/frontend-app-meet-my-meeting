@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
         ...appStyle.largeText,
         textAlign : "center",
         color: appStyle.fontColorDarkBg,
+        lineHeight: phoneDevice ? RPW(7.3) : 44,
     },
     line: {
         width: "40%",

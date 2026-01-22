@@ -25,7 +25,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
 
     // Set an error if the appointment start time selected doesn't fit with the appointment selected duration in a schedule slot
     useEffect(() => {
-        if (!selectedAppointmentType || !appointmentsSlotsList) return
+        if (!selectedAppointmentType || !appointmentsSlotsList || !eventStart) return
         if (!appointmentsSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {

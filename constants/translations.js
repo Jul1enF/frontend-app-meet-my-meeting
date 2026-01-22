@@ -12,7 +12,7 @@ export const eventCatTranslation = {
     appointment: "RDV",
     closure: "Fermeture",
     absence: "Congé",
-    workingOverride: "Jour travaillé ( modification )",
+    workingOverride: "Jour travaillé ( modifié )",
 
     // Only for front
     lunchBreak: "Pause déjeuner",

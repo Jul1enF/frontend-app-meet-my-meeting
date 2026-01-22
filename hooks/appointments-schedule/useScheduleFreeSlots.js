@@ -7,7 +7,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
 
     // Force the date to be a the actual time if it is the current day to not propose past slots
     const dtDay = useMemo(() => {
-        const now = DateTime.now({ zone: "Europe/Paris" })
+        const now = DateTime.now({ zone: "Europe/Paris" }).set({second : 0, millisecond : 0})
         return isSameDay(now, dtDate) ? now : dtDate.startOf("day")
     }, [dtDate])
 
@@ -242,8 +242,8 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
         }
 
 
-        // SETTINGS FOR A LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
-        let dtAppointmentStart = dtDay
+        // SETTINGS FOR A LOOP TO DETERMINE THE FREE EVENTS SLOTS OF THE DAY
+        let dtSlotStart = dtDay
         let firstLoop = true
 
         // For the first loop, get the first slot available for an appointment depending on the time of the request and appointments gaps
@@ -264,23 +264,23 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
 
 
         // LOOP TO DETERMINE THE FREE APPOINTMENTS SLOTS OF THE DAY
-        while (isBefore(dtAppointmentStart.plus({ minutes: eventDuration }), maxWorkingHour, true)) {
+        while (isBefore(dtSlotStart.plus({ minutes: eventDuration }), maxWorkingHour, true)) {
             if (firstLoop) {
-                dtAppointmentStart = getFirstAppointmentSlot()
+                dtSlotStart = getFirstAppointmentSlot()
                 firstLoop = false
             }
 
             // Remove the employee that are not working throughout the entire appointment duration (their day of work is over)
             const workingEmployees = employeesAvailable.filter(e => {
-                return dtAppointmentStart >= e.dtEmployeeStart &&
-                    dtAppointmentStart.plus({ minutes: eventDuration }) <= e.dtEmployeeEnd
+                return dtSlotStart >= e.dtEmployeeStart &&
+                    dtSlotStart.plus({ minutes: eventDuration }) <= e.dtEmployeeEnd
             })
             const employeesNumber = workingEmployees.length
 
-            const dtAppointmentEndMs = dtAppointmentStart.plus({ minutes: eventDuration }).toMillis()
+            const dtAppointmentEndMs = dtSlotStart.plus({ minutes: eventDuration }).toMillis()
 
             // Check if there is an event registered for the start of the event slot
-            const slotOccupied = occupiedSlots.get(dtAppointmentStart.toMillis())
+            const slotOccupied = occupiedSlots.get(dtSlotStart.toMillis())
 
             // If there is at least an employee available for the start
             if (!slotOccupied || slotOccupied.length !== employeesNumber) {
@@ -297,7 +297,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
 
 
                 // Loop to check that the employees are available until the end for that appointment slot
-                let slotChecked = dtAppointmentStart.toMillis() + fiveMinutesInMs
+                let slotChecked = dtSlotStart.toMillis() + fiveMinutesInMs
 
                 while (appointmentFreeEmployees.length > 0 && slotChecked < dtAppointmentEndMs) {
                     const slotCheckedOccupied = occupiedSlots.get(slotChecked)
@@ -316,9 +316,9 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
                 })
 
 
-                employees.length && appointmentsSlots.push({ start: dtAppointmentStart, employees })
+                employees.length && appointmentsSlots.push({ start: dtSlotStart, employees })
             }
-            dtAppointmentStart = dtAppointmentStart.plus({ milliseconds: appointmentGapMs })
+            dtSlotStart = dtSlotStart.plus({ milliseconds: appointmentGapMs })
         }
 
         return { appointmentsSlots }
