@@ -13,7 +13,7 @@ import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 
-export default function EventSaving({ selectedEmployee, eventStart, oldEvent, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, appointmentsSlots, resetAndRenewEvents, clientRedaction }) {
+export default function EventSaving({ selectedEmployee, eventStart, oldEvent, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, availableSlots, resetAndRenewEvents, clientRedaction }) {
 
     const dispatch = useDispatch()
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
@@ -45,8 +45,8 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
                 displayWarning("Erreur : Deux clients différents sélectionnés")
                 return
             }
-            if (!appointmentsSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
-                displayWarning(appointmentsSlots.length ? "Erreur : Le rdv ne rentre pas dans le créneau" : "Erreur : Aucun créneau disponible ce jour pour ces critères !")
+            if (!availableSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
+                displayWarning(availableSlots.length ? "Erreur : Le rdv ne rentre pas dans le créneau" : "Erreur : Aucun créneau disponible ce jour pour ces critères !")
                 return
             }
 
@@ -70,7 +70,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
                 displayWarning("Erreur : Informations manquantes")
                 return
             }
-            if (!appointmentsSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
+            if (!availableSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
                 displayWarning("Erreur : La pause ne rentre pas dans le créneau")
                 return
             }

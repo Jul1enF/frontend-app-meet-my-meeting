@@ -19,7 +19,7 @@ import { eventCatTranslation } from 'constants/translations';
 export default function EventRedaction({ eventRedactionContext, clientRedaction = false }) {
 
     // Context to know how to calcul the freeSlots, set an event and post it
-    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, workingOverrides, appointmentGapMs, selectedDate, resetAndRenewEvents } = eventRedactionContext
+    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, workingOverrides, slotGapMs, selectedDate, resetAndRenewEvents } = eventRedactionContext
 
     // States to register the settings of the events
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
@@ -53,7 +53,7 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
 
 
     // Hook to get all the free appointments/breaks slots
-    const { appointmentsSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, appointmentGapMs, eventDuration )
+    const { availableSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, slotGapMs, eventDuration )
 
     // Hook to get the autocomplete list for the category
     const { categoriesList } = useAutocompleteLists({ selectedEmployee })
@@ -101,7 +101,7 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
 
 
                     {category === "appointment" &&
-                        <AppointmentInputs eventRedactionContext={eventRedactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} appointmentsSlots={appointmentsSlots} clientRedaction={clientRedaction} />
+                        <AppointmentInputs eventRedactionContext={eventRedactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} availableSlots={availableSlots} clientRedaction={clientRedaction} />
                     }
 
 
@@ -111,11 +111,11 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
 
 
                     {/break/i.test(category) &&
-                        <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} appointmentsSlots={appointmentsSlots} description={description} setDescription={setDescription} category={category} />
+                        <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} availableSlots={availableSlots} description={description} setDescription={setDescription} category={category} />
                     }
 
 
-                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} appointmentsSlots={appointmentsSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
+                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} availableSlots={availableSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
 
                 </View>
 

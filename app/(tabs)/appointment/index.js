@@ -62,9 +62,9 @@ export default function AppointmentPage() {
   // Props in useMemo to pass along children of the agenda
   const agendaContext = useMemo(() => {
     const { events, closures, absences, workingOverrides, constants } = appointmentsInformations
-    const { appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = constants ?? {}
+    const { slotGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities } = constants ?? {}
 
-    return { selectedEmployees, setSelectedEmployees, setSelectedAppointmentSlot, events, closures, absences, workingOverrides, appointmentGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, employeesAutocompleteList, appointmentDuration }
+    return { selectedEmployees, setSelectedEmployees, setSelectedAppointmentSlot, events, closures, absences, workingOverrides, slotGapMs, maxFuturDays, sortFreeEmployees, rolesPriorities, employeesAutocompleteList, appointmentDuration }
   },
     [selectedEmployees, appointmentDuration, appointmentsInformations, employeesAutocompleteList])
 

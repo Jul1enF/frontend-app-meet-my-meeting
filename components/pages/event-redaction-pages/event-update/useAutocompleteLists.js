@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-export default function useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart, selectedEmployee = null}) {
+export default function useAutocompleteLists({appointmentTypes, users, availableSlots, eventStart, selectedEmployee = null}) {
 
     const role = useSelector((state)=>state.user.value.role)
     const _id = useSelector((state)=>state.user.value._id)
@@ -91,12 +91,12 @@ export default function useAutocompleteLists({appointmentTypes, users, appointme
     }, [users])
 
 
-    const appointmentsSlotsList = useMemo(() => {
-        if (!appointmentsSlots) return null
+    const availableSlotsList = useMemo(() => {
+        if (!availableSlots) return null
     
-        if (!appointmentsSlots.length || !eventStart) return []
+        if (!availableSlots.length || !eventStart) return []
 
-        return [...appointmentsSlots].map(e => {
+        return [...availableSlots].map(e => {
 
             const id = e.start.toMillis() === eventStart.toMillis() ?
                 "initialValue" : e.start.toISO()
@@ -107,7 +107,7 @@ export default function useAutocompleteLists({appointmentTypes, users, appointme
                 start: e.start,
             }
         })
-    }, [appointmentsSlots, eventStart])
+    }, [availableSlots, eventStart])
 
-    return {categoriesList, appointmentsList, usersList, appointmentsSlotsList }
+    return {categoriesList, appointmentsList, usersList, availableSlotsList }
 }

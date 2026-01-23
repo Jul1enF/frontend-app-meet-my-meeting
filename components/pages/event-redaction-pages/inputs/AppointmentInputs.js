@@ -13,26 +13,26 @@ import { appStyle } from '@styles/appStyle';
 
 import { DateTime } from "luxon";
 
-export default function AppointmentInputs({ eventRedactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, appointmentsSlots, clientRedaction }) {
+export default function AppointmentInputs({ eventRedactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, availableSlots, clientRedaction }) {
 
     // Props coming from the root
     const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate, maxFuturDays } = eventRedactionContext
 
     // Creation with a hook of the autocomplete lists
-    const { appointmentsList, usersList, appointmentsSlotsList } = useAutocompleteLists({appointmentTypes, users, appointmentsSlots, eventStart})
+    const { appointmentsList, usersList, availableSlotsList } = useAutocompleteLists({appointmentTypes, users, availableSlots, eventStart})
 
     const [slotWarning, setSlotWarning] = useState("")
 
     // Set an error if the appointment start time selected doesn't fit with the appointment selected duration in a schedule slot
     useEffect(() => {
-        if (!selectedAppointmentType || !appointmentsSlotsList || !eventStart) return
-        if (!appointmentsSlotsList.some(e =>
+        if (!selectedAppointmentType || !availableSlotsList || !eventStart) return
+        if (!availableSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            setSlotWarning(`Erreur : ${!appointmentsSlotsList.length ? "aucun créneau disponible ce jour pour ces critères !" : "le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :"}`)
+            setSlotWarning(`Erreur : ${!availableSlotsList.length ? "aucun créneau disponible ce jour pour ces critères !" : "le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :"}`)
             setTimeout(() => setSlotWarning(""), 5000)
         }
-    }, [selectedAppointmentType, appointmentsSlotsList])
+    }, [selectedAppointmentType, availableSlotsList])
 
 
 
@@ -52,8 +52,8 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
     // Memoisation of the Autocomplete for the appointments slots
     const slotsAutocomplete = useMemo(() => (
         <Autocomplete
-            key={appointmentsSlotsList ? appointmentsSlotsList.length : "key"}
-            data={appointmentsSlotsList ?? []}
+            key={availableSlotsList ? availableSlotsList.length : "key"}
+            data={availableSlotsList ?? []}
             placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
             initialValue={"initialValue"}
             showClear={false}
@@ -64,7 +64,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
             suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
             listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
         />
-    ), [appointmentsSlotsList, eventStart, selectedAppointmentType])
+    ), [availableSlotsList, eventStart, selectedAppointmentType])
 
 
     return (

@@ -9,7 +9,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
   // Informations on the registered events and their context
   const { employees, appointmentTypes, users, events, closures, absences, workingOverrides, constants } = planningInformations
 
-  const { appointmentGapMs, defaultSchedule, maxFuturDays = null } = constants ?? {}
+  const { slotGapMs, defaultSchedule, maxFuturDays = null } = constants ?? {}
 
 
   // States for the appointment schedule
@@ -76,7 +76,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
 
   // PROPS FOR THE SCHEDULE
   const scheduleContext = useMemo(() => {
-    return { events, closures, absences, workingOverrides, appointmentGapMs, defaultSchedule, selectedEmployee, selectedDate, setEventStart, setOldEvent, resetAndRenewEvents }
+    return { events, closures, absences, workingOverrides, slotGapMs, defaultSchedule, selectedEmployee, selectedDate, setEventStart, setOldEvent, resetAndRenewEvents }
   },
     [planningInformations, selectedEmployee, selectedDate, resetAndRenewEvents])
 
@@ -85,7 +85,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
   // PROPS FOR EVENT REDACTION
   const eventRedactionContext = useMemo(() => {
 
-    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, workingOverrides, appointmentGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
+    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, workingOverrides, slotGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
   },
     [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate, resetAndRenewEvents])
 

@@ -9,16 +9,16 @@ import AppointmentSlot from './AppointmentSlot';
 
 export default memo(function DayColumn({ agendaContext, width, dtDay }) {
 
-    const { setSelectedAppointmentSlot, events, closures, absences, workingOverrides, appointmentGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, rolesPriorities } = agendaContext
+    const { setSelectedAppointmentSlot, events, closures, absences, workingOverrides, slotGapMs, sortFreeEmployees, appointmentDuration, selectedEmployees, rolesPriorities } = agendaContext
 
-    const { appointmentsSlots } = useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, workingOverrides, appointmentGapMs, appointmentDuration)
+    const { availableSlots } = useScheduleFreeSlots(dtDay, selectedEmployees, events, closures, absences, workingOverrides, slotGapMs, appointmentDuration)
 
 
     // useMemo to create a memoised version of the slots
     const slots = useMemo(() => {
-        if (!appointmentsSlots) return null
-        return appointmentsSlots.map(e => <AppointmentSlot key={e.start.toMillis()} {...e} setSelectedAppointmentSlot={setSelectedAppointmentSlot} sortFreeEmployees={sortFreeEmployees} rolesPriorities={rolesPriorities} /> )
-    }, [appointmentsSlots])
+        if (!availableSlots) return null
+        return availableSlots.map(e => <AppointmentSlot key={e.start.toMillis()} {...e} setSelectedAppointmentSlot={setSelectedAppointmentSlot} sortFreeEmployees={sortFreeEmployees} rolesPriorities={rolesPriorities} /> )
+    }, [availableSlots])
 
 
     // State for the list status
@@ -29,7 +29,7 @@ export default memo(function DayColumn({ agendaContext, width, dtDay }) {
     useLayoutEffect(() => {
         setIsOverflowing(false)
         setEntireListVisible(true)
-    }, [appointmentsSlots])
+    }, [availableSlots])
 
     // Max height at first sight for the column
     const maxHeight = phoneDevice ? RPW(152) : 1050

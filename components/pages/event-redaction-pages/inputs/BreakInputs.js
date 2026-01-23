@@ -9,10 +9,10 @@ import Autocomplete from '@components/ui/Autocomplete';
 import useAutocompleteLists from '../event-update/useAutocompleteLists';
 
 
-export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, appointmentsSlots, description, setDescription, category }) {
+export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, availableSlots, description, setDescription, category }) {
 
     // Creation with a hook of the autocomplete list
-    const { appointmentsSlotsList } = useAutocompleteLists({ appointmentsSlots, eventStart })
+    const { availableSlotsList } = useAutocompleteLists({ availableSlots, eventStart })
 
 
     const [slotWarning, setSlotWarning] = useState("")
@@ -20,22 +20,22 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
     // Set an error if the break start selected doesn't fit with the break duration in a schedule slot
     useEffect(() => {
 
-        if (!breakDuration || !appointmentsSlotsList || !eventStart) return
-        if (!appointmentsSlotsList.some(e =>
+        if (!breakDuration || !availableSlotsList || !eventStart) return
+        if (!availableSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
             setSlotWarning("Erreur : la pause ne rentre pas dans le créneau ! Merci de changer sa durée ou de choisir un autre horaire ci dessous :")
             setTimeout(() => setSlotWarning(""), 6000)
         }
-    }, [breakDuration, appointmentsSlotsList])
+    }, [breakDuration, availableSlotsList])
 
 
     // Memoisation of the Autocomplete for the appointments slots and the users
 
     const slotsAutocomplete = useMemo(() => (
         <Autocomplete
-            key={appointmentsSlotsList ? appointmentsSlotsList.length : "key"}
-            data={appointmentsSlotsList ?? []}
+            key={availableSlotsList ? availableSlotsList.length : "key"}
+            data={availableSlotsList ?? []}
             placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
             initialValue={"initialValue"}
             showClear={false}
@@ -46,7 +46,7 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
             suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
             listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
         />
-    ), [appointmentsSlotsList, eventStart])
+    ), [availableSlotsList, eventStart])
 
     return (
         <>

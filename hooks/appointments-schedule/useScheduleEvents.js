@@ -39,16 +39,16 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
 
     // GET THE WORKING HOURS AND OFF DAY EVENTS OF THE SELECTED EMPLOYEE(S)
-    const selectedEmployeesAvailabilities = useMemo(() => {
+    const selectedEmployeesAvailability = useMemo(() => {
 
         let minWorkingHour
         let maxWorkingHour
-        const employeesAvailable = []
+        const employeesAvailableThatDay = []
         const defaultLunchBreaks = []
         const concernedAbsenceEvents = []
-        const workingOverrideEvents = []
+        const concernedWorkingOverrideEvents = []
 
-        if (!selectedEmployeesArray || !dtDay || !absences || !workingOverrides) return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability: true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, workingOverrideEvents }
+        if (!selectedEmployeesArray || !dtDay || !absences || !workingOverrides) return { employeesAvailableThatDay, defaultLunchBreaks, noEmployeesAvailability: true, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, concernedWorkingOverrideEvents }
 
 
         // LOOP TO SEARCH FOR POSSIBLE OFF DAY EVENTS
@@ -73,7 +73,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
                 return
             }
             else if (workingOverrideEvent) {
-                workingOverrideEvents.push({
+                concernedWorkingOverrideEvents.push({
                     ...workingOverrideEvent,
                     start: toParisDt(workingOverrideEvent.start),
                     end: toParisDt(workingOverrideEvent.end),
@@ -101,7 +101,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
             const { __v, schedule, updatedAt, ...employeeInformations } = employee
 
-            employeesAvailable.push({ ...employeeInformations, dtEmployeeStart, dtEmployeeEnd })
+            employeesAvailableThatDay.push({ ...employeeInformations, dtEmployeeStart, dtEmployeeEnd })
 
 
             // Registration of the lunch break
@@ -139,9 +139,9 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         })
 
 
-        const noEmployeesAvailability = employeesAvailable.length ? false : true
+        const noEmployeesAvailability = employeesAvailableThatDay.length ? false : true
 
-        return { employeesAvailable, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, workingOverrideEvents }
+        return { employeesAvailableThatDay, defaultLunchBreaks, noEmployeesAvailability, minWorkingHour, maxWorkingHour, concernedAbsenceEvents, concernedWorkingOverrideEvents }
 
     }, [selectedEmployeesArray, dtDay, absences, defaultStart, defaultEnd, workingOverrides])
 
@@ -151,7 +151,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
 
     // VERIFICATION THAT THE SHOP IS NOT CLOSED OR ALL EMPLOYEES ABSENT
-    const eventsAvailability = useMemo(() => {
+    const dayAvailability = useMemo(() => {
 
         const concernedClosureEvents = []
 
@@ -169,12 +169,12 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             return { noAvailabilities: true, concernedClosureEvents }
         }
 
-        const { noEmployeesAvailability } = selectedEmployeesAvailabilities
+        const { noEmployeesAvailability } = selectedEmployeesAvailability
 
         return { noAvailabilities: noEmployeesAvailability, concernedClosureEvents }
 
 
-    }, [dtDay, closures, selectedEmployeesAvailabilities, defaultStart, defaultEnd])
+    }, [dtDay, closures, selectedEmployeesAvailability, defaultStart, defaultEnd])
 
 
 
@@ -188,9 +188,9 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         // The first event, if it is not a regular working day, must always be a marker of the type of day that will be displayed (closure, absence, dayOff, workingOverride)
         let concernedEvents = []
 
-        const { noAvailabilities, concernedClosureEvents } = eventsAvailability
+        const { noAvailabilities, concernedClosureEvents } = dayAvailability
 
-        const { concernedAbsenceEvents, workingOverrideEvents, minWorkingHour, maxWorkingHour, employeesAvailable, defaultLunchBreaks } = selectedEmployeesAvailabilities
+        const { concernedAbsenceEvents, concernedWorkingOverrideEvents, minWorkingHour, maxWorkingHour, employeesAvailableThatDay, defaultLunchBreaks } = selectedEmployeesAvailability
 
 
         // We add to concernedEvents (used in an employee schedule) the releavant informations depending on the situation. A closure (shop is closed) has priority for the display on an absence
@@ -199,13 +199,13 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
             [...concernedAbsenceEvents]
 
         // Return in case of lack of informations or no availabilities
-        if (!dtDay || !events || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailable.length) {
+        if (!dtDay || !events || noAvailabilities || !minWorkingHour || !maxWorkingHour || !employeesAvailableThatDay.length) {
 
             return { concernedEvents, minWorkingHour: isClosed ? null : minWorkingHour, maxWorkingHour: isClosed ? null : maxWorkingHour }
         }
 
-        // If there are workingOverrideEvents, we add them to concernedEvents (they will not be directly displayed but we'll have their infos for updates)
-        workingOverrideEvents.length && concernedEvents.push(...workingOverrideEvents)
+        // If there are concernedWorkingOverrideEvents, we add them to concernedEvents (they will not be directly displayed but we'll have their infos for updates)
+        concernedWorkingOverrideEvents.length && concernedEvents.push(...concernedWorkingOverrideEvents)
 
 
 
@@ -216,7 +216,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
         for (let event of events) {
 
             if (isSameDay(event.start, dtDay)
-                && employeesAvailable.some(e => e._id.toString() === event.employee.toString())) {
+                && employeesAvailableThatDay.some(e => e._id.toString() === event.employee.toString())) {
 
                 concernedEvents.push(event)
 
@@ -237,7 +237,7 @@ export default function useScheduleEvents(dtDate, selectedEmployees, events, clo
 
         return { concernedEvents, minWorkingHour, maxWorkingHour }
 
-    }, [eventsAvailability, selectedEmployeesAvailabilities, events, dtDay])
+    }, [dayAvailability, selectedEmployeesAvailability, events, dtDay])
 
 
     return dayEventsSchedule

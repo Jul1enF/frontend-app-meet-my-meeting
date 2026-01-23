@@ -16,11 +16,11 @@ export default memo(function Schedule({ scheduleContext }) {
 
 
     // Memoised props
-    const { events, closures, absences, workingOverrides, appointmentGapMs, selectedEmployee, selectedDate, defaultSchedule, setEventStart, setOldEvent, resetAndRenewEvents } = scheduleContext
+    const { events, closures, absences, workingOverrides, slotGapMs, selectedEmployee, selectedDate, defaultSchedule, setEventStart, setOldEvent, resetAndRenewEvents } = scheduleContext
 
 
     // Height of one minutes and appointment gap duration in minutes
-    const appointmentGapMin = useMemo(() => appointmentGapMs / 1000 / 60, [appointmentGapMs])
+    const appointmentGapMin = useMemo(() => slotGapMs / 1000 / 60, [slotGapMs])
     const minuteHeight = phoneDevice ? RPW(1.5) : 8
 
     // Hook to get the events, the appointments slots and the working hours
