@@ -9,7 +9,11 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview",
+      "env": {
+        "EXPO_PUBLIC_BACK_ADDRESS": "https://backend-meet-my-meeting.vercel.app"
+      }
     },
     "production": {
       "autoIncrement": false,

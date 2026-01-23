@@ -1,22 +1,40 @@
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 
 import { appStyle } from '@styles/appStyle';
 
 import WeekDatePicker from "../week-date-picker/WeekDatePicker";
 import EmployeeSelection from "../../../selection/EmployeeSelection";
+import RefreshButton from "./RefreshButton";
 
 
-export default function StickyHeader({stickyComponent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, firstWeekDay, setFirstWeekDay, isSticky = false, refreshData }) {
+export default function StickyHeader({ stickyComponent, selectedDate, setSelectedDate, employees, selectedEmployee, setSelectedEmployee, _id, firstWeekDay, setFirstWeekDay, isSticky = false, refreshData }) {
 
     return (
-        <View style={ isSticky ? 
+        <View style={isSticky ?
             { width: "100%", position: "absolute", top: 0, zIndex: 1, opacity: stickyComponent ? 1 : 0, pointerEvents: stickyComponent ? "auto" : "none", backgroundColor: appStyle.pageBody.backgroundColor }
-            : { width: "100%", opacity: stickyComponent ? 0 : 1, pointerEvents: stickyComponent ? "none" : "auto" } }
-         >
+            : { width: "100%", opacity: stickyComponent ? 0 : 1, pointerEvents: stickyComponent ? "none" : "auto" }}
+        >
             <WeekDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} />
 
-            <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} refreshData={refreshData} />
+
+            <View style={styles.row}>
+                <EmployeeSelection employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} />
+
+                <RefreshButton refreshData={refreshData} />
+            </View>
+
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    row: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        backgroundColor: appStyle.pageBody.backgroundColor,
+        paddingVertical: appStyle.regularMarginTop * 0.5,
+    }
+})

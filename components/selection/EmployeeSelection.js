@@ -1,13 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useMemo, memo, useRef, useEffect, useState } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import Autocomplete from '@components/ui/Autocomplete';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id, isInRedactionComponent = false, refreshData }) {
+export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id, isInRedactionComponent = false }) {
 
     const employeesAutocompleteList = useMemo(() => {
         if (!employees) return null
@@ -68,8 +66,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
 
 
     return (
-        <View style={isInRedactionComponent ? {} : styles.mainContainer}>
-
+        <>
             {employeesAutocompleteList &&
                 <Autocomplete
                     data={employeesAutocompleteList}
@@ -95,33 +92,6 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     ref={autocompleteRef}
                     multiline={isInRedactionComponent ? true : false}
                 />}
-
-
-                 {!isInRedactionComponent &&
-                <TouchableOpacity activeOpacity={0.6} style={styles.refreshIconContainer} onPress={refreshData}>
-                    <MaterialCommunityIcons name="refresh" size={phoneDevice ? RPW(7) : 42} color="black" />
-                </TouchableOpacity>
-            }
-
-        </View>
+        </>
     )
-})
-
-const styles = StyleSheet.create({
-    mainContainer: {
-        width: "100%",
-        flexDirection : "row",
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        backgroundColor: appStyle.pageBody.backgroundColor,
-        paddingVertical: appStyle.regularMarginTop * 0.5,
-    },
-    refreshIconContainer: {
-        height : appStyle.largeItemHeight,
-        aspectRatio : 1,
-        backgroundColor : "rgb(192, 192, 192)",
-        justifyContent : "center",
-        alignItems : "center",
-        borderRadius : appStyle.regularItemBorderRadius,
-    },
 })
