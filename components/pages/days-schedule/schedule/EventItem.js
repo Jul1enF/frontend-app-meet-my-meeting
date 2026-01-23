@@ -14,7 +14,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
 
     const { start, end, defaultStart, defaultEnd, description, category, appointment_type, client, unregistered_client } = event
 
-    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || category === "workingOverride" ) return <></>
+    if ((!start && !defaultStart) || (!end && !defaultEnd) || !dtDayWorkingHours || category === "workingOverride") return <></>
 
     else {
         const { dtDayStart, dtDayEnd } = dtDayWorkingHours
@@ -26,9 +26,9 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
         const eventMinDuration = defaultStart ? getMinDuration(defaultStart, defaultEnd) : getMinDuration(start, end)
 
         const fullHeight = eventMinDuration * minuteHeight
-        const height = fullHeight * 0.94
+        let adjustedHeight = fullHeight * 0.94
         const fullTop = eventMinFromStart * minuteHeight
-        const top = fullTop + (fullHeight * 0.03)
+        let adjustedTop = fullTop + (fullHeight * 0.03)
 
         const detailsFontSize = eventMinDuration > 15 ? appStyle.regularText.fontSize : appStyle.smallText.fontSize
 
@@ -40,6 +40,10 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
         let paddingTop = 5
         let justifyContent = "space-evenly"
         let rowGap
+        let timeRange = ""
+
+        const getTimeRange = () =>
+            `  ${toParisDt(event.start).toFormat('HH:mm')} - ${toParisDt(event.end).toFormat('HH:mm')}`
 
 
         switch (category) {
@@ -49,6 +53,11 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                     rowGap = phoneDevice ? RPW(7) : 40
                 }
                 color = "rgba(183, 162, 2, 1)"
+                timeRange = getTimeRange()
+                if (eventMinDuration > 90) {
+                    adjustedHeight = fullHeight * 0.98
+                    adjustedTop = fullTop + (fullHeight * 0.01)
+                }
                 break;
             case "closure":
             case "absence":
@@ -65,7 +74,12 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
             case "break":
                 color = "rgba(119, 166, 0, 1)"
                 justifyContent = "center"
+                timeRange = getTimeRange()
                 if (eventMinDuration > 15) rowGap = phoneDevice ? RPW(3) : 20
+                if (eventMinDuration > 90) {
+                    adjustedHeight = fullHeight * 0.98
+                    adjustedTop = fullTop + (fullHeight * 0.01)
+                }
                 break;
         }
 
@@ -87,7 +101,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
             const numberOfItems = Math.floor(fullHeight / (90 * minuteHeight))
             for (let i = 0; i < numberOfItems; i++) {
                 itemDetails.push(
-                    <View style={{ justifyContent: "center", alignItems: "center", height: height / numberOfItems, maxWidth: "100%", rowGap: phoneDevice ? RPW(3) : 20 }} key={i}>
+                    <View style={{ justifyContent: "center", alignItems: "center", height: fullHeight / numberOfItems, maxWidth: "100%", rowGap: phoneDevice ? RPW(3) : 20 }} key={i}>
 
                         <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
                             {eventCatTranslation[category]}
@@ -110,7 +124,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                 )
             }
             return itemDetails
-        }, [fullHeight, height, category, end, start, description, categoryFontSize, eventDetails])
+        }, [fullHeight, category, end, start, description, categoryFontSize, eventDetails])
 
         const isFullDayItem = category === "closure" || category === "absence" || category === "dayOff"
 
@@ -118,8 +132,8 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
 
         return (
             <View style={[styles.mainContainer, rowGap && { rowGap }, {
-                top: isFullDayItem ? fullTop : top,
-                height: isFullDayItem ? fullHeight : height,
+                top: isFullDayItem ? fullTop : adjustedTop,
+                height: isFullDayItem ? fullHeight : adjustedHeight,
                 backgroundColor: color,
                 paddingTop,
                 justifyContent,
@@ -134,6 +148,11 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                     <>
                         <Text style={[styles.categoryTitle, { fontSize: categoryFontSize }]}>
                             {eventCatTranslation[category]}
+                            {timeRange &&
+                                <Text style={[eventDetails, styles.eventDetailsTitle]} >
+                                    {timeRange}
+                                </Text>
+                            }
                             {(category === "appointment" || description) && " :"}
                         </Text>
 

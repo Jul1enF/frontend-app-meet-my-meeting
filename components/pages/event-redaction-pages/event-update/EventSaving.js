@@ -12,6 +12,9 @@ import useSessionExpired from '@hooks/useSessionExpired';
 import Button from '@components/ui/Button';
 import ConfirmationModal from '@components/ui/ConfirmationModal';
 
+import { DateTime } from 'luxon';
+import { isBefore } from '@utils/timeFunctions';
+
 
 export default function EventSaving({ selectedEmployee, eventStart, oldEvent, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, availableSlots, resetAndRenewEvents, clientRedaction }) {
 
@@ -46,7 +49,12 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
                 return
             }
             if (!availableSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
-                displayWarning(availableSlots.length ? "Erreur : Le rdv ne rentre pas dans le créneau" : "Erreur : Aucun créneau disponible ce jour pour ces critères !")
+                const isEventStartInPast = isBefore(eventStart, DateTime.now({ zone: "Europe/Paris" }))
+
+                const slotWarning = !availableSlots.length ? "Erreur : aucun créneau disponible ce jour pour ces critères !" :
+                    `Erreur : ${isEventStartInPast ? "l'heure de début du rendez vous est déjà passée " : "le rdv ne rentre pas dans le créneau "}! Merci de choisir un autre horaire.`
+
+                displayWarning(slotWarning)
                 return
             }
 
@@ -71,7 +79,9 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
                 return
             }
             if (!availableSlots.some(e => e.start.toMillis() === eventStart.toMillis())) {
-                displayWarning("Erreur : La pause ne rentre pas dans le créneau")
+                const isEventStartInPast = isBefore(eventStart, DateTime.now({ zone: "Europe/Paris" }))
+
+                displayWarning(`Erreur : ${isEventStartInPast ? "l'heure de début de la pause est déjà passée " : "la pause ne rentre pas dans le créneau "}! Merci ${isEventStartInPast ? "" : "de changer sa durée ou "}de choisir un autre horaire.`)
                 return
             }
 
@@ -146,7 +156,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
             const { eventSaved } = data
             const delay = data.delay ?? 0
             setTimeout(() => {
-                resetAndRenewEvents( eventSaved, oldEvent?._id ? "update" : "create", clientRedaction ? "appointments" : "schedule")
+                resetAndRenewEvents(eventSaved, oldEvent?._id ? "update" : "create", clientRedaction ? "appointments" : "schedule")
 
                 clientRedaction && dispatch(updateEvent(eventSaved))
             }, delay)

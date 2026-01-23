@@ -1,5 +1,5 @@
 import { TextInput, Text, View } from "react-native";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import EmployeeSelection from "@components/selection/EmployeeSelection";
 import ProsAppointmentInputs from "./ProsAppointmentInputs";
@@ -12,6 +12,7 @@ import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import { DateTime } from "luxon";
+import { isBefore } from "@utils/timeFunctions";
 
 export default function AppointmentInputs({ eventRedactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, availableSlots, clientRedaction }) {
 
@@ -19,7 +20,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
     const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate, maxFuturDays } = eventRedactionContext
 
     // Creation with a hook of the autocomplete lists
-    const { appointmentsList, usersList, availableSlotsList } = useAutocompleteLists({appointmentTypes, users, availableSlots, eventStart})
+    const { appointmentsList, usersList, availableSlotsList } = useAutocompleteLists({ appointmentTypes, users, availableSlots, eventStart })
 
     const [slotWarning, setSlotWarning] = useState("")
 
@@ -29,7 +30,12 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
         if (!availableSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            setSlotWarning(`Erreur : ${!availableSlotsList.length ? "aucun créneau disponible ce jour pour ces critères !" : "le rdv ne rentre pas dans le créneau ! Merci de choisir un autre horaire ci dessous :"}`)
+            const isEventStartInPast = isBefore(eventStart, DateTime.now({ zone: "Europe/Paris" }))
+
+            const slotWarningText = !availableSlotsList.length ? "aucun créneau disponible ce jour pour ces critères !" :
+                `${isEventStartInPast ? "l'heure de début du rendez vous est déjà passée " : "le rdv ne rentre pas dans le créneau "}! Merci de choisir un autre horaire ci dessous :`
+
+            setSlotWarning("Erreur : " + slotWarningText)
             setTimeout(() => setSlotWarning(""), 5000)
         }
     }, [selectedAppointmentType, availableSlotsList])
@@ -42,29 +48,12 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
 
     // Clear the appointment type autocomplete if the selected type has been cleared in EventSaving after an attempt to save an event with a suppressed type. For oldEvent cases (modifications) it is handle in useSetOldEvent by displaying "SUPPRIMÉ"
     const appointmentTypeRef = useRef(null)
-    useEffect(()=>{
-        if (!selectedAppointmentType && appointmentTypeRef.current && typesAutocompleteRef.current && !oldEvent){
+    useEffect(() => {
+        if (!selectedAppointmentType && appointmentTypeRef.current && typesAutocompleteRef.current && !oldEvent) {
             typesAutocompleteRef.current.clear()
         }
-    },[selectedAppointmentType])
+    }, [selectedAppointmentType])
 
-
-    // Memoisation of the Autocomplete for the appointments slots
-    const slotsAutocomplete = useMemo(() => (
-        <Autocomplete
-            key={availableSlotsList ? availableSlotsList.length : "key"}
-            data={availableSlotsList ?? []}
-            placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
-            initialValue={"initialValue"}
-            showClear={false}
-            editable={false}
-            setSelectedItem={(item) => item?.start && setEventStart(item?.start)}
-            emptyText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
-            width="100%"
-            suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
-            listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-        />
-    ), [availableSlotsList, eventStart, selectedAppointmentType])
 
 
     return (
@@ -87,7 +76,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                 editable={false}
             />
 
-             {oldEvent &&
+            {oldEvent &&
                 <>
                     <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop }}>
                         Avec :
@@ -100,12 +89,12 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                         Le  :
                     </Text>
 
-                    <DatePicker chosenDate={selectedDate} setChosenDate={(date)=>{
+                    <DatePicker chosenDate={selectedDate} setChosenDate={(date) => {
                         setSelectedDate(date)
                         setEventStart(prev => prev.set({ year: date.year, month: date.month, day: date.day }))
-                    }}  
-                    buttonFontStyle={{ fontWeight : "700"}} buttonStyle={{...appStyle.largeCardItem, height : appStyle.mediumItemHeight}}
-                    maxDate={(clientRedaction && maxFuturDays) ? DateTime.now({zone : "Europe/Paris"}).endOf('day').plus({days : maxFuturDays}) : null} />
+                    }}
+                        buttonFontStyle={{ fontWeight: "700" }} buttonStyle={{ ...appStyle.largeCardItem, height: appStyle.mediumItemHeight }}
+                        maxDate={(clientRedaction && maxFuturDays) ? DateTime.now({ zone: "Europe/Paris" }).endOf('day').plus({ days: maxFuturDays }) : null} />
                 </>
             }
 
@@ -114,17 +103,29 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
             </Text>
 
 
-            {slotsAutocomplete}
+            <Autocomplete
+                key={availableSlotsList ? availableSlotsList.length : "key"}
+                data={availableSlotsList ?? []}
+                placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
+                initialValue={"initialValue"}
+                showClear={false}
+                editable={false}
+                setSelectedItem={(item) => item?.start && setEventStart(item?.start)}
+                emptyText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
+                width="100%"
+                suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
+                listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
+            />
 
 
             {!clientRedaction &&
                 <ProsAppointmentInputs usersList={usersList} usersAutocompleteRef={usersAutocompleteRef} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} />
             }
 
-            
+
             {(!oldEvent && selectedEmployee) &&
                 <Text style={{ ...appStyle.regularText, marginTop: appStyle.mediumMarginTop, color: appStyle.fontColorDarkBg, fontWeight: "500" }}>
-                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, fontWeight: "700", textAlign : "center" }}>
+                    <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, fontWeight: "700", textAlign: "center" }}>
                         Avec :
                     </Text>
                     {`  ${selectedEmployee.first_name ? (selectedEmployee.first_name + " ") : ""}${selectedEmployee.last_name ?? ""}`}

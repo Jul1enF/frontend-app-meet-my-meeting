@@ -8,6 +8,9 @@ import DurationPicker from './DurationPicker';
 import Autocomplete from '@components/ui/Autocomplete';
 import useAutocompleteLists from '../event-update/useAutocompleteLists';
 
+import { DateTime } from 'luxon';
+import { isBefore } from '@utils/timeFunctions';
+
 
 export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, availableSlots, description, setDescription, category }) {
 
@@ -24,7 +27,9 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
         if (!availableSlotsList.some(e =>
             e.start.toMillis() === eventStart.toMillis()
         )) {
-            setSlotWarning("Erreur : la pause ne rentre pas dans le créneau ! Merci de changer sa durée ou de choisir un autre horaire ci dessous :")
+            const isEventStartInPast = isBefore(eventStart, DateTime.now({ zone: "Europe/Paris" }))
+
+            setSlotWarning(`Erreur : ${isEventStartInPast ? "l'heure de début de la pause est déjà passée " : "la pause ne rentre pas dans le créneau "}! Merci ${isEventStartInPast ? "" : "de changer sa durée ou "}de choisir un autre horaire ci dessous :`)
             setTimeout(() => setSlotWarning(""), 6000)
         }
     }, [breakDuration, availableSlotsList])
