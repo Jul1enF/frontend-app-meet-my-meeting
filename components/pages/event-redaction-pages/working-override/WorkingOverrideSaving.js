@@ -85,7 +85,7 @@ export default function WorkingOverrideSaving({ oldEvent, workingSchedule, reset
                 {eventWarning}
             </Text>
 
-            <Button func={eventValidation} text={`${oldEvent?.category === "dayOff" ? "Rajouter" : "Modifier"} cette journée de travail`} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop, width : "100%" }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={eventValidation} text={`${oldEvent?.category === "dayOff" ? "Rajouter" : "Modifier"} ce jour de travail`} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop, width : "100%" }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
             < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={`Êtes vous sûr(e) de vouloir ${!oldEvent?._id ? "enregistrer" : "modifier"} cette journée de travail ?`} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />
