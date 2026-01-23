@@ -1,12 +1,13 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useMemo, memo, useRef, useEffect, useState } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import Autocomplete from '@components/ui/Autocomplete';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id, isInRedactionComponent = false }) {
+export default memo(function EmployeeSelection({ employees, selectedEmployee, setSelectedEmployee, _id, isInRedactionComponent = false, refreshData }) {
 
     const employeesAutocompleteList = useMemo(() => {
         if (!employees) return null
@@ -23,10 +24,12 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
 
 
 
-    // Ref and useEffect to change the selected employee if it has been changed elsewhere (on the other version of the sticky header or in an event update)
+    // Ref for the autocomplete
     const autocompleteRef = useRef(null)
+    // state to register THIS autocomplete value to compare it to selectedEmployee
     const [autocompleteItem, setAutocompleteItem] = useState(null)
 
+    // useEffect to change the selected employee if it has been changed elsewhere (on the other version of the sticky header or in an event update)
     useEffect(() => {
         if (
             selectedEmployee?._id
@@ -38,17 +41,17 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
             )
 
             // If the employee is no longer in the team
-            if (!employeeFound){
+            if (!employeeFound) {
                 const suppressedEmployee = {
-                title: "Ce professionnel ne fait plus partie de l'équipe !",
-                id: "suppressedEmployee",
-            }
+                    title: "Ce professionnel ne fait plus partie de l'équipe !",
+                    id: "suppressedEmployee",
+                }
 
-            autocompleteRef.current.setItem(suppressedEmployee)
+                autocompleteRef.current.setItem(suppressedEmployee)
 
-            setSelectedEmployee(null)
+                setSelectedEmployee(null)
             }
-            else{
+            else {
                 autocompleteRef.current.setItem(employeeFound)
             }
 
@@ -74,17 +77,17 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     editable={false}
                     setSelectedItem={updateSelectedEmployees}
                     initialValue={"default"}
-                    width={isInRedactionComponent ? "100%" : null}
+                    width={isInRedactionComponent ? "100%" : appStyle.largeItemWidth * 0.85}
                     inputStyle={{
                         fontWeight: "600",
                         color: isInRedactionComponent ? appStyle.fontColorDarkBg : appStyle.strongBlack,
                         fontSize: appStyle.largeText.fontSize,
-                        ...(isInRedactionComponent && {height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight})
+                        ...(isInRedactionComponent && { height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight })
                     }}
                     inputContainerStyle={{
                         borderColor: isInRedactionComponent ? appStyle.lightGrey : appStyle.strongBlack,
                         ...(!isInRedactionComponent && { marginTop: 0 }),
-                        ...(isInRedactionComponent && { height : "auto"})
+                        ...(isInRedactionComponent && { height: "auto" })
                     }}
                     placeholderColor={appStyle.mediumGrey}
                     iconColor={isInRedactionComponent ? null : appStyle.strongBlack}
@@ -93,6 +96,13 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     multiline={isInRedactionComponent ? true : false}
                 />}
 
+
+                 {!isInRedactionComponent &&
+                <TouchableOpacity activeOpacity={0.6} style={styles.refreshIconContainer} onPress={refreshData}>
+                    <MaterialCommunityIcons name="refresh" size={phoneDevice ? RPW(7) : 42} color="black" />
+                </TouchableOpacity>
+            }
+
         </View>
     )
 })
@@ -100,9 +110,18 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
 const styles = StyleSheet.create({
     mainContainer: {
         width: "100%",
+        flexDirection : "row",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
         backgroundColor: appStyle.pageBody.backgroundColor,
         paddingVertical: appStyle.regularMarginTop * 0.5,
-    }
+    },
+    refreshIconContainer: {
+        height : appStyle.largeItemHeight,
+        aspectRatio : 1,
+        backgroundColor : "rgb(192, 192, 192)",
+        justifyContent : "center",
+        alignItems : "center",
+        borderRadius : appStyle.regularItemBorderRadius,
+    },
 })

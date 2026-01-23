@@ -67,6 +67,9 @@ export default function DaysSchedule() {
     // refreshControl for the ScrollView
     const refreshControl = useRefreshControl(()=> getScheduleInformations(scheduleInformations))
 
+    // Refresh function for the stickyHeader
+    const refreshData = () => getScheduleInformations(scheduleInformations)
+
     // Custom sticky header settings
     const [stickyComponent, setStickyComponent] = useState(false)
     const [pageTitleHeight, setPageTitleHeight] = useState(0)
@@ -88,7 +91,7 @@ export default function DaysSchedule() {
 
 
             {/* Sticky Header after the pageTitle bottom is reached */}
-            <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={true} />
+            <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={true} refreshData={refreshData} />
 
 
             <ScrollView overScrollMode="never" style={{ flex: 1 }}
@@ -123,7 +126,7 @@ export default function DaysSchedule() {
 
 
                 {/* Sticky Header before it reached the top */}
-                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={false} />
+                <StickyHeader stickyComponent={stickyComponent} selectedDate={selectedDate} setSelectedDate={setSelectedDate} employees={employees} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} _id={_id} firstWeekDay={firstWeekDay} setFirstWeekDay={setFirstWeekDay} isSticky={false} refreshData={refreshData} />
 
 
                 <Schedule scheduleContext={scheduleContext} />

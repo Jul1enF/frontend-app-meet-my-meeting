@@ -191,9 +191,9 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                                     </Text>
 
                                     {" "}
-                                    {unregistered_client?.last_name ?? client?.last_name ?? null}
-                                    {" "}
                                     {unregistered_client?.first_name ?? client?.first_name ?? null}
+                                    {" "}
+                                    {unregistered_client?.last_name ?? client?.last_name ?? null}
                                 </Text>
                             </View>
                         }

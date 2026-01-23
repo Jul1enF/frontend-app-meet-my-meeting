@@ -45,10 +45,10 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
             <TextInput
                 style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
-                    setUnregisteredClient(prev => ({ ...prev, last_name: e }))
+                    setUnregisteredClient(prev => ({ ...prev, first_name: e }))
                 }}
-                value={unregisteredClient.last_name}
-                placeholder='Nom'
+                value={unregisteredClient.first_name}
+                placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
             />
@@ -56,10 +56,10 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
             <TextInput
                 style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
-                    setUnregisteredClient(prev => ({ ...prev, first_name: e }))
+                    setUnregisteredClient(prev => ({ ...prev, last_name: e }))
                 }}
-                value={unregisteredClient.first_name}
-                placeholder='Prénom'
+                value={unregisteredClient.last_name}
+                placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
             />
