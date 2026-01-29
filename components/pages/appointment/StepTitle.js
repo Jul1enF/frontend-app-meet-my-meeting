@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
         ...appStyle.pageSubtitle,
         textAlign: "left",
         width: "100%",
-        paddingHorizontal: appStyle.regularLateralPadding,
+        paddingHorizontal: appStyle.regularHorizontalPadding,
         color: appStyle.fontColorDarkBg,
     },
     chevronIcon: {
         position: "absolute",
-        right: appStyle.regularLateralPadding,
+        right: appStyle.regularHorizontalPadding,
     },
 })

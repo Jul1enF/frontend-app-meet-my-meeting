@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
         width: "90%",
         borderRadius: appStyle.regularItemBorderRadius,
         position: "absolute",
-        paddingHorizontal: phoneDevice ? appStyle.regularLateralPadding * 0.5 : appStyle.regularLateralPadding,
+        paddingHorizontal: phoneDevice ? appStyle.regularHorizontalPadding * 0.5 : appStyle.regularHorizontalPadding,
         paddingBottom: phoneDevice ? RPW(1) : 5,
         alignItems: "center",
         opacity: 0.95,

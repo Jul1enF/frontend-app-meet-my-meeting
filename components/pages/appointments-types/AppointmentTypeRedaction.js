@@ -104,7 +104,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
             overScrollMode="never"
             bottomOffset={Platform.OS === 'ios' ? 40 : 20}
         >
-            <Text style={[appStyle.pageTitle, { paddingHorizontal: appStyle.cardLateralPadding * 0.9, lineHeight: phoneDevice ? RPW(8) : 60 }]} >
+            <Text style={[appStyle.pageTitle, { paddingHorizontal: appStyle.cardHorizontalPadding * 0.9, lineHeight: phoneDevice ? RPW(8) : 60 }]} >
                 {!selectedType ? "Création d'un nouveau modèle" : "Modifier un modèle"}
             </Text>
 

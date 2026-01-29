@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         paddingBottom: 0,
         paddingTop: 0,
-        paddingLeft : appStyle.regularLateralPadding,
+        paddingLeft : appStyle.regularHorizontalPadding,
     },
     suggestionsListContainer: {
         backgroundColor: appStyle.strongGrey2,

@@ -147,7 +147,7 @@ export default function UserAppointments() {
                     flatlistRef.current.scrollToIndex({ animated: false, index: event.index })
                 }}
                 ListHeaderComponent={faltlistHeader}
-                ListHeaderComponentStyle={{ marginVertical: appStyle.largeMarginTop, paddingHorizontal: appStyle.regularLateralPadding }}
+                ListHeaderComponentStyle={{ marginVertical: appStyle.largeMarginTop, paddingHorizontal: appStyle.regularHorizontalPadding }}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item, index }) =>

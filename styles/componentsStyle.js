@@ -14,12 +14,12 @@ const mediumItemHeight = phoneDevice ? RPW(10.8) : 68
 const largeItemWidth = phoneDevice ? RPW(92) : 700
 const largeItemHeight = phoneDevice ? RPW(12) : 78
 
-const regularLateralPadding = phoneDevice ? RPW(3) : 20
-const cardLateralPadding = phoneDevice ? RPW(5) : 30
+const regularHorizontalPadding = phoneDevice ? RPW(3) : 20
+const cardHorizontalPadding = phoneDevice ? RPW(5) : 30
 
 const regularMarginTop = phoneDevice ? RPW(3) : 25
 const mediumMarginTop = phoneDevice ? RPW(4.75) : 38
-const largeMarginTop = phoneDevice ? RPW(7) : 50
+const largeMarginTop = phoneDevice ? RPW(7) : 50  // page padding top
 const veryLargeMarginTop = phoneDevice ? RPW(9.5) : 70
 
 const pagePaddingBottom = phoneDevice ? RPW(15) : 120
@@ -30,11 +30,11 @@ const pagePaddingBottom = phoneDevice ? RPW(15) : 120
 const card = {
     paddingTop: phoneDevice ? RPW(6) : 45,
     paddingBottom: phoneDevice ? RPW(6.5) : 50,
-    paddingHorizontal: cardLateralPadding,
+    paddingHorizontal: cardHorizontalPadding,
     borderRadius: regularItemBorderRadius,
     marginTop: largeMarginTop,
     alignItems: "center",
-    width: (cardLateralPadding * 2) + regularItemWidth,
+    width: (cardHorizontalPadding * 2) + regularItemWidth,
     backgroundColor: darkGrey,
 }
 
@@ -49,7 +49,7 @@ const regularItem = {
     width: regularItemWidth,
     borderRadius: regularItemBorderRadius,
     marginTop: regularMarginTop,
-    paddingHorizontal: regularLateralPadding,
+    paddingHorizontal: regularHorizontalPadding,
 }
 
 const largeItem = {
@@ -57,7 +57,7 @@ const largeItem = {
     width: largeItemWidth,
     borderRadius: regularItemBorderRadius,
     marginTop: regularMarginTop,
-    paddingHorizontal: regularLateralPadding,
+    paddingHorizontal: regularHorizontalPadding,
 }
 
 const largeCardItem = {
@@ -147,8 +147,8 @@ export const componentsStyle = {
     largeItemWidth,
     largeItemHeight,
 
-    regularLateralPadding,
-    cardLateralPadding,
+    regularHorizontalPadding,
+    cardHorizontalPadding,
     pagePaddingBottom,
 
     regularMarginTop,

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     chevronIcon: {
         position: "absolute",
-        right: appStyle.regularLateralPadding,
+        right: appStyle.regularHorizontalPadding,
     },
     typeContainer: {
         minWidth: "100%",
