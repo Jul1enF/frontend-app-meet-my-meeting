@@ -120,6 +120,19 @@ export default function Signin({ setSignForm, func }) {
                     </TouchableOpacity>
 
                 </View>
+            
+            <View style={[appStyle.largeItem, {backgroundColor : "red", justifyContent : "center"}]}>
+                <Text style={[appStyle.largeText, {color : appStyle.fontColorDarkBg, textAlign : "center"}]}>
+                    Test Large Item
+                </Text>
+            </View>
+
+
+            <View style={[appStyle.regularItem, {backgroundColor : "red", justifyContent : "center"}]}>
+                <Text style={[appStyle.largeText, {color : appStyle.fontColorDarkBg, textAlign : "center"}]}>
+                    Test Regular Item
+                </Text>
+            </View>
 
 
             </KeyboardAwareScrollView>

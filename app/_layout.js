@@ -4,6 +4,8 @@ import * as ScreenOrientation from 'expo-screen-orientation'
 import { phoneDevice } from "../utils/dimensions"
 import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
+import useUpdateRPW from "@hooks/useUpdateRPW";
+
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
@@ -23,6 +25,10 @@ const store = configureStore({
         getDefaultMiddleware({ serializableCheck: false })
 })
 
+export const unstable_settings = {
+  initialRouteName: "home",
+};
+
 export default function RootLayout() {
 
     const unlockPortraitModeTablet = async () => {
@@ -35,6 +41,9 @@ export default function RootLayout() {
 
     // Check if the version of the app is obsolete to eventually block it
     const appObsolete = useIsAppObsolete()
+
+    // Update RPW for phones if they are has been some changes (accessibility zoom)
+    const refreshRPW = useUpdateRPW()
 
     return (
         <Provider store={store}>

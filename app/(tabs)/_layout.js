@@ -21,6 +21,7 @@ export default function TabsLayout() {
       screenOptions={({ route }) => ({
         headerShown: false,
         keyboardHidesTabBar: true,
+        tabBarAllowFontScaling : false,
 
         tabBarIcon: ({ focused }) => {
           let iconName = '';
@@ -51,7 +52,7 @@ export default function TabsLayout() {
             colors={[appStyle.strongRed, appStyle.strongBlack]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
-            style={{ height: 150 }}
+            style={{ flex: 1 }}
           ></LinearGradient>
         ),
 

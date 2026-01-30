@@ -8,10 +8,11 @@ const { regularText } = fontsStyle
 const regularItemWidth = phoneDevice ? RPW(67) : 510
 const regularItemHeight = phoneDevice ? RPW(9) : 55
 const regularItemBorderRadius = phoneDevice ? RPW(2.5) : 18
+const regularItemVertPadding = phoneDevice ? RPW(1.8) : 10
 
 const mediumItemHeight = phoneDevice ? RPW(10.8) : 68
 
-const largeItemWidth = phoneDevice ? RPW(92) : 700
+const largeItemWidth = phoneDevice ? RPW(92) : Math.min(700, RPW(100), RPH(100)) // small android tablets can be smaller than 700 dp
 const largeItemHeight = phoneDevice ? RPW(12) : 78
 
 const regularHorizontalPadding = phoneDevice ? RPW(3) : 20
@@ -41,12 +42,15 @@ const card = {
 const largeCard = {
     ...card,
     width : largeItemWidth,
+    maxWidth : largeItemWidth,
     paddingBottom: phoneDevice ? RPW(12) : 70,
 }
 
 const regularItem = {
-    height: regularItemHeight,
+    minHeight: regularItemHeight,
+    paddingVertical : regularItemVertPadding,
     width: regularItemWidth,
+    maxWidth: regularItemWidth,
     borderRadius: regularItemBorderRadius,
     marginTop: regularMarginTop,
     paddingHorizontal: regularHorizontalPadding,
@@ -63,8 +67,10 @@ const largeItem = {
 const largeCardItem = {
     ...largeItem,
     width : "100%",
+    maxWidth : "100%",
 }
 
+// On android there is default padding top and bottom on text input that we need to override
 const inputVertPadding = {
     paddingBottom: 0,
     paddingTop: 0,
@@ -77,6 +83,7 @@ const lightGreyBorder = {
 
 
 
+// EXPORT
 export const componentsStyle = {
     // Main sizes of the app
     headerHeight: phoneDevice ? RPW(16) : 105,

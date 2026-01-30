@@ -46,7 +46,7 @@ export default function Header({appObsolete}) {
                         <FontAwesome name="navicon" style={styles.icon} size={phoneDevice ? RPW(6) : 38} />
                     </TouchableOpacity>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.title}>
+                        <Text style={styles.title} allowFontScaling={false}>
                             Meet My Meeting
                         </Text>
                     </View>
