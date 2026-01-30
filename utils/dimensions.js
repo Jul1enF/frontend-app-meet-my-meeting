@@ -4,7 +4,7 @@ import { Dimensions, Platform } from "react-native";
 const screenHeight = Dimensions.get('window').height
 const fullScreenHeight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('window').width
-
+console.log()
 
 export const RPH = (percentage) => {
 
