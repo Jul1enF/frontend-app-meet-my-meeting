@@ -61,6 +61,10 @@ export default function TabsLayout() {
 
       })}
     >
+       <Tabs.Screen name="index" options={{
+        tabBarItemStyle: { display: "none" },
+        title: "Accueil",
+      }} />
       <Tabs.Screen name="date-picker" options={{
         title: "Date Picker",
       }} />

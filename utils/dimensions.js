@@ -9,7 +9,6 @@ const phoneDevice = screenWidth < 600;
 
 Dimensions.addEventListener('change', ({ window, screen }) => {
     if (phoneDevice) {
-         console.log("Here ! dimensions", new Date().toISOString())
         screenHeight = window.height;
         screenWidth = window.width;
 

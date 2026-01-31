@@ -1,10 +1,10 @@
 import { Stack } from "expo-router";
 import { useEffect } from "react";
 import * as ScreenOrientation from 'expo-screen-orientation'
-import { phoneDevice } from "../utils/dimensions"
+import { phoneDevice, RPW } from "../utils/dimensions"
+import { appStyle } from "@styles/appStyle";
 import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
-import useUpdateRPW from "@hooks/useUpdateRPW";
 
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -42,8 +42,7 @@ export default function RootLayout() {
     // Check if the version of the app is obsolete to eventually block it
     const appObsolete = useIsAppObsolete()
 
-    // Update RPW for phones if they are has been some changes (accessibility zoom)
-    const refreshRPW = useUpdateRPW()
+    console.log("RPW(100)  :", RPW(100), "RPW(1) :", RPW(1), "Header Height :", appStyle.headerHeight)
 
     return (
         <Provider store={store}>
@@ -51,9 +50,9 @@ export default function RootLayout() {
                 <KeyboardProvider>
                     <Stack screenOptions={{
                         header: (props) => <Header {...props} appObsolete={appObsolete} />,
-                    }} >
-                        <Stack.Screen name="index" />
-                        <Stack.Screen name="(tabs)" />
+                    }}
+                    >
+                        <Stack.Screen name="(tabs)"/>
                     </Stack>
                 </KeyboardProvider>
             </AutocompleteDropdownContextProvider>

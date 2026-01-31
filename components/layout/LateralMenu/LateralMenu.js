@@ -20,8 +20,8 @@ export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight,
     }
 
     const sectionsArray = [
-        { sectionName: "Accueil", link: "/home" },
-        { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/home" : "/login", func: jwtToken ? logoutUser : null },
+        { sectionName: "Accueil", link: "/" },
+        { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/" : "/login", func: jwtToken ? logoutUser : null },
     ]
 
     if (jwtToken){

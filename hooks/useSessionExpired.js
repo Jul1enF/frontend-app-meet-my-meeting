@@ -11,7 +11,7 @@ export default function useSessionExpired(sessionExpired, setSessionExpired) {
     useEffect(() => {
         if (sessionExpired) {
             setSessionExpired(false)
-            router.push("/home")
+            router.push("/")
             dispatch(logout())
             dispatch(deleteInformations())
         }
