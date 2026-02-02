@@ -93,7 +93,8 @@ export default function UsersPage() {
                 <HorizontalMenu data={usersByRoles} chosenItem={selectedRole} setChosenItem={setSelectedRole} categoryType="role" countProp="priority" />
 
                 <View style={styles.searchContainer}>
-                    <View style={styles.inputContainer}>
+
+
                         <MyTextInput
                             style={styles.searchInput}
                             value={searchText}
@@ -102,13 +103,16 @@ export default function UsersPage() {
                             placeholderTextColor={appStyle.placeholderColor}
                             placeholder='Rechercher un utilisateur...'
                         >
+
+                            <View style={[appStyle.inputIconContainer, {paddingRight : 0}]}>
+                                <FontAwesome name="search" size={appStyle.inputIconSize} color={appStyle.strongBlack} />
+                            </View>
+
                         </MyTextInput>
 
 
-                        <FontAwesome name="search" size={appStyle.inputIconSize} color={appStyle.strongBlack} />
-                    </View>
 
-                    <TouchableOpacity activeOpacity={0.6} onPress={() => setSearchText("")} style={styles.backspaceIconContainer} hitSlop={{right : appStyle.headerHorizPadd }} >
+                    <TouchableOpacity activeOpacity={0.6} onPress={() => setSearchText("")} style={styles.backspaceIconContainer} hitSlop={{ right: appStyle.headerHorizPadd }} >
                         <MaterialCommunityIcons name="backspace" size={appStyle.inputIconSize} color={appStyle.strongBlack} onPress={() => setSearchText("")} />
                     </TouchableOpacity>
                 </View>
@@ -156,27 +160,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: appStyle.headerHorizPadd,
         width: "100%",
     },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: phoneDevice ? 2 : 3,
-        borderBottomColor: appStyle.strongRed,
-    },
     searchInput: {
         ...appStyle.input.withIcon,
         ...appStyle.secondHeaderText,
         width: phoneDevice ? RPW(68) : 450,
-        maxWidth : "90%",
+        maxWidth : Math.min(RPW(80), RPH(80)),
         paddingTop: phoneDevice ? RPW(2.2) : 10,
         paddingBottom: phoneDevice ? RPW(2.2) : 10,
+        borderBottomWidth: phoneDevice ? 2 : 3,
+        borderBottomColor: appStyle.strongRed,
     },
-    backspaceIconContainer : {
-        position : "absolute",
-        right : appStyle.headerHorizPadd,
-        height : "100%",
-        width :phoneDevice ? RPW(11) : 75,
-        alignItems : "flex-end",
-        justifyContent : "center",
+    backspaceIconContainer: {
+        position: "absolute",
+        right: appStyle.headerHorizPadd,
+        height: "100%",
+        width: phoneDevice ? RPW(11) : 75,
+        alignItems: "flex-end",
+        justifyContent: "center",
     },
     modal: {
         alignItems: "flex-start",

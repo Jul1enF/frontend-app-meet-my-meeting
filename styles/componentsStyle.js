@@ -122,21 +122,17 @@ export const componentsStyle = {
             fontWeight: "700",
         },
         withIcon: {
-            paddingRight: inputIconSize * 1.75,
+            paddingRight: inputIconSize * 1.8,
         }
-    },
-    inputAndIconContainer: {
-        flexDirection: "row",
-        alignItems: "center",
     },
     inputIconContainer: {
         position: "absolute",
         height: "100%",
         right: 0,
-        bottom: phoneDevice ? RPW(-2) : -14,
-        width: inputIconSize * 1.75,
+        paddingRight : regularHorizontalPadding,
+        width: inputIconSize * 1.8,
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-end",
     },
     button: {
         alignItems: "center",

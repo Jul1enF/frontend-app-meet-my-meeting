@@ -1,4 +1,4 @@
-import { Text, View, TextInput } from 'react-native';
+import { Text, View } from 'react-native';
 import { useMemo, useState, useEffect } from 'react';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
@@ -82,7 +82,7 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
             </Text>
 
 
-            <TextInput
+            <MyTextInput
                 style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => setDescription(e)}
                 value={description}

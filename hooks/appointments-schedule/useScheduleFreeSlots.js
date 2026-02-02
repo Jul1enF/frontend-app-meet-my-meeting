@@ -56,7 +56,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
             if (employee.contract_end && isBefore(employee.contract_end, dtDay)) return
 
             // The employee is not available and his dayOff has not been override
-            const workingOverrideEvent = workingOverrides.find(e =>
+            const workingOverrideEvent = workingOverrides?.find(e =>
                 e.employee.toString() === employee._id.toString()
                 && isSameDay(e.start, dtDay)
             )
@@ -64,7 +64,7 @@ export default function useScheduleFreeSlots(dtDate, selectedEmployees, events, 
             if (!employeeDay.enabled && !workingOverrideEvent) return
 
             // The employee is not available (absence which is always full-day (00:00 → 23:59 Paris time))
-            const employeeAbsence = absences.find(absence =>
+            const employeeAbsence = absences?.find(absence =>
                 absence.employee.toString() === employee._id.toString() &&
                 isBetween(absence.start, dtDay, absence.end)
             )

@@ -40,25 +40,25 @@ export default function SearchModal({ searchVisible, setSearchVisible, screenWid
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
             >
-                <View style={styles.searchInputContainer}>
-                    <MyTextInput
-                        style={styles.searchInput}
-                        placeholder="Rechercher..."
-                        onChangeText={(e) => setSearchText(e)}
-                        value={searchText}
-                        returnKeyType="send"
-                        placeholderTextColor={appStyle.placeholderColor}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onSubmitEditing={() => submitSearch()}
-                    ></MyTextInput>
 
+                <MyTextInput
+                    style={styles.searchInput}
+                    placeholder="Rechercher..."
+                    onChangeText={(e) => setSearchText(e)}
+                    value={searchText}
+                    returnKeyType="send"
+                    placeholderTextColor={appStyle.placeholderColor}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onSubmitEditing={() => submitSearch()}
+                >
 
                     <TouchableOpacity activeOpacity={0.6} style={styles.searchIconContainer} onPress={() => submitSearch()}>
                         <FontAwesome6 name="magnifying-glass" color={appStyle.darkWhite} size={appStyle.inputIconSize * 0.9} />
                     </TouchableOpacity>
 
-                </View>
+                </MyTextInput>
+
 
 
                 <TouchableOpacity activeOpacity={0.6} style={styles.chevronContainer} onPress={() => setSearchVisible(!searchVisible)} >
@@ -78,18 +78,11 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         position: "absolute",
-        // height: appStyle.secondHeaderHeight,
         minHeight: appStyle.secondHeaderHeight,
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: appStyle.headerHorizPadd,
-    },
-    searchInputContainer: {
-        borderBottomColor: appStyle.darkWhite,
-        borderBottomWidth: phoneDevice ? 0.5 : 1,
-        flexDirection: 'row',
-        alignItems: "center",
     },
     searchInput: {
         ...appStyle.regularText,
@@ -97,13 +90,15 @@ const styles = StyleSheet.create({
         ...appStyle.secondHeaderText,
         color: appStyle.darkWhite,
         width: phoneDevice ? RPW(68) : 450,
-        maxWidth: "90%",
+        maxWidth : Math.min(RPW(80), RPH(80)),
         paddingTop: phoneDevice ? RPW(1) : 5,
         paddingBottom: phoneDevice ? RPW(1) : 5,
+         borderBottomColor: appStyle.darkWhite,
+        borderBottomWidth: phoneDevice ? 0.5 : 1,
     },
     searchIconContainer: {
         ...appStyle.inputIconContainer,
-        bottom: "auto"
+        paddingRight : 0,
     },
     chevronContainer: {
         position: "absolute",

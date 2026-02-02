@@ -27,6 +27,7 @@ export default function DaysSchedule() {
     const { employees } = scheduleInformations
     const _id = useSelector((state) => state.user.value._id)
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const role = useSelector((state) => state.user.value.role)
 
 
     // LOAD SCHEDULE INFORMATIONS FUNCTION
@@ -75,7 +76,7 @@ export default function DaysSchedule() {
     const [pageTitleHeight, setPageTitleHeight] = useState(0)
     const [firstWeekDay, setFirstWeekDay] = useState(null)
 
-
+    if (!role || !["owner", "admin", "employee"].includes(role)) return null
     return (
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 

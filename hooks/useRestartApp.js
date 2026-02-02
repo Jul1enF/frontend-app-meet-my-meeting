@@ -38,10 +38,10 @@ export default function useRestartApp() {
 
     const { width: safeWidth } = useSafeAreaFrame()
 
-    // Function to check if on android cellphones the current screen width is not the same as the one registered with RPW() and Dimensions (because of an accessibility zoom) and restart completely the app
+    // Function to check if on android the current screen width is not the same as the one registered with RPW() and Dimensions (because of an accessibility zoom) and restart completely the app
     const checkScreenWidthChange = () => {
 
-        if (Platform.OS !== "android" || !phoneDevice) return
+        if (Platform.OS !== "android") return
 
         // Current size of the screen from Dimension and SafeArea
         const dimWidth = Math.round(RPW(100));

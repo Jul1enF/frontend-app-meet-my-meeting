@@ -86,26 +86,27 @@ export default function Signin({ setSignForm, func }) {
                     </MyTextInput>
 
 
-                    <View style={appStyle.inputAndIconContainer} >
-                        <MyTextInput style={styles.passwordInput}
-                            onChangeText={(e) => {
-                                setPassword(e)
-                                setWarning({})
-                            }}
-                            value={password}
-                            autoCapitalize='none'
-                            placeholder='Mot de passe'
-                            placeholderTextColor={appStyle.placeholderColor}
-                            secureTextEntry={!passwordVisible}
-                        >
-                        </MyTextInput>
+
+                    <MyTextInput style={styles.passwordInput}
+                        onChangeText={(e) => {
+                            setPassword(e)
+                            setWarning({})
+                        }}
+                        value={password}
+                        autoCapitalize='none'
+                        placeholder='Mot de passe'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        secureTextEntry={!passwordVisible}
+                    >
+
 
                         <TouchableOpacity activeOpacity={0.6} onPress={() => setPasswordVisible(!passwordVisible)} style={appStyle.inputIconContainer} >
                             <FontAwesome
                                 name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
                             </FontAwesome>
                         </TouchableOpacity>
-                    </View>
+
+                    </MyTextInput>
 
 
                     <Button text="Se connecter" func={signinClick} />

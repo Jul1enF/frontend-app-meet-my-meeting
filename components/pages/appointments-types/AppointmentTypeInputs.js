@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet } from "react-native"
+import { View, Text, StyleSheet } from "react-native"
 import Autocomplete from "@components/ui/Autocomplete"
 import MyTextInput from "@components/ui/MyTextInput"
 
@@ -41,26 +41,28 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Durée :
                 </Text>
 
-                <View style={appStyle.inputAndIconContainer}>
-                    <MyTextInput style={styles.inputWithText}
-                        onChangeText={(e) => {
-                            if (!Number.isNaN(Number(e)) && e) setDefaultDuration(Number(e))
-                            else setDefaultDuration("")
-                            setWarning("")
-                        }}
-                        value={defaultDuration.toString()}
-                        placeholder='Durée...'
-                        placeholderTextColor={appStyle.placeholderColor}
-                        keyboardType="numeric"
-                    >
-                    </MyTextInput>
+
+                <MyTextInput style={styles.inputWithText}
+                    onChangeText={(e) => {
+                        if (!Number.isNaN(Number(e)) && e) setDefaultDuration(Number(e))
+                        else setDefaultDuration("")
+                        setWarning("")
+                    }}
+                    value={defaultDuration.toString()}
+                    placeholder='Durée...'
+                    placeholderTextColor={appStyle.placeholderColor}
+                    keyboardType="numeric"
+                >
 
                     <View style={styles.inputTextContainer}>
                         <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
                             minutes
                         </Text>
                     </View>
-                </View>
+
+                </MyTextInput>
+
+
             </View>
 
 
@@ -69,26 +71,27 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Prix :
                 </Text>
 
-                <View style={appStyle.inputAndIconContainer}>
-                    <MyTextInput style={styles.inputWithText}
-                        onChangeText={(e) => {
-                            if (!Number.isNaN(Number(e)) && e) setPrice(Number(e))
-                            else setPrice("")
-                            setWarning("")
-                        }}
-                        value={price.toString()}
-                        placeholder='Prix...'
-                        placeholderTextColor={appStyle.placeholderColor}
-                        keyboardType="numeric"
-                    >
-                    </MyTextInput>
+                <MyTextInput style={styles.inputWithText}
+                    onChangeText={(e) => {
+                        if (!Number.isNaN(Number(e)) && e) setPrice(Number(e))
+                        else setPrice("")
+                        setWarning("")
+                    }}
+                    value={price.toString()}
+                    placeholder='Prix...'
+                    placeholderTextColor={appStyle.placeholderColor}
+                    keyboardType="numeric"
+                >
 
                     <View style={styles.inputTextContainer}>
                         <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
                             euros
                         </Text>
                     </View>
-                </View>
+
+                </MyTextInput>
+
+
             </View>
         </>
     )
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
     inputTextContainer: {
         ...appStyle.inputIconContainer,
         width: "50%",
-        paddingRight : appStyle.regularHorizontalPadding,
-        alignItems : "flex-end"
+        paddingRight: appStyle.regularHorizontalPadding,
+        alignItems: "flex-end"
     }
 })

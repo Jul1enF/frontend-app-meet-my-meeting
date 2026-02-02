@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useState, useRef } from 'react';
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
-import useInputResetKey from '@hooks/useInputResetKey';
+import MyTextInput from '@components/ui/MyTextInput';
 
 export default function Signup({ setSignForm, func }) {
     const router = useRouter()
@@ -80,7 +80,7 @@ export default function Signup({ setSignForm, func }) {
                 style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
                 contentContainerStyle={[
                     appStyle.pageBody,
-                    { flex : "auto" }
+                    { flex: "auto" }
                 ]} keyboardShouldPersistTaps="handled"
                 bounces={false}
                 overScrollMode="never"
@@ -92,7 +92,7 @@ export default function Signup({ setSignForm, func }) {
 
                 <View style={appStyle.card}>
 
-                    <TextInput style={styles.input}
+                    <MyTextInput style={styles.input}
                         onChangeText={(e) => {
                             setFirstName(e)
                             setWarning({})
@@ -101,10 +101,10 @@ export default function Signup({ setSignForm, func }) {
                         placeholder='Prénom'
                         placeholderTextColor={appStyle.placeholderColor}
                         autoCapitalize="words"
-                        key={useInputResetKey(firstName)}>
-                    </TextInput>
+                    >
+                    </MyTextInput>
 
-                    <TextInput style={styles.input}
+                    <MyTextInput style={styles.input}
                         onChangeText={(e) => {
                             setLastName(e)
                             setWarning({})
@@ -113,10 +113,10 @@ export default function Signup({ setSignForm, func }) {
                         placeholder='Nom'
                         placeholderTextColor={appStyle.placeholderColor}
                         autoCapitalize="words"
-                        key={useInputResetKey(lastName)}>
-                    </TextInput>
+                    >
+                    </MyTextInput>
 
-                    <TextInput style={styles.input}
+                    <MyTextInput style={styles.input}
                         onChangeText={(e) => {
                             setEmail(e)
                             setWarning({})
@@ -126,44 +126,54 @@ export default function Signup({ setSignForm, func }) {
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType='email-address'
                         autoCapitalize='none'
-                        key={useInputResetKey(email)}>
-                    </TextInput>
+                    >
+                    </MyTextInput>
 
-                    <View style={styles.passwordInputContainer} >
-                        <TextInput style={styles.passwordInput}
-                            onChangeText={(e) => {
-                                setPassword(e)
-                                setWarning('')
-                            }}
-                            value={password}
-                            autoCapitalize='none'
-                            placeholder='Mot de passe'
-                            placeholderTextColor={appStyle.placeholderColor}
-                            secureTextEntry={!passwordVisible}
-                            key={useInputResetKey(password)}>
-                        </TextInput>
-                        <FontAwesome
-                            name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
-                        </FontAwesome>
-                    </View>
 
-                    <View style={styles.passwordInputContainer} >
-                        <TextInput style={styles.passwordInput}
-                            onChangeText={(e) => {
-                                setConfirmedPassword(e)
-                                setWarning('')
-                            }}
-                            value={confirmedPassword}
-                            autoCapitalize='none'
-                            placeholder='Confirmation mot de passe'
-                            placeholderTextColor={appStyle.placeholderColor}
-                            secureTextEntry={!confirmedPasswordVisible}
-                            key={useInputResetKey(confirmedPassword)}>
-                        </TextInput>
-                        <FontAwesome
-                            name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)}>
-                        </FontAwesome>
-                    </View>
+
+                    <MyTextInput style={[styles.input, styles.passwordInput]}
+                        onChangeText={(e) => {
+                            setPassword(e)
+                            setWarning('')
+                        }}
+                        value={password}
+                        autoCapitalize='none'
+                        placeholder='Mot de passe'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        secureTextEntry={!passwordVisible}
+                    >
+
+                        <TouchableOpacity activeOpacity={0.6} style={appStyle.inputIconContainer} onPress={() => setPasswordVisible(!passwordVisible)} >
+                            <FontAwesome
+                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
+                            </FontAwesome>
+                        </TouchableOpacity>
+
+                    </MyTextInput>
+
+
+
+                    <MyTextInput style={[styles.input, styles.passwordInput]}
+                        onChangeText={(e) => {
+                            setConfirmedPassword(e)
+                            setWarning('')
+                        }}
+                        value={confirmedPassword}
+                        autoCapitalize='none'
+                        placeholder='Confirmation mot de passe'
+                        placeholderTextColor={appStyle.placeholderColor}
+                        secureTextEntry={!confirmedPasswordVisible}
+                    >
+
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)} style={appStyle.inputIconContainer} >
+                            <FontAwesome
+                                name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
+                            </FontAwesome>
+                        </TouchableOpacity>
+
+                    </MyTextInput>
+
+
 
                     <Button text="S'inscrire" func={signupClick} />
 
@@ -204,15 +214,8 @@ const styles = StyleSheet.create({
         ...appStyle.input.base,
         color: appStyle.fontColorDarkBg,
     },
-    passwordInputContainer: {
-        ...appStyle.input.base,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
     passwordInput: {
         ...appStyle.input.withIcon,
-        color: appStyle.fontColorDarkBg,
     },
     signupButton: {
         ...appStyle.button,

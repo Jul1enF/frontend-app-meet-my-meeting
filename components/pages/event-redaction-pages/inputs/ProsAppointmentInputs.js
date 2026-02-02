@@ -1,11 +1,11 @@
-import { Text, TextInput } from "react-native"
+import { Text } from "react-native"
 import { useMemo } from "react";
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import Autocomplete from "@components/ui/Autocomplete";
-import useInputResetKey from "@hooks/useInputResetKey";
+import MyTextInput from "@components/ui/MyTextInput";
 
 export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef, setClient, unregisteredClient, setUnregisteredClient }) {
 
@@ -43,7 +43,7 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
                 Utilisateur non enregistré :
             </Text>
 
-            <TextInput
+            <MyTextInput
                 style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
                     setUnregisteredClient(prev => ({ ...prev, first_name: e }))
@@ -52,10 +52,9 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
                 placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
-                key={useInputResetKey(unregisteredClient.first_name)}
             />
 
-            <TextInput
+            <MyTextInput
                 style={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                 onChangeText={(e) => {
                     setUnregisteredClient(prev => ({ ...prev, last_name: e }))
@@ -64,7 +63,6 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
                 placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
-                key={useInputResetKey(unregisteredClient.last_name)}
             />
 
         </>

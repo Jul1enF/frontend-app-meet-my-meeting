@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 import { useState, useRef } from "react"
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
@@ -10,7 +10,7 @@ import { changeUserInfos } from "@reducers/user"
 import Button from "@components/ui/Button"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import useSessionExpired from "@hooks/useSessionExpired"
-import useInputResetKey from "@hooks/useInputResetKey"
+import MyTextInput from "@components/ui/MyTextInput"
 import ConfirmationModal from "@components/ui/ConfirmationModal"
 import request from "@utils/request"
 
@@ -64,7 +64,7 @@ export default function UserInformations({ user }) {
             path: '/users/update-user',
             method: "PUT",
             body,
-            jwtToken : user.jwtToken,
+            jwtToken: user.jwtToken,
             setSessionExpired,
             functionRef: updateUserRef,
             setWarning: setFetchWarning,
@@ -87,7 +87,7 @@ export default function UserInformations({ user }) {
                 Changer mon email
             </Text>
 
-            <TextInput style={styles.input}
+            <MyTextInput style={styles.input}
                 onChangeText={(e) => {
                     setEmail(e)
                     setFormWarning("")
@@ -97,15 +97,15 @@ export default function UserInformations({ user }) {
                 placeholderTextColor={appStyle.placeholderColor}
                 keyboardType='email-address'
                 autoCapitalize='none'
-                key={useInputResetKey(email)}>
-            </TextInput>
+            >
+            </MyTextInput>
 
 
             <Text style={styles.label}>
                 Changer mon prénom
             </Text>
 
-            <TextInput style={styles.input}
+            <MyTextInput style={styles.input}
                 onChangeText={(e) => {
                     setFirstName(e)
                     setFormWarning("")
@@ -114,15 +114,15 @@ export default function UserInformations({ user }) {
                 placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
-                key={useInputResetKey(firstName)}>
-            </TextInput>
+            >
+            </MyTextInput>
 
 
             <Text style={styles.label}>
                 Changer mon nom
             </Text>
 
-            <TextInput style={styles.input}
+            <MyTextInput style={styles.input}
                 onChangeText={(e) => {
                     setLastName(e)
                     setFormWarning("")
@@ -131,8 +131,8 @@ export default function UserInformations({ user }) {
                 placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
-                key={useInputResetKey(lastName)}>
-            </TextInput>
+            >
+            </MyTextInput>
 
 
             <Text style={styles.label}>
@@ -140,67 +140,77 @@ export default function UserInformations({ user }) {
             </Text>
 
 
-            <View style={[styles.input, styles.passwordContainer]} >
-                <TextInput style={styles.passwordInput}
-                    onChangeText={(e) => {
-                        setOldPassword(e)
-                        setFormWarning("")
-                    }}
-                    value={oldPassword}
-                    autoCapitalize='none'
-                    placeholder='Ancien mot de passe'
-                    placeholderTextColor={appStyle.placeholderColor}
-                    secureTextEntry={!oldPasswordVisible}
-                    key={useInputResetKey(oldPassword)}>
-                </TextInput>
-                <FontAwesome
-                    name={oldPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setOldPasswordVisible(prev => !prev)}>
-                </FontAwesome>
-            </View>
+
+            <MyTextInput style={[styles.input, styles.passwordInput]}
+                onChangeText={(e) => {
+                    setOldPassword(e)
+                    setFormWarning("")
+                }}
+                value={oldPassword}
+                autoCapitalize='none'
+                placeholder='Ancien mot de passe'
+                placeholderTextColor={appStyle.placeholderColor}
+                secureTextEntry={!oldPasswordVisible}
+            >
+
+                <TouchableOpacity activeOpacity={0.6} style={appStyle.inputIconContainer} onPress={() => setOldPasswordVisible(prev => !prev)} >
+                    <FontAwesome
+                        name={oldPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
+                    </FontAwesome>
+                </TouchableOpacity>
+
+            </MyTextInput>
 
 
-            <View style={[styles.input, styles.passwordContainer]} >
-                <TextInput style={styles.passwordInput}
-                    onChangeText={(e) => {
-                        setPassword(e)
-                        setFormWarning("")
-                    }}
-                    value={password}
-                    autoCapitalize='none'
-                    placeholder='Nouveau mot de passe'
-                    placeholderTextColor={appStyle.placeholderColor}
-                    secureTextEntry={!passwordVisible}
-                    key={useInputResetKey(password)}>
-                </TextInput>
-                <FontAwesome
-                    name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(prev => !prev)}>
-                </FontAwesome>
-            </View>
+            <MyTextInput style={[styles.input, styles.passwordInput]}
+                onChangeText={(e) => {
+                    setPassword(e)
+                    setFormWarning("")
+                }}
+                value={password}
+                autoCapitalize='none'
+                placeholder='Nouveau mot de passe'
+                placeholderTextColor={appStyle.placeholderColor}
+                secureTextEntry={!passwordVisible}
+            >
 
-            <View style={[styles.input, styles.passwordContainer]} >
-                <TextInput style={styles.passwordInput}
-                    onChangeText={(e) => {
-                        setConfirmedPassword(e)
-                        setFormWarning("")
-                    }}
-                    value={confirmedPassword}
-                    autoCapitalize='none'
-                    placeholder='Confirmation du mot de passe'
-                    placeholderTextColor={appStyle.placeholderColor}
-                    secureTextEntry={!confirmedPasswordVisible}
-                    key={useInputResetKey(confirmedPassword)}>
-                </TextInput>
-                <FontAwesome
-                    name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(prev => !prev)}>
-                </FontAwesome>
-            </View>
+                <TouchableOpacity activeOpacity={0.6} style={appStyle.inputIconContainer} onPress={() => setPasswordVisible(prev => !prev)}>
+                    <FontAwesome
+                        name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
+                    </FontAwesome>
+                </TouchableOpacity>
+
+            </MyTextInput>
+
+
+
+            <MyTextInput style={[styles.input, styles.passwordInput]}
+                onChangeText={(e) => {
+                    setConfirmedPassword(e)
+                    setFormWarning("")
+                }}
+                value={confirmedPassword}
+                autoCapitalize='none'
+                placeholder='Confirmation du mot de passe'
+                placeholderTextColor={appStyle.placeholderColor}
+                secureTextEntry={!confirmedPasswordVisible}
+            >
+
+                <TouchableOpacity activeOpacity={0.6} style={appStyle.inputIconContainer} onPress={() => setConfirmedPasswordVisible(prev => !prev)} >
+                    <FontAwesome
+                        name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
+                    </FontAwesome>
+                </TouchableOpacity>
+
+            </MyTextInput>
+
 
 
             <Text style={[appStyle.warning, !formWarning && { height: 0, marginTop: 0 }]}>
                 {formWarning}
             </Text>
 
-            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"}  style={{ height: appStyle.mediumItemHeight, width: "100%", marginTop : appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"} style={{ height: appStyle.mediumItemHeight, width: "100%", marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
             < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUser} />
@@ -211,7 +221,7 @@ export default function UserInformations({ user }) {
 const styles = StyleSheet.create({
     label: {
         ...appStyle.labelText,
-        textAlign : "center",
+        textAlign: "center",
         color: appStyle.fontColorDarkBg,
         marginTop: appStyle.regularMarginTop,
     },
@@ -219,14 +229,9 @@ const styles = StyleSheet.create({
         ...appStyle.input.baseLargeCard,
         color: appStyle.fontColorDarkBg,
     },
-    passwordContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
     passwordInput: {
         ...appStyle.input.withIcon,
-        fontWeight : "700",
+        fontWeight: "700",
         color: appStyle.fontColorDarkBg,
     },
 })
