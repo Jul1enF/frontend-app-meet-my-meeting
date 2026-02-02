@@ -2,6 +2,7 @@ import { Text, View, TextInput } from 'react-native';
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
+import useInputResetKey from '@hooks/useInputResetKey';
 
 import DatePicker from '@components/ui/DatePicker/DatePicker';
 
@@ -40,6 +41,7 @@ export default function VacationInputs({ vacationStart, setVacationStart, vacati
                 placeholder='Description...'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="sentences"
+                key={useInputResetKey(description)}
             />
 
 

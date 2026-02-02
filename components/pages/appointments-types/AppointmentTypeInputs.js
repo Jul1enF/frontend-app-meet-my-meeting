@@ -1,5 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from "react-native"
 import Autocomplete from "@components/ui/Autocomplete"
+import useInputResetKey from "@hooks/useInputResetKey"
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -30,6 +31,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     placeholder='Titre...'
                     placeholderTextColor={appStyle.placeholderColor}
                     autoCapitalize="sentences"
+                    key={useInputResetKey(title)}
                 >
                 </TextInput>
             </View>
@@ -49,6 +51,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                         placeholder='Durée...'
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType="numeric"
+                        key={useInputResetKey(defaultDuration.toString())}
                     >
                     </TextInput>
                     <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
@@ -73,6 +76,7 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                         placeholder='Prix...'
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType="numeric"
+                        key={useInputResetKey(price.toString())}
                     >
                     </TextInput>
                     <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>

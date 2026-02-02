@@ -5,6 +5,7 @@ import { phoneDevice, RPW } from "../utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
+import useRestartApp from "@hooks/useRestartApp";
 
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -42,7 +43,9 @@ export default function RootLayout() {
     // Check if the version of the app is obsolete to eventually block it
     const appObsolete = useIsAppObsolete()
 
-    console.log("RPW(100)  :", RPW(100), "RPW(1) :", RPW(1), "Header Height :", appStyle.headerHeight)
+    // Restart the app on android cellphones if the screen widht has changed (accessibility zoom) in order to properly reset the RPW and RPH
+    useRestartApp()
+
 
     return (
         <Provider store={store}>

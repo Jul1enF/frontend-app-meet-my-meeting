@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
+import useInputResetKey from '@hooks/useInputResetKey';
 
 export default function Signup({ setSignForm, func }) {
     const router = useRouter()
@@ -99,7 +100,8 @@ export default function Signup({ setSignForm, func }) {
                         value={firstName}
                         placeholder='Prénom'
                         placeholderTextColor={appStyle.placeholderColor}
-                        autoCapitalize="words">
+                        autoCapitalize="words"
+                        key={useInputResetKey(firstName)}>
                     </TextInput>
 
                     <TextInput style={styles.input}
@@ -110,7 +112,8 @@ export default function Signup({ setSignForm, func }) {
                         value={lastName}
                         placeholder='Nom'
                         placeholderTextColor={appStyle.placeholderColor}
-                        autoCapitalize="words">
+                        autoCapitalize="words"
+                        key={useInputResetKey(lastName)}>
                     </TextInput>
 
                     <TextInput style={styles.input}
@@ -122,7 +125,8 @@ export default function Signup({ setSignForm, func }) {
                         placeholder='Email'
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType='email-address'
-                        autoCapitalize='none'>
+                        autoCapitalize='none'
+                        key={useInputResetKey(email)}>
                     </TextInput>
 
                     <View style={styles.passwordInputContainer} >
@@ -135,7 +139,8 @@ export default function Signup({ setSignForm, func }) {
                             autoCapitalize='none'
                             placeholder='Mot de passe'
                             placeholderTextColor={appStyle.placeholderColor}
-                            secureTextEntry={!passwordVisible}>
+                            secureTextEntry={!passwordVisible}
+                            key={useInputResetKey(password)}>
                         </TextInput>
                         <FontAwesome
                             name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
@@ -152,7 +157,8 @@ export default function Signup({ setSignForm, func }) {
                             autoCapitalize='none'
                             placeholder='Confirmation mot de passe'
                             placeholderTextColor={appStyle.placeholderColor}
-                            secureTextEntry={!confirmedPasswordVisible}>
+                            secureTextEntry={!confirmedPasswordVisible}
+                            key={useInputResetKey(confirmedPassword)}>
                         </TextInput>
                         <FontAwesome
                             name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(!confirmedPasswordVisible)}>

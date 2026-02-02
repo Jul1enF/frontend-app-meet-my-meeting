@@ -5,6 +5,7 @@ import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import Autocomplete from "@components/ui/Autocomplete";
+import useInputResetKey from "@hooks/useInputResetKey";
 
 export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef, setClient, unregisteredClient, setUnregisteredClient }) {
 
@@ -51,6 +52,7 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
                 placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
+                key={useInputResetKey(unregisteredClient.first_name)}
             />
 
             <TextInput
@@ -62,6 +64,7 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
                 placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
+                key={useInputResetKey(unregisteredClient.last_name)}
             />
 
         </>

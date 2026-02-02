@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     title: {
-        fontSize: phoneDevice ? RPW(7) : 52,
+        fontSize: phoneDevice ? RPW(7) : 46,
         color: appStyle.darkWhite,
         letterSpacing: phoneDevice ? 1.5 : 4,
         fontWeight: "600",

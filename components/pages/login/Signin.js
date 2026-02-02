@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Button from '@components/ui/Button';
+import MyTextInput from '@components/ui/MyTextInput';
 import { useDispatch } from 'react-redux';
 import { login } from 'reducers/user'
 import request from '@utils/request';
@@ -12,6 +13,7 @@ import { useRouter } from 'expo-router';
 
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
+import useInputResetKey from '@hooks/useInputResetKey';
 
 export default function Signin({ setSignForm, func }) {
     const router = useRouter()
@@ -60,7 +62,7 @@ export default function Signin({ setSignForm, func }) {
                 style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
                 contentContainerStyle={[
                     appStyle.pageBody,
-                    { flex : "auto" }
+                    { flex: "auto" }
                 ]} keyboardShouldPersistTaps="handled"
                 bounces={false}
                 overScrollMode="never"
@@ -71,7 +73,7 @@ export default function Signin({ setSignForm, func }) {
 
                 <View style={appStyle.card}>
 
-                    <TextInput style={styles.input}
+                    <MyTextInput style={styles.input}
                         onChangeText={(e) => {
                             setEmail(e)
                             setWarning({})
@@ -80,11 +82,13 @@ export default function Signin({ setSignForm, func }) {
                         placeholder='Email'
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType='email-address'
-                        autoCapitalize='none'>
-                    </TextInput>
+                        autoCapitalize='none'
+                    >
+                    </MyTextInput>
 
-                    <View style={styles.passwordInputContainer} >
-                        <TextInput style={styles.passwordInput}
+
+                    <View style={appStyle.InputAndIconContainer} >
+                        <MyTextInput style={styles.passwordInput}
                             onChangeText={(e) => {
                                 setPassword(e)
                                 setWarning({})
@@ -93,12 +97,17 @@ export default function Signin({ setSignForm, func }) {
                             autoCapitalize='none'
                             placeholder='Mot de passe'
                             placeholderTextColor={appStyle.placeholderColor}
-                            secureTextEntry={!passwordVisible}>
-                        </TextInput>
-                        <FontAwesome
-                            name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(!passwordVisible)}>
-                        </FontAwesome>
+                            secureTextEntry={!passwordVisible}
+                        >
+                        </MyTextInput>
+
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => setPasswordVisible(!passwordVisible)} style={appStyle.inputIconContainer} >
+                            <FontAwesome
+                                name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} >
+                            </FontAwesome>
+                        </TouchableOpacity>
                     </View>
+
 
                     <Button text="Se connecter" func={signinClick} />
 
@@ -120,19 +129,12 @@ export default function Signin({ setSignForm, func }) {
                     </TouchableOpacity>
 
                 </View>
-            
-            <View style={[appStyle.largeItem, {backgroundColor : "red", justifyContent : "center"}]}>
-                <Text style={[appStyle.largeText, {color : appStyle.fontColorDarkBg, textAlign : "center"}]}>
-                    Test Large Item
-                </Text>
-            </View>
 
-
-            <View style={[appStyle.regularItem, {backgroundColor : "red", justifyContent : "center"}]}>
-                <Text style={[appStyle.largeText, {color : appStyle.fontColorDarkBg, textAlign : "center"}]}>
-                    Test Regular Item
-                </Text>
-            </View>
+                <View style={[{backgroundColor : "red", ...appStyle.regularItem}]}>
+                    <Text style={appStyle.labelText}>
+                        Test regular Item
+                    </Text>
+                </View>
 
 
             </KeyboardAwareScrollView>
@@ -149,13 +151,8 @@ const styles = StyleSheet.create({
         ...appStyle.input.base,
         color: appStyle.fontColorDarkBg,
     },
-    passwordInputContainer: {
-        ...appStyle.input.base,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
     passwordInput: {
+        ...appStyle.input.base,
         ...appStyle.input.withIcon,
         color: appStyle.fontColorDarkBg,
     },

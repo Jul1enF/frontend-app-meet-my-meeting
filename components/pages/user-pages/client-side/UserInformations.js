@@ -10,6 +10,7 @@ import { changeUserInfos } from "@reducers/user"
 import Button from "@components/ui/Button"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import useSessionExpired from "@hooks/useSessionExpired"
+import useInputResetKey from "@hooks/useInputResetKey"
 import ConfirmationModal from "@components/ui/ConfirmationModal"
 import request from "@utils/request"
 
@@ -95,7 +96,8 @@ export default function UserInformations({ user }) {
                 placeholder='Email'
                 placeholderTextColor={appStyle.placeholderColor}
                 keyboardType='email-address'
-                autoCapitalize='none'>
+                autoCapitalize='none'
+                key={useInputResetKey(email)}>
             </TextInput>
 
 
@@ -111,7 +113,8 @@ export default function UserInformations({ user }) {
                 value={firstName}
                 placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
-                autoCapitalize="words">
+                autoCapitalize="words"
+                key={useInputResetKey(firstName)}>
             </TextInput>
 
 
@@ -127,7 +130,8 @@ export default function UserInformations({ user }) {
                 value={lastName}
                 placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
-                autoCapitalize="words">
+                autoCapitalize="words"
+                key={useInputResetKey(lastName)}>
             </TextInput>
 
 
@@ -146,7 +150,8 @@ export default function UserInformations({ user }) {
                     autoCapitalize='none'
                     placeholder='Ancien mot de passe'
                     placeholderTextColor={appStyle.placeholderColor}
-                    secureTextEntry={!oldPasswordVisible}>
+                    secureTextEntry={!oldPasswordVisible}
+                    key={useInputResetKey(oldPassword)}>
                 </TextInput>
                 <FontAwesome
                     name={oldPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setOldPasswordVisible(prev => !prev)}>
@@ -164,7 +169,8 @@ export default function UserInformations({ user }) {
                     autoCapitalize='none'
                     placeholder='Nouveau mot de passe'
                     placeholderTextColor={appStyle.placeholderColor}
-                    secureTextEntry={!passwordVisible}>
+                    secureTextEntry={!passwordVisible}
+                    key={useInputResetKey(password)}>
                 </TextInput>
                 <FontAwesome
                     name={passwordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setPasswordVisible(prev => !prev)}>
@@ -181,7 +187,8 @@ export default function UserInformations({ user }) {
                     autoCapitalize='none'
                     placeholder='Confirmation du mot de passe'
                     placeholderTextColor={appStyle.placeholderColor}
-                    secureTextEntry={!confirmedPasswordVisible}>
+                    secureTextEntry={!confirmedPasswordVisible}
+                    key={useInputResetKey(confirmedPassword)}>
                 </TextInput>
                 <FontAwesome
                     name={confirmedPasswordVisible ? "eye-slash" : "eye"} color={appStyle.placeholderColor} size={appStyle.inputIconSize} onPress={() => setConfirmedPasswordVisible(prev => !prev)}>

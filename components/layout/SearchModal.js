@@ -6,6 +6,7 @@ import Modal from "react-native-modal"
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 import { useRouter } from "expo-router";
+import useInputResetKey from "@hooks/useInputResetKey";
 
 
 export default function SearchModal({ searchVisible, setSearchVisible, screenWidth, screenHeight, modalOffsetTop }) {
@@ -50,6 +51,7 @@ export default function SearchModal({ searchVisible, setSearchVisible, screenWid
                         autoCapitalize="none"
                         autoCorrect={false}
                         onSubmitEditing={() => submitSearch()}
+                        key={useInputResetKey(searchText)}
                     ></TextInput>
                     <FontAwesome6 name="magnifying-glass" style={styles.icon} size={phoneDevice ? RPW(4.5) : 25} onPress={() => submitSearch()} />
                 </View>

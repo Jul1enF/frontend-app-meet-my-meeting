@@ -1,24 +1,12 @@
 import { Dimensions, Platform } from "react-native";
 
 
-let screenHeight = Dimensions.get('window').height
-let fullScreenHeight = Dimensions.get('screen').height
-let screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height
+const fullScreenHeight = Dimensions.get('screen').height
+const screenWidth = Dimensions.get('window').width
 
-const phoneDevice = screenWidth < 600;
 
-Dimensions.addEventListener('change', ({ window, screen }) => {
-    if (phoneDevice) {
-        screenHeight = window.height;
-        screenWidth = window.width;
-
-        if (Platform.OS === "android") {
-            fullScreenHeight = screen.height;
-        }
-    }
-});
-
-const RPH = (percentage) => {
+export const RPH = (percentage) => {
 
     if (Platform.OS === "android") {
         return (percentage / 100) * fullScreenHeight
@@ -28,9 +16,8 @@ const RPH = (percentage) => {
     }
 };
 
-const RPW = (percentage) => {
+export const RPW = (percentage) => {
     return (percentage / 100) * (screenWidth);
 };
 
-export {phoneDevice, RPH, RPW}
-
+export const phoneDevice = screenWidth < 600;

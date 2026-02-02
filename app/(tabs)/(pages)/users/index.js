@@ -6,6 +6,7 @@ import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector } from "react-redux";
 import useRefreshControl from "@hooks/useRefreshControl";
+import useInputResetKey from "@hooks/useInputResetKey";
 import useSortUsers from "@components/pages/user-pages/owner-side/useSortUsers";
 
 import UserItem from "@components/pages/user-pages/owner-side/UserItem";
@@ -100,6 +101,7 @@ export default function UsersPage() {
                             autoCapitalize='none'
                             placeholderTextColor={appStyle.placeholderColor}
                             placeholder='Rechercher un utilisateur...'
+                            key={useInputResetKey(searchText)}
                         >
                         </TextInput>
 
