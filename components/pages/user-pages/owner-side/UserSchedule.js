@@ -41,7 +41,7 @@ export default function UserSchedule({ scheduleArray, contractEnd, setContractEn
 
             <View style={styles.contractContainer} >
 
-                <SmallSwitch active={changeContractEnd} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularItem.paddingHorizontal * 1.5, top: appStyle.mediumMarginTop}}
+                <SmallSwitch active={changeContractEnd} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularHorizontalPadding * 1.5, top: appStyle.mediumMarginTop}}
                     leftFunction={() => {
                         setChangeContractEnd(prev => !prev)
                         contractEnd && changeContractEnd && setContractEnd(null)
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
         ...appStyle.lightGreyBorder,
         borderRadius: appStyle.regularItemBorderRadius,
         minWidth: "100%",
-        paddingHorizontal: appStyle.regularItem.paddingHorizontal,
-        marginTop: appStyle.regularItem.marginTop * (phoneDevice ? 2 : 1.3),
+        paddingHorizontal: appStyle.regularHorizontalPadding,
+        marginTop: appStyle.regularMarginTop * (phoneDevice ? 2 : 1.3),
         paddingBottom: appStyle.largeMarginTop,
         alignItems: "center",
     },

@@ -109,20 +109,24 @@ export const componentsStyle = {
             ...regularItem,
             ...lightGreyBorder,
             ...regularText,
+            textAlign :"left",
         },
         baseLarge: {
             ...largeItem,
             ...lightGreyBorder,
             ...regularText,
+            textAlign :"left",
         },
         baseLargeCard: {
             ...largeCardItem,
             ...lightGreyBorder,
             ...regularText,
             fontWeight: "700",
+            textAlign :"left",
         },
         withIcon: {
             paddingRight: inputIconSize * 1.8,
+            textAlign :"left",
         }
     },
     inputIconContainer: {

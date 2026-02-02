@@ -23,6 +23,7 @@ export const fontsStyle = {
         fontWeight: "700",
         letterSpacing: phoneDevice ? RPW(0.3) : 1.4,
         lineHeight: phoneDevice ? RPW(6.8) : 40,
+        textAlign: "center",
     },
     largeText: {
         color: strongBlack,
@@ -30,6 +31,7 @@ export const fontsStyle = {
         fontWeight: "500",
         lineHeight: phoneDevice ? RPW(6.8) : 40,
         letterSpacing: phoneDevice ? RPW(0.1) : 1,
+        textAlign: "center",
     },
     regularText: {
         color: strongBlack,
@@ -37,6 +39,7 @@ export const fontsStyle = {
         lineHeight: phoneDevice ? RPW(5.5) : 35,
         fontWeight: "400",
         letterSpacing: phoneDevice ? RPW(0.15) : 1,
+        textAlign: "center",
     },
     secondHeaderText: {
         color: strongBlack,
@@ -48,6 +51,7 @@ export const fontsStyle = {
         color: strongBlack,
         fontSize: phoneDevice ? RPW(3.8) : 22,
         fontWeight: "400",
+        textAlign: "center",
     },
     warning: {
         fontSize: phoneDevice ? RPW(4.6) : 30,

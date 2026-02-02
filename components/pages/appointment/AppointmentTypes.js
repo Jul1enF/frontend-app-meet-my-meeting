@@ -50,7 +50,7 @@ export default memo(function AppointmentTypes({ title, types, selected, setSelec
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: appStyle.largeItem.width,
+        width: appStyle.largeItemWidth,
         marginTop: appStyle.regularMarginTop,
         backgroundColor: appStyle.pageBody.backgroundColor,
         shadowColor: Platform.OS === "android" ? "black" : appStyle.darkGrey,

@@ -1,5 +1,5 @@
 import { Platform, Dimensions, AppState } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import RNRestart from "react-native-restart-newarch";
 import { phoneDevice, RPW } from "@utils/dimensions";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
@@ -10,7 +10,7 @@ export default function useRestartApp() {
     // FONT ZOOM RESTART LOGIC
 
     // Register the fontScale when app start
-    let lastFontScale = Dimensions.get("window").fontScale;
+    const lastFontScaleRef = useRef(Dimensions.get("window").fontScale)
 
     // useEffect with a listener for android of focus state to see if the fontScale changed
     useEffect(() => {
@@ -20,7 +20,7 @@ export default function useRestartApp() {
 
             // console.log("lastFontScale :", lastFontScale, "fontScale :", fontScale)
 
-            if (fontScale !== lastFontScale) {
+            if (fontScale !== lastFontScaleRef.current) {
                 RNRestart.restart()
                 return;
             }

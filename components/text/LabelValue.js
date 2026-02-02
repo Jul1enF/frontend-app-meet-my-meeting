@@ -31,7 +31,7 @@ export default function LabelValue({ label, details, underlineOffset = phoneDevi
       {/* Invisible label text (opacity : 0) to have it's width and put an absolute underlining View */}
       <View style={[{ borderBottomColor: underlineColor, borderBottomWidth: underlineHeight, position: "absolute", paddingBottom: underlineOffset }]} >
         <Text
-          style={[labelStyle, { opacity: 0 }]}
+          style={[labelStyle, { opacity: 0,  textAlign :"left" }]}
         >
           {label}
         </Text>
@@ -39,7 +39,7 @@ export default function LabelValue({ label, details, underlineOffset = phoneDevi
 
 
 
-      <Text style={detailsStyle} onTextLayout={(e) => {
+      <Text style={[detailsStyle, { textAlign :"left"}]} onTextLayout={(e) => {
         const lines = e.nativeEvent.lines
         const height = lines.reduce((acc, line) => acc + line.height, 0)
         setLinesLenght(prev => prev !== lines.length ? lines.length : prev)
@@ -51,7 +51,7 @@ export default function LabelValue({ label, details, underlineOffset = phoneDevi
         }}
       >
         <Text
-          style={labelStyle}
+          style={[labelStyle, { textAlign :"left" }]}
         >
           {label}
         </Text>

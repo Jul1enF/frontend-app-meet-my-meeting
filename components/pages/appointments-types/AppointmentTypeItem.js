@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         borderColor: appStyle.strongRed,
         borderRadius: appStyle.regularItemBorderRadius,
         width: phoneDevice ? RPW(90) : 600,
-        paddingHorizontal: appStyle.regularItem.paddingHorizontal,
+        paddingHorizontal: appStyle.regularHorizontalPadding,
         paddingBottom: phoneDevice ? RPW(3) : 15,
         paddingTop: phoneDevice ? RPW(4) : 25,
         marginBottom: phoneDevice ? RPW(4) : 20,

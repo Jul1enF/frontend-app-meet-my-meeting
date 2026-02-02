@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 10,
         right: phoneDevice ? RPW(2.5) : 23,
-        marginTop: appStyle.regularItem.marginTop * 0.85,
+        marginTop: appStyle.regularMarginTop * 0.85,
     },
     modal: {
         alignItems: "center",

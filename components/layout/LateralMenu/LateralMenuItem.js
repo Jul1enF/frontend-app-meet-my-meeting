@@ -15,7 +15,7 @@ const sectionPress = () => {
 }
     return (
         <TouchableOpacity activeOpacity={0.6} style={styles.linkContainer} onPress={sectionPress}>
-            <Text style={styles.link}>{sectionName}</Text>
+            <Text style={styles.link} allowFontScaling={false}>{sectionName}</Text>
         </TouchableOpacity>
     )
 }
