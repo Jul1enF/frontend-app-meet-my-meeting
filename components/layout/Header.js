@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         height: "100%",
         alignItems: "flex-start",
         justifyContent: "center",
-        paddingLeft: phoneDevice ? RPW(4) : 30,
+        paddingLeft: appStyle.headerHorizPadd,
     },
     titleContainer: {
         width: "70%",
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         height: "100%",
         alignItems: "flex-end",
         justifyContent: "center",
-        paddingRight: phoneDevice ? RPW(4) : 30,
+        paddingRight: appStyle.headerHorizPadd,
     },
     icon: {
         color: appStyle.darkWhite,

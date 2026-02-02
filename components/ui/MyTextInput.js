@@ -2,9 +2,11 @@ import { TextInput, View, StyleSheet, Text } from "react-native";
 
 export default function MyTextInput({ style, onChangeText, value, autoCapitalize, placeholder, placeholderTextColor, secureTextEntry, keyboardType, }) {
 
-    const { minHeight, paddingTop, paddingBottom, width, maxWidth, borderRadius, marginTop, paddingHorizontal, borderColor, borderWidth, backgroundColor, paddingLeft, ...fontStyle } = style
+    const styleObject = StyleSheet.flatten(style) ?? {}
 
-    const fontSize = style.fontSize ?? 16;
+    const { minHeight, paddingTop, paddingBottom, width, height, maxHeight, maxWidth, borderRadius, marginTop, paddingHorizontal, borderColor, borderWidth, backgroundColor, paddingLeft, ...fontStyle } = styleObject
+
+    const fontSize = styleObject.fontSize ?? 16;
     const lineHeight = Math.round(fontSize * 1.25);
 
     return (
@@ -13,12 +15,12 @@ export default function MyTextInput({ style, onChangeText, value, autoCapitalize
             <Text style={[fontStyle, styles.placeHolder,
                 {
                     color: placeholderTextColor,
-                    fontWeight: "700",
+                    fontWeight: "500",
                     fontSize,
                     lineHeight,
-                    paddingLeft: style.paddingLeft ?? style.paddingHorizontal ?? 0,
-                    paddingRight: style.paddingRight ?? style.paddingHorizontal ?? 0,
-                    bottom : style.paddingBottom,
+                    paddingLeft: styleObject.paddingLeft ?? styleObject.paddingHorizontal ?? 0,
+                    paddingRight: styleObject.paddingRight ?? styleObject.paddingHorizontal ?? 0,
+                    bottom : styleObject.paddingBottom * 1.05 ?? "auto",
                 },
                 value && { display: "none" }]}
                 numberOfLines={1}
@@ -39,7 +41,7 @@ export default function MyTextInput({ style, onChangeText, value, autoCapitalize
                 textAlignVertical="center"
                 multiline={false}
                 numberOfLines={1}
-                style={[style, { fontSize, lineHeight }]}
+                style={[styleObject, { fontSize, lineHeight }]}
             />
         </View>
     )

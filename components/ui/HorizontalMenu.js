@@ -42,7 +42,7 @@ export default function HorizontalMenu({ data, menuBelow, func, name, chosenItem
 
         return (
             <TouchableOpacity style={[styles.itemBtn, itemSelected ? styles.selectedItemBtn : styles.unselectedItemBtn]} onPress={itemPress}>
-                <Text style={[styles.itemText, itemSelected ? styles.selectedItemText : styles.unselectedItemText]}>
+                <Text style={[styles.itemText, itemSelected ? styles.selectedItemText : styles.unselectedItemText]} allowFontScaling={false}>
                     {name ? props[name] : props.name}
                 </Text>
             </TouchableOpacity>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         ...appStyle.secondHeaderBorderBottom,
     },
     itemBtn: {
-        marginLeft: appStyle.secondHeaderHorizPadd,
+        marginLeft: appStyle.headerHorizPadd,
         minHeight: "100%",
         justifyContent: "center",
     },

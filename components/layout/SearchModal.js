@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -6,7 +6,7 @@ import Modal from "react-native-modal"
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle";
 import { useRouter } from "expo-router";
-import useInputResetKey from "@hooks/useInputResetKey";
+import MyTextInput from "@components/ui/MyTextInput";
 
 
 export default function SearchModal({ searchVisible, setSearchVisible, screenWidth, screenHeight, modalOffsetTop }) {
@@ -41,8 +41,8 @@ export default function SearchModal({ searchVisible, setSearchVisible, screenWid
                 end={{ x: 1, y: 0.5 }}
             >
                 <View style={styles.searchInputContainer}>
-                    <TextInput
-                        style={[styles.search, appStyle.inputVertPadding, { color: appStyle.darkWhite }]}
+                    <MyTextInput
+                        style={styles.searchInput}
                         placeholder="Rechercher..."
                         onChangeText={(e) => setSearchText(e)}
                         value={searchText}
@@ -51,11 +51,19 @@ export default function SearchModal({ searchVisible, setSearchVisible, screenWid
                         autoCapitalize="none"
                         autoCorrect={false}
                         onSubmitEditing={() => submitSearch()}
-                        key={useInputResetKey(searchText)}
-                    ></TextInput>
-                    <FontAwesome6 name="magnifying-glass" style={styles.icon} size={phoneDevice ? RPW(4.5) : 25} onPress={() => submitSearch()} />
+                    ></MyTextInput>
+
+
+                    <TouchableOpacity activeOpacity={0.6} style={styles.searchIconContainer} onPress={() => submitSearch()}>
+                        <FontAwesome6 name="magnifying-glass" color={appStyle.darkWhite} size={appStyle.inputIconSize * 0.9} />
+                    </TouchableOpacity>
+
                 </View>
-                <FontAwesome6 name="chevron-up" style={styles.icon} size={phoneDevice ? RPW(6) : 28} onPress={() => setSearchVisible(!searchVisible)} />
+
+
+                <TouchableOpacity activeOpacity={0.6} style={styles.chevronContainer} onPress={() => setSearchVisible(!searchVisible)} >
+                    <FontAwesome6 name="chevron-up" color={appStyle.darkWhite} size={appStyle.inputIconSize} />
+                </TouchableOpacity>
 
             </LinearGradient>
         </Modal>
@@ -70,30 +78,39 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         position: "absolute",
-        height: appStyle.secondHeaderHeight,
+        // height: appStyle.secondHeaderHeight,
+        minHeight: appStyle.secondHeaderHeight,
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal : phoneDevice ? RPW(4) : 30,
+        paddingHorizontal: appStyle.headerHorizPadd,
     },
     searchInputContainer: {
         borderBottomColor: appStyle.darkWhite,
         borderBottomWidth: phoneDevice ? 0.5 : 1,
-        width: "50%",
-        paddingBottom: phoneDevice ? RPW(1.5) : 8,
-        paddingRight: phoneDevice ? RPW(1) : 8,
-        marginTop: phoneDevice ? RPW(0.5) : 4,
         flexDirection: 'row',
-        justifyContent: "space-between",
         alignItems: "center",
     },
-    search: {
+    searchInput: {
         ...appStyle.regularText,
-        padding : 0,
-        width: "90%",
-    },
-    icon: {
+        ...appStyle.input.withIcon,
+        ...appStyle.secondHeaderText,
         color: appStyle.darkWhite,
+        width: phoneDevice ? RPW(68) : 450,
+        maxWidth: "90%",
+        paddingTop: phoneDevice ? RPW(1) : 5,
+        paddingBottom: phoneDevice ? RPW(1) : 5,
     },
+    searchIconContainer: {
+        ...appStyle.inputIconContainer,
+        bottom: "auto"
+    },
+    chevronContainer: {
+        position: "absolute",
+        right: appStyle.headerHorizPadd,
+        height: "100%",
+        width: phoneDevice ? RPW(10) : 70,
+        alignItems: "flex-end",
+        justifyContent: "center",
+    }
 })

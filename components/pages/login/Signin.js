@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useState, useRef } from 'react';
@@ -13,7 +13,6 @@ import { useRouter } from 'expo-router';
 
 import { RPH, RPW, phoneDevice } from 'utils/dimensions'
 import { appStyle } from 'styles/appStyle';
-import useInputResetKey from '@hooks/useInputResetKey';
 
 export default function Signin({ setSignForm, func }) {
     const router = useRouter()
@@ -87,7 +86,7 @@ export default function Signin({ setSignForm, func }) {
                     </MyTextInput>
 
 
-                    <View style={appStyle.InputAndIconContainer} >
+                    <View style={appStyle.inputAndIconContainer} >
                         <MyTextInput style={styles.passwordInput}
                             onChangeText={(e) => {
                                 setPassword(e)
@@ -128,12 +127,6 @@ export default function Signin({ setSignForm, func }) {
                         </View>
                     </TouchableOpacity>
 
-                </View>
-
-                <View style={[{backgroundColor : "red", ...appStyle.regularItem}]}>
-                    <Text style={appStyle.labelText}>
-                        Test regular Item
-                    </Text>
                 </View>
 
 

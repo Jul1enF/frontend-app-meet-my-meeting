@@ -7,7 +7,7 @@ import { appStyle } from '@styles/appStyle';
 import DurationPicker from './DurationPicker';
 import Autocomplete from '@components/ui/Autocomplete';
 import useAutocompleteLists from '../event-update/useAutocompleteLists';
-import useInputResetKey from '@hooks/useInputResetKey';
+import MyTextInput from '@components/ui/MyTextInput';
 
 import { DateTime } from 'luxon';
 import { isBefore } from '@utils/timeFunctions';
@@ -89,7 +89,6 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
                 placeholder='Description...'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="sentences"
-                key={useInputResetKey(description)}
             />
 
         </>

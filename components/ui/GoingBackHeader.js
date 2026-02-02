@@ -18,7 +18,7 @@ const leftBtnPress = ()=>{
         <View style={styles.headerBody}>
             <TouchableOpacity style={styles.buttonContainer} onPress={leftBtnPress}>
                 <FontAwesome5 name="chevron-left" color={appStyle.brightGrey} size={phoneDevice ? RPW(4.2) : 25} style={{ marginRight: phoneDevice ? RPW(4) : 30 }} />
-                {previousPageName && <Text style={styles.buttonText}>{previousPageName}</Text>}
+                {previousPageName && <Text style={styles.buttonText} allowFontScaling={false}>{previousPageName}</Text>}
             </TouchableOpacity>
         </View>
     )
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal : appStyle.secondHeaderHorizPadd,
+        paddingHorizontal : appStyle.headerHorizPadd,
     },
     buttonContainer: {
         flexDirection: "row",

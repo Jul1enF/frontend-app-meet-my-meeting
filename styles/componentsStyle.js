@@ -72,7 +72,7 @@ const largeItem = {
 
 const largeCardItem = {
     ...largeItem,
-    width: "100%",
+    width: largeCard.width - (cardHorizontalPadding * 2),
     maxWidth: "100%",
 }
 
@@ -91,9 +91,9 @@ const inputIconSize = phoneDevice ? RPW(5.2) : 35
 export const componentsStyle = {
     // Main sizes of the app
     headerHeight: phoneDevice ? RPW(16) : 105,
-    tabBarHeight: phoneDevice ? RPW(18) : 90,
+    headerHorizPadd: phoneDevice ? RPW(4) : 30,
     secondHeaderHeight: phoneDevice ? RPW(10) : 62,
-    secondHeaderHorizPadd: phoneDevice ? RPW(4) : 30,
+    tabBarHeight: phoneDevice ? RPW(18) : 90,
 
 
     // Components Style
@@ -122,10 +122,10 @@ export const componentsStyle = {
             fontWeight: "700",
         },
         withIcon: {
-            paddingRight: inputIconSize * 2,
+            paddingRight: inputIconSize * 1.75,
         }
     },
-    InputAndIconContainer: {
+    inputAndIconContainer: {
         flexDirection: "row",
         alignItems: "center",
     },
@@ -134,7 +134,7 @@ export const componentsStyle = {
         height: "100%",
         right: 0,
         bottom: phoneDevice ? RPW(-2) : -14,
-        width: inputIconSize * 2,
+        width: inputIconSize * 1.75,
         justifyContent: "center",
         alignItems: "center",
     },

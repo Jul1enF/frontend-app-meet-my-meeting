@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, TextInput, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, FlatList, TouchableOpacity } from "react-native";
 import { useEffect, useState, useRef } from "react";
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
@@ -6,10 +6,10 @@ import { appStyle } from "@styles/appStyle"
 import request from "@utils/request";
 import { useSelector } from "react-redux";
 import useRefreshControl from "@hooks/useRefreshControl";
-import useInputResetKey from "@hooks/useInputResetKey";
 import useSortUsers from "@components/pages/user-pages/owner-side/useSortUsers";
 
 import UserItem from "@components/pages/user-pages/owner-side/UserItem";
+import MyTextInput from "@components/ui/MyTextInput";
 import HorizontalMenu from "@components/ui/HorizontalMenu";
 import ModalPageWrapper from "@components/layout/ModalPageWrapper";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -68,7 +68,7 @@ export default function UsersPage() {
     const usersFlatlistRef = useRef(null)
 
     // refreshControl for the ScrollView
-    const refreshControl = useRefreshControl(()=> fetchUsers(usersInformations))
+    const refreshControl = useRefreshControl(() => fetchUsers(usersInformations))
 
     const usersListHeader = () => {
         return (
@@ -94,22 +94,25 @@ export default function UsersPage() {
 
                 <View style={styles.searchContainer}>
                     <View style={styles.inputContainer}>
-                        <TextInput
-                            style={[appStyle.input.withIcon, appStyle.secondHeaderText]}
+                        <MyTextInput
+                            style={styles.searchInput}
                             value={searchText}
                             onChangeText={(e) => setSearchText(e)}
                             autoCapitalize='none'
                             placeholderTextColor={appStyle.placeholderColor}
                             placeholder='Rechercher un utilisateur...'
-                            key={useInputResetKey(searchText)}
                         >
-                        </TextInput>
+                        </MyTextInput>
+
 
                         <FontAwesome name="search" size={appStyle.inputIconSize} color={appStyle.strongBlack} />
                     </View>
 
-                    <MaterialCommunityIcons name="backspace" size={appStyle.inputIconSize} color={appStyle.strongBlack} onPress={() => setSearchText("")} />
+                    <TouchableOpacity activeOpacity={0.6} onPress={() => setSearchText("")} style={styles.backspaceIconContainer} hitSlop={{right : appStyle.headerHorizPadd }} >
+                        <MaterialCommunityIcons name="backspace" size={appStyle.inputIconSize} color={appStyle.strongBlack} onPress={() => setSearchText("")} />
+                    </TouchableOpacity>
                 </View>
+
 
                 <FlatList
                     data={usersToDisplay}
@@ -149,20 +152,31 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        height: appStyle.secondHeaderHeight,
-        paddingHorizontal: appStyle.secondHeaderHorizPadd,
-        paddingTop: phoneDevice ? RPW(1) : 6,
+        minHeight: appStyle.secondHeaderHeight,
+        paddingHorizontal: appStyle.headerHorizPadd,
         width: "100%",
     },
     inputContainer: {
-        width: phoneDevice ? RPW(68) : 450,
-        height: "100%",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
         borderBottomWidth: phoneDevice ? 2 : 3,
         borderBottomColor: appStyle.strongRed,
+    },
+    searchInput: {
+        ...appStyle.input.withIcon,
+        ...appStyle.secondHeaderText,
+        width: phoneDevice ? RPW(68) : 450,
+        maxWidth : "90%",
+        paddingTop: phoneDevice ? RPW(2.2) : 10,
+        paddingBottom: phoneDevice ? RPW(2.2) : 10,
+    },
+    backspaceIconContainer : {
+        position : "absolute",
+        right : appStyle.headerHorizPadd,
+        height : "100%",
+        width :phoneDevice ? RPW(11) : 75,
+        alignItems : "flex-end",
+        justifyContent : "center",
     },
     modal: {
         alignItems: "flex-start",

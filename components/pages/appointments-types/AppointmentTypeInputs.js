@@ -1,12 +1,12 @@
 import { View, Text, TextInput, StyleSheet } from "react-native"
 import Autocomplete from "@components/ui/Autocomplete"
-import useInputResetKey from "@hooks/useInputResetKey"
+import MyTextInput from "@components/ui/MyTextInput"
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
 
-export default function AppointmentsTypesInputs({ categories, setCategory, title, setTitle, defaultDuration, setDefaultDuration, price, setPrice, setWarning, selectedType}) {
+export default function AppointmentsTypesInputs({ categories, setCategory, title, setTitle, defaultDuration, setDefaultDuration, price, setPrice, setWarning, selectedType }) {
 
     return (
         <>
@@ -15,14 +15,14 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Catégorie :
                 </Text>
 
-                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" width={"100%"} inputStyle={{ fontWeight: "400" }} canCreate={true} initialValue={selectedType?.category && {title : selectedType.category, id : selectedType._id} } />
+                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" width={"100%"} inputStyle={{ fontWeight: "400" }} canCreate={true} initialValue={selectedType?.category && { title: selectedType.category, id: selectedType._id }} />
             </View>
 
             <View style={styles.column}>
                 <Text style={styles.label}>
                     Titre :
                 </Text>
-                <TextInput style={[appStyle.input.baseLargeCard, { color: appStyle.fontColorDarkBg, fontWeight : "400"}]}
+                <MyTextInput style={[appStyle.input.baseLargeCard, { color: appStyle.fontColorDarkBg, fontWeight: "400" }]}
                     onChangeText={(e) => {
                         setTitle(e)
                         setWarning("")
@@ -31,32 +31,35 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     placeholder='Titre...'
                     placeholderTextColor={appStyle.placeholderColor}
                     autoCapitalize="sentences"
-                    key={useInputResetKey(title)}
                 >
-                </TextInput>
+                </MyTextInput>
             </View>
+
 
             <View style={styles.column}>
                 <Text style={styles.label}>
                     Durée :
                 </Text>
 
-                <View style={styles.numberInputContainer}>
-                    <TextInput style={[appStyle.input.withIcon, { color: appStyle.fontColorDarkBg, width: "50%" }]}
+                <View style={appStyle.inputAndIconContainer}>
+                    <MyTextInput style={styles.inputWithText}
                         onChangeText={(e) => {
-                            !Number.isNaN(Number(e)) ? setDefaultDuration(Number(e)) : setDefaultDuration("")
+                            if (!Number.isNaN(Number(e)) && e) setDefaultDuration(Number(e))
+                            else setDefaultDuration("")
                             setWarning("")
                         }}
                         value={defaultDuration.toString()}
                         placeholder='Durée...'
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType="numeric"
-                        key={useInputResetKey(defaultDuration.toString())}
                     >
-                    </TextInput>
-                    <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
-                        minutes
-                    </Text>
+                    </MyTextInput>
+
+                    <View style={styles.inputTextContainer}>
+                        <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
+                            minutes
+                        </Text>
+                    </View>
                 </View>
             </View>
 
@@ -66,22 +69,25 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Prix :
                 </Text>
 
-                <View style={styles.numberInputContainer}>
-                    <TextInput style={[appStyle.input.withIcon, { color: appStyle.fontColorDarkBg, width: "50%" }]}
+                <View style={appStyle.inputAndIconContainer}>
+                    <MyTextInput style={styles.inputWithText}
                         onChangeText={(e) => {
-                            !Number.isNaN(Number(e)) ? setPrice(Number(e)) : setPrice("")
+                            if (!Number.isNaN(Number(e)) && e) setPrice(Number(e))
+                            else setPrice("")
                             setWarning("")
                         }}
                         value={price.toString()}
                         placeholder='Prix...'
                         placeholderTextColor={appStyle.placeholderColor}
                         keyboardType="numeric"
-                        key={useInputResetKey(price.toString())}
                     >
-                    </TextInput>
-                    <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
-                        euros
-                    </Text>
+                    </MyTextInput>
+
+                    <View style={styles.inputTextContainer}>
+                        <Text style={{ ...appStyle.regularText, color: appStyle.fontColorDarkBg }}>
+                            euros
+                        </Text>
+                    </View>
                 </View>
             </View>
         </>
@@ -104,11 +110,16 @@ const styles = StyleSheet.create({
         borderBottomColor: appStyle.darkWhite,
         borderBottomWidth: phoneDevice ? 2 : 3,
     },
-    numberInputContainer: {
+    inputWithText: {
+        ...appStyle.input.withIcon,
         ...appStyle.input.baseLargeCard,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingRight : phoneDevice ? RPW(3) : 25,
+        color: appStyle.fontColorDarkBg,
+        paddingRight: "50%",
+    },
+    inputTextContainer: {
+        ...appStyle.inputIconContainer,
+        width: "50%",
+        paddingRight : appStyle.regularHorizontalPadding,
+        alignItems : "flex-end"
     }
 })
