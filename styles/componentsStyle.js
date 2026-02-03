@@ -10,8 +10,6 @@ const regularItemHeight = phoneDevice ? RPW(9) : 55
 const regularItemBorderRadius = phoneDevice ? RPW(2.5) : 18
 const regularItemVertPadding = phoneDevice ? RPW(1.8) : 10
 
-const mediumItemHeight = phoneDevice ? RPW(10.8) : 68
-
 const largeItemWidth = phoneDevice ? RPW(92) : Math.min(700, RPW(92), RPH(92)) // small android tablets can be smaller than 700 dp
 const largeItemHeight = phoneDevice ? RPW(12) : 78
 const largeItemVertPadding = phoneDevice ? RPW(2.5) : 19
@@ -57,6 +55,12 @@ const regularItem = {
     borderRadius: regularItemBorderRadius,
     marginTop: regularMarginTop,
     paddingHorizontal: regularHorizontalPadding,
+}
+
+const mediumItemHeight = {
+    minHeight: phoneDevice ? RPW(10.8) : 68,
+    paddingTop : phoneDevice ? RPW(2) : 14,
+    paddingBottom : phoneDevice ? RPW(2) : 14,
 }
 
 const largeItem = {

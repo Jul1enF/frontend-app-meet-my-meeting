@@ -210,7 +210,7 @@ export default function UserInformations({ user }) {
                 {formWarning}
             </Text>
 
-            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"} style={{ height: appStyle.mediumItemHeight, width: "100%", marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"} style={{...appStyle.mediumItemHeight, width: "100%", marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
             < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUser} />

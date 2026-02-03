@@ -27,7 +27,7 @@ export default function DatePicker({ chosenDate, setChosenDate, startInputText =
 
                 <Button func={updateCalendarVisible} 
                 text={startInputText + chosenDate.toFormat("dd / MM / yyyy") + endInputText }
-                style={buttonStyle} fontStyle={buttonFontStyle}
+                style={{...buttonStyle, paddingHorizontal : phoneDevice ? RPW(8) : 53}} fontStyle={buttonFontStyle}
                 />
 
             </View>

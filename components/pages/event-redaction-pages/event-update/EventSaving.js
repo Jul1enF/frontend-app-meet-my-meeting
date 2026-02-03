@@ -175,7 +175,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
                 {eventWarning}
             </Text>
 
-            <Button func={eventValidation} text={!oldEvent ? "Enregistrer l'évènement" : "Modifier l'évènement"} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop, width : "100%" }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={eventValidation} text={!oldEvent ? "Enregistrer l'évènement" : "Modifier l'évènement"} style={{ ...appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop, width : "100%" }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
             < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={`Êtes vous sûr(e) de vouloir ${!oldEvent ? "enregistrer" : "modifier"} ${clientRedaction ? "ce RDV" : "cet évènement"} ?`} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={registerEvent} />

@@ -6,7 +6,7 @@ import { appStyle } from '@styles/appStyle';
 export default function HomePage() {
   return (
     <View style={styles.container}>
-      <Text style={appStyle.pageTitle}>{RPW(1).toFixed(2).toString()}Welcome !</Text>
+      <Text style={appStyle.pageTitle}>Welcome !</Text>
     </View>
   );
 }

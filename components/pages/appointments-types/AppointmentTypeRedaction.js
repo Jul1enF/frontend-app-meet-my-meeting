@@ -116,9 +116,9 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
                     {warning}
                 </Text>
 
-                <Button func={() => validateType()} text={`Enregistrer ${!selectedType ? "le modèle" : "les modifications"}`} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop }} />
+                <Button func={() => validateType()} text={`Enregistrer ${!selectedType ? "le modèle" : "les modifications"}`} style={{ ...appStyle.mediumItemHeight, marginTop: appStyle.largeMarginTop }} />
 
-                {selectedType && <Button func={() => setDeleteModalVisible(true)} text={"Supprimer le modèle"} style={{ height: appStyle.mediumItemHeight, marginTop: appStyle.mediumMarginTop }} />}
+                {selectedType && <Button func={() => setDeleteModalVisible(true)} text={"Supprimer le modèle"} style={{ ...appStyle.mediumItemHeight, marginTop: appStyle.mediumMarginTop }} />}
 
             </View>
 
