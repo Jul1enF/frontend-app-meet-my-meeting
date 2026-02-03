@@ -51,6 +51,9 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
             width="100%"
             suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
             listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
+            inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
+            inputContainerStyle={{ height: "auto" }}
+            multiline={true}
         />
     ), [availableSlotsList, eventStart])
 

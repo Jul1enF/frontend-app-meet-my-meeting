@@ -14,7 +14,7 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
     const usersAutocomplete = useMemo(() => (
         <Autocomplete
             data={usersList}
-            ref={usersAutocompleteRef}
+            controllerRef={usersAutocompleteRef}
             placeholderText={"Utilisateur ( inscrit )"}
             setSelectedItem={(item) => setClient(item?.user ?? null)}
             emptyText="Aucun résultat"

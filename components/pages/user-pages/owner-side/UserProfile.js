@@ -61,7 +61,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
             }
         }
 
-         setModalVisible(true)
+        setModalVisible(true)
     }
 
 
@@ -124,7 +124,19 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
                     Statut :
                 </Text>
 
-                <Autocomplete data={rolesData} setSelectedItem={setNewRole} placeholderText={"Statut de l'utilisateur"} width={"100%"} initialValue={newRole} emptyText="Aucun résultat" />
+                <Autocomplete
+                    data={rolesData}
+                    setSelectedItem={setNewRole}
+                    placeholderText={"Statut de l'utilisateur"}
+                    width={"100%"}
+                    initialValue={newRole}
+                    emptyText="Aucun résultat"
+                    inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight }}
+                    inputContainerStyle={{ height: "auto" }}
+                    suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
+                    listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
+                    multiline={true}
+                />
 
                 {(newRole?.role && newRole?.role !== "client") &&
                     <UserSchedule scheduleArray={scheduleArray} setNewSchedule={setNewSchedule}

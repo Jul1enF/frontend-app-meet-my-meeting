@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useRef } from "react";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -6,16 +7,18 @@ import { appStyle } from "@styles/appStyle"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
 
-export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputContainerStyle, inputStyle, listItemStyle, suggestionTextStyle, boldTitleWeight, iconColor, canCreate, editable = true, showClear = true, multiline = false, ref = null }) {
+export default function Autocomplete({ data, setSelectedItem, placeholderText, placeholderColor, width, height, initialValue, emptyText, inputContainerStyle, inputStyle, listItemStyle, suggestionTextStyle, boldTitleWeight, iconColor, canCreate, editable = true, showClear = true, multiline = false, controllerRef = null }) {
 
     const inputWidth = width ?? appStyle.largeItemWidth
     const inputHeight = height ?? appStyle.largeItemHeight
 
+    const internalRef = useRef(null)
+    const finalControllerRef = controllerRef ?? internalRef
 
     return (
         <AutocompleteDropdown
             dataSet={data}
-            controller={controller => { if (ref) ref.current = controller }}
+            controller={controller => finalControllerRef.current = controller }
             showClear={showClear}
             editable={editable}
             clearOnFocus={false}

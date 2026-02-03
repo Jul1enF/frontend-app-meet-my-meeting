@@ -1,6 +1,7 @@
 import { TextInput, View, StyleSheet, Text } from "react-native";
+import { useRef } from "react";
 
-export default function MyTextInput({ style, onChangeText, value, autoCapitalize, placeholder, placeholderTextColor, secureTextEntry, keyboardType, children }) {
+export default function MyTextInput({ style, onChangeText, value, autoCapitalize, placeholder, placeholderTextColor, secureTextEntry, keyboardType, multiline, children, inputRef = null }) {
 
     const styleObject = StyleSheet.flatten(style) ?? {}
 
@@ -8,6 +9,10 @@ export default function MyTextInput({ style, onChangeText, value, autoCapitalize
 
     const fontSize = styleObject.fontSize ?? 16;
     const lineHeight = Math.round(fontSize * 1.25);
+
+    // Conditionnal ref
+    const internalRef = useRef(null);
+    const finalInputRef = inputRef ?? internalRef;
 
     return (
         <View style={[styles.mainContainer, styleObject?.marginTop !== undefined && { marginTop: styleObject?.marginTop }]}>
@@ -38,6 +43,7 @@ export default function MyTextInput({ style, onChangeText, value, autoCapitalize
             <TextInput
                 value={value}
                 onChangeText={onChangeText}
+                ref={finalInputRef}
                 autoCapitalize={autoCapitalize}
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}
@@ -45,9 +51,9 @@ export default function MyTextInput({ style, onChangeText, value, autoCapitalize
                 placeholderTextColor="transparent"
                 includeFontPadding={false}
                 textAlignVertical="center"
-                multiline={false}
-                numberOfLines={1}
-                style={[styleObject, { fontSize, lineHeight, marginTop: 0}]}
+                multiline={multiline ?? false}
+                numberOfLines={multiline ? undefined : 1}
+                style={[styleObject, { fontSize, lineHeight, marginTop: 0 }]}
             />
 
 

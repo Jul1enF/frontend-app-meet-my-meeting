@@ -89,7 +89,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     placeholderColor={appStyle.mediumGrey}
                     iconColor={isInRedactionComponent ? null : appStyle.strongBlack}
                     height={isInRedactionComponent ? null : (phoneDevice ? null : 70)}
-                    ref={autocompleteRef}
+                    controllerRef={autocompleteRef}
                     multiline={isInRedactionComponent ? true : false}
                 />}
         </>

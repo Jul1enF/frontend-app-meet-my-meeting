@@ -15,7 +15,20 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                     Catégorie :
                 </Text>
 
-                <Autocomplete data={categories} setSelectedItem={setCategory} placeholderText="Catégorie..." emptyText="Aucun résultat" width={"100%"} inputStyle={{ fontWeight: "400" }} canCreate={true} initialValue={selectedType?.category && { title: selectedType.category, id: selectedType._id }} />
+                <Autocomplete
+                    data={categories}
+                    setSelectedItem={setCategory}
+                    placeholderText="Catégorie..."
+                    emptyText="Aucun résultat"
+                    width={"100%"}
+                    canCreate={true}
+                    initialValue={selectedType?.category && { title: selectedType.category, id: selectedType._id }}
+                    inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight, fontWeight: "400" }}
+                    inputContainerStyle={{ height: "auto" }}
+                    suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
+                    listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
+                    multiline={true}
+                />
             </View>
 
             <View style={styles.column}>

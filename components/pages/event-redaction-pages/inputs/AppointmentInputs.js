@@ -65,7 +65,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                     setSelectedAppointmentType(item?.appointment ?? null)
                     appointmentTypeRef.current = item
                 }}
-                ref={typesAutocompleteRef}
+                controllerRef={typesAutocompleteRef}
                 emptyText="Aucun résultat"
                 width="100%"
                 inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
@@ -113,8 +113,10 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                 setSelectedItem={(item) => item?.start && setEventStart(item?.start)}
                 emptyText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
                 width="100%"
-                suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
-                listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
+                inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
+                inputContainerStyle={{ height: "auto" }}
+                suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6.5) : 40, fontWeight : "700" }}
+                listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
             />
 
 

@@ -53,72 +53,77 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
 
 
     // Hook to get all the free appointments/breaks slots
-    const { availableSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, slotGapMs, eventDuration )
+    const { availableSlots } = useScheduleFreeSlots(selectedDate, selectedEmployee, !oldEvent ? events : events.filter((e) => e._id !== oldEvent._id), closures, absences, workingOverrides, slotGapMs, eventDuration)
 
     // Hook to get the autocomplete list for the category
     const { categoriesList } = useAutocompleteLists({ selectedEmployee })
 
 
     return (
-            <KeyboardAwareScrollView
-                style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
-                contentContainerStyle={[
-                    appStyle.pageBody,
-                    { flex : "auto" }
-                ]}
-                keyboardShouldPersistTaps="handled"
-                bounces={false}
-                overScrollMode="never"
-                bottomOffset={Platform.OS === 'ios' ? 40 : 20}
-            >
+        <KeyboardAwareScrollView
+            style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}
+            contentContainerStyle={[
+                appStyle.pageBody,
+                { flex: "auto" }
+            ]}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+            overScrollMode="never"
+            bottomOffset={Platform.OS === 'ios' ? 40 : 20}
+        >
 
 
-                <Text style={appStyle.pageTitle}>
-                    {!oldEvent ? "Nouvel évènement :" : `Modifier un ${clientRedaction ? "RDV" : "évènement"} :`}
-                </Text>
+            <Text style={appStyle.pageTitle}>
+                {!oldEvent ? "Nouvel évènement :" : `Modifier un ${clientRedaction ? "RDV" : "évènement"} :`}
+            </Text>
 
-                <View style={appStyle.largeCard}>
+            <View style={appStyle.largeCard}>
 
-                    {oldEvent &&
-                        <View style={{ borderBottomColor: appStyle.darkWhite, borderBottomWidth: phoneDevice ? 2 : 3, paddingBottom: phoneDevice ? RPW(1) : 6, marginBottom: phoneDevice ? RPW(1) : 10 }}>
-                            <Text style={{ ...appStyle.pageSubtitle, color: appStyle.fontColorDarkBg, fontWeight: "700" }}>
-                                {eventCatTranslation[category]} :
-                            </Text>
-                        </View>
-                    }
-
-
-                    {!oldEvent &&
-                        <Autocomplete
-                            data={categoriesList}
-                            editable={false}
-                            showClear={false}
-                            setSelectedItem={(item) => setCategory(item?.category ?? null)}
-                            initialValue={"initialValue"}
-                            width="100%"
-                        />
-                    }
+                {oldEvent &&
+                    <View style={{ borderBottomColor: appStyle.darkWhite, borderBottomWidth: phoneDevice ? 2 : 3, paddingBottom: phoneDevice ? RPW(1) : 6, marginBottom: phoneDevice ? RPW(1) : 10 }}>
+                        <Text style={{ ...appStyle.pageSubtitle, color: appStyle.fontColorDarkBg, fontWeight: "700" }}>
+                            {eventCatTranslation[category]} :
+                        </Text>
+                    </View>
+                }
 
 
-                    {category === "appointment" &&
-                        <AppointmentInputs eventRedactionContext={eventRedactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} availableSlots={availableSlots} clientRedaction={clientRedaction} />
-                    }
+                {!oldEvent &&
+                    <Autocomplete
+                        data={categoriesList}
+                        editable={false}
+                        showClear={false}
+                        setSelectedItem={(item) => setCategory(item?.category ?? null)}
+                        initialValue={"initialValue"}
+                        width="100%"
+                        inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
+                        inputContainerStyle={{ height: "auto" }}
+                        suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6.5) : 40 }}
+                        listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
+                        multiline={true}
+                    />
+                }
 
 
-                    {(category === "absence" || category === "closure") &&
-                        <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} selectedEmployee={selectedEmployee} />
-                    }
+                {category === "appointment" &&
+                    <AppointmentInputs eventRedactionContext={eventRedactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} availableSlots={availableSlots} clientRedaction={clientRedaction} />
+                }
 
 
-                    {/break/i.test(category) &&
-                        <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} availableSlots={availableSlots} description={description} setDescription={setDescription} category={category} />
-                    }
+                {(category === "absence" || category === "closure") &&
+                    <VacationInputs vacationStart={vacationStart} setVacationStart={setVacationStart} vacationEnd={vacationEnd} setVacationEnd={setVacationEnd} description={description} setDescription={setDescription} category={category} selectedEmployee={selectedEmployee} />
+                }
 
 
-                    <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} availableSlots={availableSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
+                {/break/i.test(category) &&
+                    <BreakInputs breakDuration={breakDuration} setBreakDuration={setBreakDuration} eventStart={eventStart} setEventStart={setEventStart} availableSlots={availableSlots} description={description} setDescription={setDescription} category={category} />
+                }
 
-                </View>
 
-            </KeyboardAwareScrollView>
+                <EventSaving selectedEmployee={selectedEmployee} eventStart={eventStart} oldEvent={oldEvent} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} client={client} unregisteredClient={unregisteredClient} category={category} description={description} vacationStart={vacationStart} vacationEnd={vacationEnd} breakDuration={breakDuration} availableSlots={availableSlots} resetAndRenewEvents={resetAndRenewEvents} clientRedaction={clientRedaction} />
+
+            </View>
+
+        </KeyboardAwareScrollView>
     );
 }
