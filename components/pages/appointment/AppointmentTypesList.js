@@ -56,14 +56,19 @@ export default function AppointmentTypesList({ appointmentTypes, selectedAppoint
 
     const category = selectedAppointmentType?.category
 
+    // To not show the title underline in case of accessibilty zoom if the title take the all screen width
+    const [showUnderline, setShowUnderline] = useState(true)
+
     return (
         <View style={{ width: "100%", alignItems: "center", paddingTop: appStyle.largeMarginTop, paddingBottom: selectedAppointmentType ? 0 : appStyle.largeMarginTop }} >
 
             <View style={{
                 borderBottomColor: appStyle.strongBlack,
-                borderBottomWidth: phoneDevice ? 3 : 5,
-            }}>
-                <Text style={[appStyle.pageTitle, { paddingBottom: phoneDevice ? RPW(2.5) : 15 }]}>Prendre un rendez vous :</Text>
+                borderBottomWidth: showUnderline ? (phoneDevice ? 3 : 5) : 0,
+            }}
+            onLayout={(e)=> Math.round(e.nativeEvent.layout.width) === Math.round(RPW(100)) && setShowUnderline(false)}
+            >
+                <Text style={[appStyle.pageTitle, { paddingBottom: showUnderline ? (phoneDevice ? RPW(2.5) : 15) : 0 }]}>Prendre un rendez vous :</Text>
             </View>
 
             <Text style={[appStyle.warning, warning?.success && appStyle.success, !warning?.text && { height: 0, marginTop: 0 }]}>

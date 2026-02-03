@@ -137,6 +137,7 @@ export default memo(function EventItem({ event, minuteHeight, dtDayWorkingHours,
                 backgroundColor: color,
                 paddingTop,
                 justifyContent,
+                overflow : "hidden"
             }]} >
                 <UpdateButtons setEventStart={setEventStart} setOldEvent={setOldEvent} eventMinDuration={eventMinDuration} resetAndRenewEvents={resetAndRenewEvents} event={event} />
 
