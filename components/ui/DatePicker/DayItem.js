@@ -28,7 +28,7 @@ const textColor = isToday && !isSelected ? { color : appStyle.strongRed} : {}
                 if (!currentMonth) nextMonth ? updateViewedDate(true) : updateViewedDate(false)
             }
         }}>
-            <Text style={[styles.dayNumber, textColor]} >
+            <Text style={[styles.dayNumber, textColor]} maxFontSizeMultiplier={1.32} >
                 {date.day}
             </Text>
         </TouchableOpacity>

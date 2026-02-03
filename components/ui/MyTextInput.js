@@ -1,7 +1,7 @@
 import { TextInput, View, StyleSheet, Text } from "react-native";
 import { useRef } from "react";
 
-export default function MyTextInput({ style, onChangeText, value, autoCapitalize, placeholder, placeholderTextColor, secureTextEntry, keyboardType, multiline, children, inputRef = null }) {
+export default function MyTextInput({ style, onChangeText, value, autoCorrect, autoCapitalize, placeholder, placeholderTextColor, secureTextEntry, keyboardType, multiline, children, inputRef = null }) {
 
     const styleObject = StyleSheet.flatten(style) ?? {}
 
@@ -44,6 +44,7 @@ export default function MyTextInput({ style, onChangeText, value, autoCapitalize
                 value={value}
                 onChangeText={onChangeText}
                 ref={finalInputRef}
+                autoCorrect={autoCorrect}
                 autoCapitalize={autoCapitalize}
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}

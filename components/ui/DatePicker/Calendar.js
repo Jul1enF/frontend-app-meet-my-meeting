@@ -47,7 +47,7 @@ export default memo(function Calendar({ chosenDate, setChosenDate, setCalendarVi
                 </TouchableOpacity>
 
 
-                <Text style={styles.monthText}>
+                <Text style={styles.monthText} maxFontSizeMultiplier={1.32}>
                     {monthName}
                 </Text>
 
@@ -57,7 +57,7 @@ export default memo(function Calendar({ chosenDate, setChosenDate, setCalendarVi
             </View>
 
             <View style={styles.daysNameContainer} >
-                {daysName.map((e, i) => <Text style={styles.dayName} key={i}>{e}</Text>)}
+                {daysName.map((e, i) => <Text style={styles.dayName} key={i} maxFontSizeMultiplier={1.32}>{e}</Text>)}
             </View>
 
             <View style={styles.daysContainer} key={`${viewedYear}-${viewedMonth}`}>

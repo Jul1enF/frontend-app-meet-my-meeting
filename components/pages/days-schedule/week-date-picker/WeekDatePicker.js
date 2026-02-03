@@ -44,7 +44,7 @@ export default memo(function WeekDatePicker({ selectedDate, setSelectedDate, fir
                 </TouchableOpacity>
 
 
-                <Text style={styles.monthText}>
+                <Text style={styles.monthText} maxFontSizeMultiplier={1.32}>
                     {monthName}
                 </Text>
 
@@ -55,7 +55,7 @@ export default memo(function WeekDatePicker({ selectedDate, setSelectedDate, fir
 
 
             <View style={styles.daysNameContainer} >
-                {daysArray && daysArray.map((e, i) => <Text style={styles.dayName} key={i}>{e.dayName}</Text>)}
+                {daysArray && daysArray.map((e, i) => <Text style={styles.dayName} key={i} maxFontSizeMultiplier={1.32}>{e.dayName}</Text>)}
             </View>
 
 
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: phoneDevice ? RPW(10) : 60,
+        minHeight: phoneDevice ? RPW(10) : 60,
     },
       leftChevronContainer: {
         alignItems: "flex-start",

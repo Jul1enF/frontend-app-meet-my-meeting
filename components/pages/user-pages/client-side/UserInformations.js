@@ -114,6 +114,7 @@ export default function UserInformations({ user }) {
                 placeholder='Prénom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
+                autoCorrect={false}
             >
             </MyTextInput>
 
@@ -131,6 +132,7 @@ export default function UserInformations({ user }) {
                 placeholder='Nom'
                 placeholderTextColor={appStyle.placeholderColor}
                 autoCapitalize="words"
+                autoCorrect={false}
             >
             </MyTextInput>
 

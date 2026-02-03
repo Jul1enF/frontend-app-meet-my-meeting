@@ -62,6 +62,11 @@ export default function Signup({ setSignForm, func }) {
 
         if (data?.result) {
             dispatch(login(data.user))
+            setLastName("")
+            setFirstName("")
+            setEmail("")
+            setPassword("")
+            setConfirmedPassword("")
             if (typeof func === "function") func()
             else router.push("/")
         }
@@ -101,6 +106,7 @@ export default function Signup({ setSignForm, func }) {
                         placeholder='Prénom'
                         placeholderTextColor={appStyle.placeholderColor}
                         autoCapitalize="words"
+                        autoCorrect={false}
                     >
                     </MyTextInput>
 
@@ -113,6 +119,7 @@ export default function Signup({ setSignForm, func }) {
                         placeholder='Nom'
                         placeholderTextColor={appStyle.placeholderColor}
                         autoCapitalize="words"
+                        autoCorrect={false}
                     >
                     </MyTextInput>
 

@@ -30,7 +30,7 @@ export default memo(function DayItem({ date, currentMonth, disabled, selectedDat
                 setSelectedDate(itemDate)
             }}
             >
-                <Text style={[styles.dayNumber, todayColor, todayFontStyle]} >
+                <Text style={[styles.dayNumber, todayColor, todayFontStyle]} maxFontSizeMultiplier={1.32} >
                     {date.day}
                 </Text>
             </TouchableOpacity>

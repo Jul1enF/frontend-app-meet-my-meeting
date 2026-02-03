@@ -76,7 +76,7 @@ export default memo(function Schedule({ scheduleContext }) {
             grid.push(
                 <View key={start.toISO()} style={{ height: appointmentGapMin * minuteHeight, borderBottomWidth, borderBottomColor: appStyle.strongBlack, alignItems: "center", paddingTop: phoneDevice ? RPW(2) : 10, width: "100%" }}>
 
-                    {timeGrid && <Text style={{ ...appStyle.regularText, fontWeight: "500" }}>
+                    {timeGrid && <Text style={{ ...appStyle.regularText, fontWeight: "500" }} maxFontSizeMultiplier={1.32}>
                         {start.toFormat("HH:mm")}
                     </Text>}
 
@@ -114,7 +114,7 @@ export default memo(function Schedule({ scheduleContext }) {
 
             <View style={styles.mainContainer}>
 
-                <View style={{ width: phoneDevice ? RPW(16) : 100, backgroundColor: appStyle.darkWhite2 }}>
+                <View style={{ width: phoneDevice ? RPW(17) : 100, backgroundColor: appStyle.darkWhite2 }}>
                     {timeGrid}
                 </View>
 

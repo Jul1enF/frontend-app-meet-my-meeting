@@ -45,6 +45,8 @@ export default function Signin({ setSignForm, func }) {
 
         if (data?.result) {
             dispatch(login(data.user))
+            setPassword("")
+            setEmail("")
             if (typeof func === "function") func()
             else router.push("/")
         }
