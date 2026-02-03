@@ -19,15 +19,17 @@ export default memo(function DayScheduleForm({ onChange, day, showDayToggle = tr
         <View style={styles.mainContainer}>
 
             {showDayToggle &&
-                <>
-                    <SmallSwitch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularHorizontalPadding * 1.5, top: appStyle.mediumMarginTop }} leftFunction={() => onChange({ enabled: !activeDay })} />
+                <View style={{ width: "100%", alignItems: "center", justifyContent: "center", marginTop: appStyle.mediumMarginTop }}>
 
-                    <View style={[styles.underline, { marginTop: appStyle.mediumMarginTop }]}>
+                    <SmallSwitch active={activeDay} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: 0 }} leftFunction={() => onChange({ enabled: !activeDay })} />
+
+                    <View style={styles.underline}>
                         <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg }]}>
                             {dayTitle} :
                         </Text>
                     </View>
-                </>
+
+                </View>
             }
 
             <View style={[{ width: "100%", marginTop: appStyle.largeMarginTop }, !activeDay && { display: "none" }]}>
@@ -58,12 +60,12 @@ export default memo(function DayScheduleForm({ onChange, day, showDayToggle = tr
                     {dayError}
                 </Text>
 
-                <View style={{ width: "100%", alignItems: "center", marginTop: appStyle.largeMarginTop }}>
+                <View style={{ width: "100%", alignItems: "center", justifyContent: "center", marginTop: appStyle.largeMarginTop }}>
                     <Text style={[appStyle.labelText, { color: appStyle.fontColorDarkBg, fontWeight: "700" }]}>
                         Pause :
                     </Text>
 
-                    <SmallSwitch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: appStyle.regularHorizontalPadding * 0.5, top: 0 }} leftFunction={() => onChange({ break: {...day.break, enabled: !activeBreak } })} />
+                    <SmallSwitch active={activeBreak} width={phoneDevice ? RPW(9) : 56} height={phoneDevice ? RPW(4.5) : 28} style={{ position: "absolute", right: 0 }} leftFunction={() => onChange({ break: { ...day.break, enabled: !activeBreak } })} />
                 </View>
 
 
@@ -115,17 +117,18 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingRight: appStyle.regularHorizontalPadding * 0.5,
+        flexWrap: "wrap",
+        rowGap : phoneDevice ? RPW(3) : 15,
     },
     row: {
         flexDirection: "row",
         alignItems: "flex-end",
-        height: "100%",
     },
     label: {
         ...appStyle.labelText,
         color: appStyle.fontColorDarkBg,
         padding: phoneDevice ? RPW(2) : 15,
-        textAlign :"left",
+        textAlign: "left",
     },
     timeContainer: {
         marginLeft: phoneDevice ? RPW(2) : 15,

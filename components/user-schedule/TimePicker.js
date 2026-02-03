@@ -135,13 +135,10 @@ const styles = StyleSheet.create({
         paddingTop : phoneDevice ? RPW(3) : 40
     },
     selectionButton: {
-        borderRadius : appStyle.regularItemBorderRadius,
         ...appStyle.button,
         ...appStyle.lightGreyBorder,
-        flexDirection: "row",
+        ...appStyle.regularItem,
         marginTop: phoneDevice ? RPW(3) : 55,
-        width: phoneDevice ? RPW(50) : 330,
-        height : phoneDevice ? RPW(11) : 70
     },
     selectionButtonText: {
         letterSpacing: phoneDevice ? 1 : 1.5,
