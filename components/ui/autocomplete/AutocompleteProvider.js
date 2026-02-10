@@ -8,7 +8,7 @@ const AutocompleteContext = createContext(null)
 
 export function AutocompleteProvider({ modalPageWrapper = false, children }) {
     const [dropdownProps, setDropdownProps] = useState(null)
-    const { tabBar, header, dropdownId } = dropdownProps ?? {}
+    const { tabBar, header } = dropdownProps ?? {}
 
     // Layout informations to display the dropdown in a View that fit a screen layout
     const { freeHeight, fullHeaderHeight } = useLayoutSpaces({ tabBar, header })
