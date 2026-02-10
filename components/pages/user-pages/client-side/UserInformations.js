@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 import { useState, useRef } from "react"
+import { useRouter } from "expo-router"
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
 import { useDispatch } from "react-redux"
-import { changeUserInfos } from "@reducers/user"
+import { changeUserInfos, logout } from "@reducers/user"
+import { deleteInformations } from "@reducers/planning"
 
 import Button from "@components/ui/Button"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -17,6 +19,7 @@ import request from "@utils/request"
 
 export default function UserInformations({ user }) {
     const dispatch = useDispatch()
+    const router = useRouter()
 
     const [email, setEmail] = useState(user.email ?? "")
     const [firstName, setFirstName] = useState(user.first_name ?? "")
@@ -29,8 +32,10 @@ export default function UserInformations({ user }) {
     const [confirmedPasswordVisible, setConfirmedPasswordVisible] = useState(false)
 
     const [formWarning, setFormWarning] = useState("")
-    const [fetchWarning, setFetchWarning] = useState({})
-    const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
+    const [updateWarning, setUpdateWarning] = useState({})
+    const [updateModalVisible, setUpdateModalVisible] = useState(false)
+    const [deleteWarning, setDeleteWarning] = useState({})
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
 
     // Function called when user wants to submit the form to check the informations before calling the confirmation modal
@@ -47,7 +52,7 @@ export default function UserInformations({ user }) {
             setFormWarning("Erreur : Merci de renseigner votre ancien mot de passe !")
         }
         else {
-            setConfirmationModalVisible(true)
+            setUpdateModalVisible(true)
         }
     }
 
@@ -67,8 +72,8 @@ export default function UserInformations({ user }) {
             jwtToken: user.jwtToken,
             setSessionExpired,
             functionRef: updateUserRef,
-            setWarning: setFetchWarning,
-            setModalVisible: setConfirmationModalVisible,
+            setWarning: setUpdateWarning,
+            setModalVisible: setUpdateModalVisible,
         })
         if (data?.result) {
             const { userSaved } = data
@@ -76,6 +81,29 @@ export default function UserInformations({ user }) {
         }
     }
 
+
+    // Function to delete a user
+    const deleteRef = useRef(true)
+
+    const deleteUser = async () => {
+        const data = await request({
+            path: '/users/delete-user',
+            method: "DELETE",
+            jwtToken: user.jwtToken,
+            setSessionExpired,
+            functionRef: deleteRef,
+            setWarning: setDeleteWarning,
+            setModalVisible: setDeleteModalVisible,
+        })
+        if (data?.result) {
+            const delay = data.delay ?? 0
+            setTimeout(() => {
+                router.push("/")
+                dispatch(logout())
+                dispatch(deleteInformations())
+            }, delay)
+        }
+    }
 
     return (
         <>
@@ -212,10 +240,15 @@ export default function UserInformations({ user }) {
                 {formWarning}
             </Text>
 
-            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"} style={{...appStyle.mediumItemHeight, width: "100%", marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+            <Button func={checkUserInformationsForm} text={"Enregistrer les modifications"} style={{ ...appStyle.mediumItemHeight, width: "100%", marginTop: appStyle.largeMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
 
 
-            < ConfirmationModal visible={confirmationModalVisible} closeModal={() => setConfirmationModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={fetchWarning} confirmationFunc={updateUser} />
+            < ConfirmationModal visible={updateModalVisible} closeModal={() => setUpdateModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir enregistrer ces modifications ?"} confirmationBtnText={"Oui, enregistrer"} cancelBtnText={"Non, annuler"} warning={updateWarning} confirmationFunc={updateUser} />
+
+
+            <Button func={() => setDeleteModalVisible(true)} text={"Supprimer mon compte"} style={{ ...appStyle.mediumItemHeight, width: "100%", marginTop: appStyle.mediumMarginTop }} fontStyle={{ ...appStyle.largeText, color: appStyle.fontColorDarkBg, letterSpacing: phoneDevice ? RPW(0.3) : 2 }} />
+
+            < ConfirmationModal visible={deleteModalVisible} closeModal={() => setDeleteModalVisible(false)} confirmationText={"Êtes vous sûr(e) de vouloir supprimer votre compte ?"} confirmationBtnText={"Oui, supprimer"} cancelBtnText={"Non, annuler"} warning={deleteWarning} confirmationFunc={deleteUser} />
         </>
     )
 }

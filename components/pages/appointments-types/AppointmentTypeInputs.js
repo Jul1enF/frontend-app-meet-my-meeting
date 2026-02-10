@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet } from "react-native"
-import Autocomplete from "@components/ui/Autocomplete"
+import Autocomplete from "@components/ui/autocomplete/Autocomplete"
 import MyTextInput from "@components/ui/MyTextInput"
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
 
 
-export default function AppointmentsTypesInputs({ categories, setCategory, title, setTitle, defaultDuration, setDefaultDuration, price, setPrice, setWarning, selectedType }) {
+export default function AppointmentsTypesInputs({ categories, category, setCategory, title, setTitle, defaultDuration, setDefaultDuration, price, setPrice, setWarning }) {
 
     return (
         <>
@@ -18,16 +18,10 @@ export default function AppointmentsTypesInputs({ categories, setCategory, title
                 <Autocomplete
                     data={categories}
                     setSelectedItem={setCategory}
+                    selectedItem={category}
                     placeholderText="Catégorie..."
-                    emptyText="Aucun résultat"
-                    width={"100%"}
                     canCreate={true}
-                    initialValue={selectedType?.category && { title: selectedType.category, id: selectedType._id }}
-                    inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight, fontWeight: "400" }}
-                    inputContainerStyle={{ height: "auto" }}
-                    suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
-                    listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-                    multiline={true}
+                    inputStyle={{ ...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg, fontWeight: "400" }}
                 />
             </View>
 

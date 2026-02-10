@@ -39,15 +39,10 @@ export default function AppointmentsTypesPage() {
 
     // CATEGORIES LOGIC (IF THERE ARE ONES)
     const categories = useMemo(() => {
-        const categoriesObject = types.reduce((acc, type) => {
-            const key = type.category
-            if (key && !acc[key]) acc[key] = { title: key, id: type._id }
-            return acc
-        }, {})
-        const categoriesArray = Object.values(categoriesObject)
+        const categoriesArray = []
+        types.forEach(e => (e.category && !categoriesArray.includes(e.category)) && categoriesArray.push(e.category))
         return categoriesArray
     }, [types])
-
 
     // FLATLIST SET UP
 

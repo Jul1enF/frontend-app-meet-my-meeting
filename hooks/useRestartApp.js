@@ -1,13 +1,33 @@
 import { Platform, Dimensions, AppState } from "react-native";
 import { useEffect, useRef } from "react";
-import RNRestart from "react-native-restart-newarch";
-import { phoneDevice, RPW } from "@utils/dimensions";
+import { phoneDevice, RPW, RPH } from "@utils/dimensions";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import Constants from 'expo-constants';
+
+const env = Constants.executionEnvironment
+const isBuild = env === "bare" || env === "standalone" ? true : false
+const RNRestart = isBuild ? require("react-native-restart-newarch").default : null
 
 
 export default function useRestartApp() {
+    const isRestartingRef = useRef(false);
 
-    // FONT ZOOM RESTART LOGIC
+    // Function to restart the app
+    const tryRestart = () => {
+        // if on expo go or already restarting we return
+        if (!isBuild || isRestartingRef.current) return;
+        isRestartingRef.current = true;
+        RNRestart.restart();
+
+        // if the restart failed, let the ref be false again to be able to try later a new restart
+        setTimeout(() => {
+            isRestartingRef.current = false;
+        }, 1000);
+    };
+
+
+    
+    /* ================= FONT SCALE RESTART LOGIC ================= */
 
     // Register the fontScale when app start
     const lastFontScaleRef = useRef(Dimensions.get("window").fontScale)
@@ -21,7 +41,7 @@ export default function useRestartApp() {
             // console.log("lastFontScale :", lastFontScale, "fontScale :", fontScale)
 
             if (fontScale !== lastFontScaleRef.current) {
-                RNRestart.restart()
+                tryRestart()
                 return;
             }
         })
@@ -34,30 +54,31 @@ export default function useRestartApp() {
 
 
 
-    // LAYOUT ZOOM RESTART LOGIC
+    /* ================= LAYOUT ZOOM RESTART LOGIC ================= */
 
-    const { width: safeWidth } = useSafeAreaFrame()
+    const { width: safeWidth, height : safeHeight } = useSafeAreaFrame()
+    const firstAppLaunchRef = useRef(false)
 
-    // Function to check if on android the current screen width is not the same as the one registered with RPW() and Dimensions (because of an accessibility zoom) and restart completely the app
-    const checkScreenWidthChange = () => {
+    // useEffect to check if on android the current max screen measure is not the same as the one registered with RPW()/RPH() and Dimensions (because of an accessibility zoom) and restart completely the app
+    useEffect(() => {
+        if (Platform.OS !== "android" || !isBuild || !safeWidth || isRestartingRef.current) return
 
-        if (Platform.OS !== "android") return
+        // On android tablets, the app can first be launched in locked portrait mode even if the tablet is in landscape. So safeWidth is not accurate => return
+        if ( RPW(100) > RPH(100) && safeWidth < safeHeight && !firstAppLaunchRef.current ){
+            firstAppLaunchRef.current = true
+            return
+        }
 
-        // Current size of the screen from Dimension and SafeArea
-        const dimWidth = Math.round(RPW(100));
-        const layoutWidth = Math.round(safeWidth);
+        // Current max size of the screen from Dimension (registered at the app launch) and SafeArea
+        const dimMaxMeasure = Math.round( Math.max(RPW(100), RPH(100)) );
+        const safeMaxMeasure = Math.round( Math.max(safeWidth, safeHeight) );
 
-        // console.log("dimWidth :", dimWidth, "layoutWidth :", layoutWidth)
+        // console.log("dimMaxMeasure :", dimMaxMeasure, "safeMaxMeasure :", safeMaxMeasure)
 
-        if (dimWidth !== layoutWidth) {
-            RNRestart.restart()
+        if (dimMaxMeasure !== safeMaxMeasure) {
+            tryRestart()
             return;
         }
-    }
-
-    // useEffect to check inconsistance between Dimension and SafeArea 
-    useEffect(() => {
-        checkScreenWidthChange()
     }, [safeWidth])
 
 }

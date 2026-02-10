@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, Platform } from "react-native";
 import { useState, useMemo, useRef } from "react";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import Autocomplete from "@components/ui/Autocomplete";
+import Autocomplete from "@components/ui/autocomplete/Autocomplete";
 import UserInformations from "./UserInformations";
 import UserSchedule from "./UserSchedule";
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
@@ -17,14 +17,13 @@ import ConfirmationModal from "@components/ui/ConfirmationModal";
 export default function UserProfile({ selectedUser: user, jwtToken, setUserInformations, setSessionExpired, defaultSchedule }) {
 
     const rolesData = [
-        { id: "1", title: "Gérant", role: "owner" },
-        { id: "2", title: "Administrateur", role: "admin" },
-        { id: "3", title: "Employé", role: "employee" },
-        { id: "4", title: "Client", role: "client" },
+        { title: "Gérant", role: "owner" },
+        { title: "Administrateur", role: "admin" },
+        { title: "Employé", role: "employee" },
+        { title: "Client", role: "client" },
     ]
 
-    const index = rolesData.findIndex(e => e.role === user.role)
-    const [newRole, setNewRole] = useState(rolesData[index])
+    const [newRole, setNewRole] = useState(user.role)
 
     let userDefaultSchedule = {}
     if (defaultSchedule) {
@@ -69,13 +68,12 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
     const updateUserRef = useRef(true)
 
     const updateUserPress = async () => {
-        const { role } = newRole
         const body = {
             _id: user._id,
             userToSave: {
-                role,
-                schedule: role === "client" ? null : newSchedule,
-                contract_end: role === "client" ? null :
+                role : newRole,
+                schedule: newRole === "client" ? null : newSchedule,
+                contract_end: newRole === "client" ? null :
                     contractEnd ? contractEnd.toUTC().toJSDate() : null,
             }
         }
@@ -109,6 +107,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
             bottomOffset={Platform.OS === 'ios' ? 40 : 20}
             overScrollMode="never"
             bounces={false}
+            keyboardShouldPersistTaps="handled"
         >
 
             <Text style={appStyle.pageTitle}>
@@ -126,19 +125,14 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
 
                 <Autocomplete
                     data={rolesData}
+                    selectedItem={newRole}
                     setSelectedItem={setNewRole}
                     placeholderText={"Statut de l'utilisateur"}
-                    width={"100%"}
-                    initialValue={newRole}
-                    emptyText="Aucun résultat"
-                    inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight }}
-                    inputContainerStyle={{ height: "auto" }}
-                    suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
-                    listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-                    multiline={true}
+                    sectionToSelectKey={"role"}
+                    inputStyle={{...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg}}
                 />
 
-                {(newRole?.role && newRole?.role !== "client") &&
+                {(newRole && newRole !== "client") &&
                     <UserSchedule scheduleArray={scheduleArray} setNewSchedule={setNewSchedule}
                         contractEnd={contractEnd} setContractEnd={setContractEnd}
                     />

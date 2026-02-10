@@ -19,22 +19,23 @@ export default function AppointmentPage() {
 
   const [warning, setWarning] = useState({})
   const [selectedAppointmentType, setSelectedAppointmentType] = useState(null)
-  const [selectedEmployees, setSelectedEmployees] = useState(null)
+  const [selectedEmployees, setSelectedEmployees] = useState(employees)
   const [selectedAppointmentSlot, setSelectedAppointmentSlot] = useState(null)
-
 
   const employeesAutocompleteList = useMemo(() => {
     if (!employees) return null
     else return employees.reduce((acc, e) => {
       acc.push({
         title: `${e.first_name ? (e.first_name + " ") : ""}${e.last_name ?? ""}`,
-        id: e._id,
         employee: e,
       })
       return acc
-    }, [{ title: "Sans préférence", id: "all", employees, }])
+    }, 
+    // If no employee in particular is selected, we select them all to have all the appointments available and we'll chose one at the depending on work status
+    [{ title: "Sans préférence", employee : employees }])
 
   }, [employees])
+ 
 
 
   const appointmentDuration = useMemo(() => selectedAppointmentType?.default_duration, [selectedAppointmentType])

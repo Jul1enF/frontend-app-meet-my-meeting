@@ -5,7 +5,7 @@ import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import DurationPicker from './DurationPicker';
-import Autocomplete from '@components/ui/Autocomplete';
+import Autocomplete from '@components/ui/autocomplete/Autocomplete';
 import useAutocompleteLists from '../event-update/useAutocompleteLists';
 import MyTextInput from '@components/ui/MyTextInput';
 
@@ -13,7 +13,7 @@ import { DateTime } from 'luxon';
 import { isBefore } from '@utils/timeFunctions';
 
 
-export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, availableSlots, description, setDescription, category }) {
+export default function BreakInputs({ breakDuration, setBreakDuration, eventStart, setEventStart, availableSlots, description, setDescription }) {
 
     // Creation with a hook of the autocomplete list
     const { availableSlotsList } = useAutocompleteLists({ availableSlots, eventStart })
@@ -36,26 +36,7 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
     }, [breakDuration, availableSlotsList])
 
 
-    // Memoisation of the Autocomplete for the appointments slots and the users
-
-    const slotsAutocomplete = useMemo(() => (
-        <Autocomplete
-            key={availableSlotsList ? availableSlotsList.length : "key"}
-            data={availableSlotsList ?? []}
-            placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
-            initialValue={"initialValue"}
-            showClear={false}
-            editable={false}
-            setSelectedItem={(item) => item?.start && setEventStart(item?.start)}
-            emptyText={!breakDuration ? "Merci de sélectionner une durée" : "Aucun créneau disponible"}
-            width="100%"
-            suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40, fontWeight: "700" }}
-            listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-            inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
-            inputContainerStyle={{ height: "auto" }}
-            multiline={true}
-        />
-    ), [availableSlotsList, eventStart])
+  
 
     return (
         <>
@@ -77,7 +58,19 @@ export default function BreakInputs({ breakDuration, setBreakDuration, eventStar
                 Début :
             </Text>
 
-            {slotsAutocomplete}
+
+            <Autocomplete
+            data={availableSlotsList ?? []}
+            placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
+            showClear={false}
+            editable={false}
+            setSelectedItem={setEventStart}
+            selectedItem={eventStart}
+            emptyResultText={!breakDuration ? "Merci de sélectionner une durée" : "Aucun créneau disponible"}
+            inputStyle={{ ...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg }}
+            dropdownTextStyle={{fontWeight : "700"}}
+            multiline={true}
+        />
 
 
             <Text style={{ ...appStyle.labelText, color: appStyle.fontColorDarkBg, marginTop: appStyle.mediumMarginTop, }} >

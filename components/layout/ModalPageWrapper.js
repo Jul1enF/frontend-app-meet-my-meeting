@@ -5,7 +5,7 @@ import { appStyle } from "@styles/appStyle"
 import Modal from "react-native-modal"
 import useLayoutSpaces from "@hooks/useLayoutSpaces"
 import GoingBackHeader from "@components/ui/GoingBackHeader";
-import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import { AutocompleteProvider } from "@components/ui/autocomplete/AutocompleteProvider";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 
@@ -13,7 +13,7 @@ export default function ModalPageWrapper({ visible, setVisible, closeFunction, b
 
     const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
 
-    const close = () =>{
+    const close = () => {
         typeof setVisible === "function" && setVisible(false)
         typeof closeFunction === "function" && closeFunction()
     }
@@ -21,7 +21,7 @@ export default function ModalPageWrapper({ visible, setVisible, closeFunction, b
     return (
         <Modal
             isVisible={visible}
-            style={{ maxHeight: freeHeight, top: 0, width: "100%", alignItems: "flex-start", justifyContent: "flex-start", margin: 0, zIndex : 999 }}
+            style={{ maxHeight: freeHeight, top: 0, width: "100%", alignItems: "flex-start", justifyContent: "flex-start", margin: 0, zIndex: 999 }}
             coverScreen={false}
             backdropColor="transparent"
             animationIn="slideInRight"
@@ -32,22 +32,22 @@ export default function ModalPageWrapper({ visible, setVisible, closeFunction, b
             deviceHeight={screenHeight}
             useNativeDriverForBackdrop={true}
         >
-            <AutocompleteDropdownContextProvider>
+            <AutocompleteProvider modalPageWrapper={true}>
                 <KeyboardProvider>
 
-                <GoingBackHeader previousPageName={backHeaderText} leftFunction={close} />
+                    <GoingBackHeader previousPageName={backHeaderText} leftFunction={close} />
 
-                { noScrollView && [children] }
+                    {noScrollView && [children]}
 
 
-                { !noScrollView && <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" >
+                    {!noScrollView && <ScrollView style={{ minWidth: "100%" }} contentContainerStyle={{ backgroundColor: appStyle.pageBody.backgroundColor, minHeight: freeHeight }} bounces={false} overScrollMode="never" keyboardShouldPersistTaps="handled" >
 
-                    {[children]}
+                        {[children]}
 
-                </ScrollView>}
-                
+                    </ScrollView>}
+
                 </KeyboardProvider>
-            </AutocompleteDropdownContextProvider>
+            </AutocompleteProvider>
         </Modal>
     )
 }

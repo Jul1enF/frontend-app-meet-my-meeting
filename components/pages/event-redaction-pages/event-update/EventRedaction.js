@@ -7,7 +7,7 @@ import { appStyle } from '@styles/appStyle';
 
 import useScheduleFreeSlots from '@hooks/appointments-schedule/useScheduleFreeSlots';
 import useAutocompleteLists from './useAutocompleteLists';
-import Autocomplete from '@components/ui/Autocomplete';
+import Autocomplete from '@components/ui/autocomplete/Autocomplete';
 import AppointmentInputs from '../inputs/AppointmentInputs';
 import VacationInputs from '../inputs/VacationInputs';
 import BreakInputs from '../inputs/BreakInputs';
@@ -19,13 +19,18 @@ import { eventCatTranslation } from 'constants/translations';
 export default function EventRedaction({ eventRedactionContext, clientRedaction = false }) {
 
     // Context to know how to calcul the freeSlots, set an event and post it
-    const { selectedEmployee, eventStart, setEventStart, oldEvent, events, closures, absences, workingOverrides, slotGapMs, selectedDate, resetAndRenewEvents } = eventRedactionContext
+    const { selectedEmployee, eventStart, setEventStart, oldEvent, setOldEvent, events, closures, absences, workingOverrides, slotGapMs, selectedDate, resetAndRenewEvents } = eventRedactionContext
+
+    // useEffect to clear an old event if this component is unmounted
+    useEffect(() => {
+        return () => setOldEvent(null)
+    }, [])
 
     // States to register the settings of the events
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
     const [client, setClient] = useState(oldEvent?.client ?? null)
     const [unregisteredClient, setUnregisteredClient] = useState(oldEvent?.unregistered_client ?? { first_name: "", last_name: "" })
-    const [category, setCategory] = useState(oldEvent?.category ?? "appointment")
+    const [category, setCategory] = useState("appointment")
     const [description, setDescription] = useState(oldEvent?.description ?? "")
 
     const [vacationStart, setVacationStart] = useState(
@@ -44,8 +49,8 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
     const prevDurations = useRef({})
     useEffect(() => {
         const appDuration = selectedAppointmentType?.default_duration
-        if (prevDurations.current.breakDuration !== breakDuration) setEventDuration(breakDuration)
-        else if (prevDurations.current.appDuration !== appDuration) {
+        if (breakDuration && prevDurations.current.breakDuration !== breakDuration) setEventDuration(breakDuration)
+        else if (appDuration && prevDurations.current.appDuration !== appDuration) {
             setEventDuration(appDuration)
         }
         prevDurations.current = { breakDuration, appDuration }
@@ -93,20 +98,16 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
                         data={categoriesList}
                         editable={false}
                         showClear={false}
-                        setSelectedItem={(item) => setCategory(item?.category ?? null)}
-                        initialValue={"initialValue"}
-                        width="100%"
-                        inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
-                        inputContainerStyle={{ height: "auto" }}
-                        suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6.5) : 40 }}
-                        listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
-                        multiline={true}
+                        setSelectedItem={setCategory}
+                        selectedItem={category}
+                        sectionToSelectKey={"category"}
+                        inputStyle={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                     />
                 }
 
 
                 {category === "appointment" &&
-                    <AppointmentInputs eventRedactionContext={eventRedactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} availableSlots={availableSlots} clientRedaction={clientRedaction} />
+                    <AppointmentInputs eventRedactionContext={eventRedactionContext} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} selectedAppointmentType={selectedAppointmentType} setSelectedAppointmentType={setSelectedAppointmentType} availableSlots={availableSlots} clientRedaction={clientRedaction} client={client} />
                 }
 
 

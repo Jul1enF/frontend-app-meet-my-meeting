@@ -85,7 +85,7 @@ export default function usePlanningContext(planningInformations = {}, getPlannin
   // PROPS FOR EVENT REDACTION
   const eventRedactionContext = useMemo(() => {
 
-    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, employees, appointmentTypes, users, events, closures, absences, workingOverrides, slotGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
+    return { selectedEmployee, setSelectedEmployee, eventStart, setEventStart, oldEvent, setOldEvent, employees, appointmentTypes, users, events, closures, absences, workingOverrides, slotGapMs, maxFuturDays, selectedDate, setSelectedDate, resetAndRenewEvents}
   },
     [selectedEmployee, eventStart, oldEvent, planningInformations, selectedDate, resetAndRenewEvents])
 

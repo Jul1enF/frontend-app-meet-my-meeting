@@ -51,16 +51,20 @@ export function isBetween(dateBefore, dateBetween, dateAfter, canBeEquals) {
     return parisDateBefore <= parisDateBetween && parisDateBetween < parisDateAfter
 }
 
-// Function to get the duration between two date
+// Function to get the duration between two date in ms
 export function getDuration(start, end) {
-    return toParisDt(end).diff(toParisDt(start)).milliseconds
+    return toParisDt(end).diff(toParisDt(start)).as('milliseconds')
 }
 
-// Function to get the duration between two date
+// Function to get the duration between two date in minutes
 export function getMinDuration(start, end) {
-    return toParisDt(end).diff(toParisDt(start)).milliseconds / 1000 / 60
+    return toParisDt(end).diff(toParisDt(start)).as("minutes")
 }
 
+// Function to get the duration between two date in days
+export function getDayDuration(start, end) {
+    return toParisDt(end).diff(toParisDt(start)).as("days")
+}
 
 // Function to create a dtDate from a string hour in Paris time zone
 export const datefromStringHour = (stringHour, dtDay) => {

@@ -4,7 +4,7 @@ import { useState, memo, useMemo } from 'react';
 import { RPH, RPW, phoneDevice } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import Autocomplete from '@components/ui/Autocomplete';
+import Autocomplete from '@components/ui/autocomplete/Autocomplete';
 import DayColumn from './DayColumn';
 import { DateTime } from 'luxon';
 import useLayoutSpaces from '@hooks/useLayoutSpaces';
@@ -49,13 +49,6 @@ export default memo(function Agenda({ agendaContext }) {
 
     const maxDaysReached = startColumnIndex + columnNumber >= maxFuturDays
 
-    // Function for the autocomplete to update the selectedEmployees
-    const updateSelectedEmployees = (item) => {
-        item?.employee && setSelectedEmployees([item.employee])
-        item?.employees && setSelectedEmployees(item.employees)
-
-        if (item === null) selectedEmployees.length === 1 && setSelectedEmployees(employeesAutocompleteList[0].employees)
-    }
 
     // Function to increment or decrement the startColumnIndex
     const changeStartColumnIndex = (increment) => {
@@ -66,19 +59,23 @@ export default memo(function Agenda({ agendaContext }) {
 
     return (
         <>
-            {employeesAutocompleteList.length > 1 && 
-            <Autocomplete 
-            data={employeesAutocompleteList} 
-            setSelectedItem={updateSelectedEmployees} 
-            placeholderText="Choisir votre spécialiste" 
-            emptyText="Aucun résultat" 
-            inputContainerStyle={{ borderColor: appStyle.strongBlack, height: "auto" }} 
-            placeholderColor={appStyle.mediumGrey} 
-            iconColor={appStyle.strongBlack} 
-            inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight, fontWeight: "600", color: appStyle.strongBlack, fontSize: appStyle.largeText.fontSize }}
-            suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
-            listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22, alignItems : "center", width : "100%" }}
-            />
+            <Text style={{ ...appStyle.labelText, marginTop: appStyle.regularMarginTop }}>Votre spécialiste :</Text>
+
+            {employeesAutocompleteList.length > 1 &&
+                <Autocomplete
+                    data={employeesAutocompleteList}
+                    setSelectedItem={setSelectedEmployees}
+                    selectedItem={selectedEmployees}
+                    sectionToSelectKey={"employee"}
+                    placeholderText="Choisir votre spécialiste"
+                    emptyText="Aucun résultat"
+                    editable={false}
+                    showClear={false}
+                    inputContainerStyle={{ borderColor: appStyle.strongBlack, height: "auto" }}
+                    placeholderColor={appStyle.mediumGrey}
+                    iconColor={appStyle.strongBlack}
+                    inputStyle={{ ...appStyle.input.baseLarge, ...appStyle.largeText, textAlign: "left", marginTop : appStyle.regularMarginTop * 0.9 }}
+                />
             }
 
             <View style={{ width: "100%", flexDirection: "row", justifyContent: "center" }} >

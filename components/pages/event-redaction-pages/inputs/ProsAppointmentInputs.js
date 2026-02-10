@@ -4,29 +4,10 @@ import { useMemo } from "react";
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
-import Autocomplete from "@components/ui/Autocomplete";
+import Autocomplete from "@components/ui/autocomplete/Autocomplete";
 import MyTextInput from "@components/ui/MyTextInput";
 
-export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef, setClient, unregisteredClient, setUnregisteredClient }) {
-
-
-    // Memoisation of the Autocomplete for the users
-    const usersAutocomplete = useMemo(() => (
-        <Autocomplete
-            data={usersList}
-            controllerRef={usersAutocompleteRef}
-            placeholderText={"Utilisateur ( inscrit )"}
-            setSelectedItem={(item) => setClient(item?.user ?? null)}
-            emptyText="Aucun résultat"
-            width="100%"
-            inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(3) : 22, paddingBottom: phoneDevice ? RPW(3) : 22, minHeight: appStyle.largeItemHeight }}
-            inputContainerStyle={{ height: "auto" }}
-            suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6) : 40 }}
-            listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(3) : 22 }}
-            multiline={true}
-        />
-    ), [usersList])
-
+export default function ProsAppointmentInputs({ usersList, client, setClient, unregisteredClient, setUnregisteredClient }) {
 
 
     return (
@@ -35,7 +16,15 @@ export default function ProsAppointmentInputs({ usersList, usersAutocompleteRef,
                 Utilisateur inscrit à l'app :
             </Text>
 
-            {usersAutocomplete}
+            <Autocomplete
+                data={usersList}
+                sectionToSelectKey="user"
+                placeholderText={"Utilisateur ( inscrit )"}
+                setSelectedItem={setClient}
+                selectedItem={client}
+                inputStyle={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
+                multiline={true}
+            />
 
 
 

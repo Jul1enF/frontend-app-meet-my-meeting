@@ -7,7 +7,7 @@ import Header from "@components/layout/Header";
 import useIsAppObsolete from "@hooks/useIsAppObsolete";
 import useRestartApp from "@hooks/useRestartApp";
 
-import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import { AutocompleteProvider } from "@components/ui/autocomplete/AutocompleteProvider";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { Settings } from "luxon";
@@ -49,16 +49,16 @@ export default function RootLayout() {
 
     return (
         <Provider store={store}>
-            <AutocompleteDropdownContextProvider >
                 <KeyboardProvider>
+                    <AutocompleteProvider>
                     <Stack screenOptions={{
                         header: (props) => <Header {...props} appObsolete={appObsolete} />,
                     }}
                     >
                         <Stack.Screen name="(tabs)"/>
                     </Stack>
+                    </AutocompleteProvider>
                 </KeyboardProvider>
-            </AutocompleteDropdownContextProvider>
         </Provider>
     )
 }

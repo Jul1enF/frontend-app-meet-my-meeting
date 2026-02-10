@@ -48,7 +48,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
     const appointmentTypesModification = async () => {
         const appointmentTypeToSave = {
-            category: category?.title ?? null,
+            category: category ?? null,
             title,
             default_duration: defaultDuration,
             price,
@@ -110,7 +110,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
             <View style={appStyle.largeCard}>
 
-                <AppointmentsTypesInputs categories={categories} setCategory={setCategory} title={title} setTitle={setTitle} defaultDuration={defaultDuration} setDefaultDuration={setDefaultDuration} price={price} setPrice={setPrice} setWarning={setWarning} selectedType={selectedType} />
+                <AppointmentsTypesInputs categories={categories} category={category} setCategory={setCategory} title={title} setTitle={setTitle} defaultDuration={defaultDuration} setDefaultDuration={setDefaultDuration} price={price} setPrice={setPrice} setWarning={setWarning} selectedType={selectedType} />
 
                 <Text style={[appStyle.warning, !warning && { height: 0, marginTop: 0 }]}>
                     {warning}

@@ -3,7 +3,9 @@ import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-cont
 import Constants from 'expo-constants';
 import { appStyle } from "@styles/appStyle"
 
-export default function useLayoutSpaces(tabBar, secondHeader) {
+export default function useLayoutSpaces(props) {
+    const { tabBar = true, secondHeader = false, header = true } = props ?? {}
+
     const { height: screenHeight, width: screenWidth } = useSafeAreaFrame()
 
     const insets = useSafeAreaInsets();
@@ -12,16 +14,20 @@ export default function useLayoutSpaces(tabBar, secondHeader) {
 
     const statusBarOffset = Platform.OS === "ios" ? Constants.statusBarHeight : insets.top
 
-    const topBlockedHeight = secondHeader ? appStyle.headerHeight + appStyle.secondHeaderHeight : appStyle.headerHeight
+    const fullHeaderHeight = header ? (appStyle.headerHeight + statusBarOffset) : 0
+
+    const topBlockedHeight = fullHeaderHeight + (secondHeader ? appStyle.secondHeaderHeight : 0)
 
     const env = Constants.executionEnvironment
     const isBuild = env === "bare" || env === "standalone" ? true  : false
 
-    // On expo go Android, top : 0 already include the statusBarOffset
-    const modalOffsetTop = Platform.OS === "ios" || isBuild ? topBlockedHeight + statusBarOffset : topBlockedHeight
+    // On expo go Android, for modals (react-native-modal), top : 0 already include the statusBarOffset
+    const modalOffsetTop = Platform.OS === "ios" || isBuild ? topBlockedHeight : topBlockedHeight - statusBarOffset
 
-    const freeHeight = screenHeight - topBlockedHeight - statusBarOffset 
-    - ( tabBar ? appStyle.tabBarHeight + tabbarPaddingBottom : 0)
+    // Height of the tabbar with the inset padding
+    const fullTabBarHeight = tabBar ? appStyle.tabBarHeight + tabbarPaddingBottom : 0
 
-    return { modalOffsetTop, statusBarOffset, topBlockedHeight, freeHeight, screenHeight, screenWidth }
+    const freeHeight = screenHeight - topBlockedHeight - fullTabBarHeight
+
+    return { freeHeight, screenHeight, screenWidth, modalOffsetTop, statusBarOffset, topBlockedHeight, fullTabBarHeight, fullHeaderHeight }
 }

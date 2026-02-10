@@ -15,15 +15,15 @@ export default function useAutocompleteLists({appointmentTypes, users, available
         const canAddAbsenceOrBreak = ["owner","admin"].includes(role) || _id.toString() === selectedEmployee._id.toString()
 
         const list = [
-            { title : "RDV", id : "initialValue", category : "appointment" },
+            { title : "RDV", category : "appointment" },
         ]
 
         canAddAbsenceOrBreak && list.push(
-            { title : "Pause", id : "1", category : "break" },
-            { title : "Congé", id : "2", category : "absence" }
+            { title : "Pause", category : "break" },
+            { title : "Congé", category : "absence" }
         )
 
-        canAddClosure && list.push({ title : "Fermeture", id : "3", category : "closure"})
+        canAddClosure && list.push({ title : "Fermeture", category : "closure"})
 
         return list
     },[selectedEmployee])
@@ -33,15 +33,15 @@ export default function useAutocompleteLists({appointmentTypes, users, available
     const appointmentsList = useMemo(() => {
         if (!appointmentTypes) return []
 
-        const category = appointmentTypes[0].category ? true : false
+        const hasCategory = appointmentTypes[0].category ? true : false
 
-        const categoryCount = category && [...appointmentTypes].reduce((acc, {category})=>{
+        const categoryCount = hasCategory && [...appointmentTypes].reduce((acc, {category})=>{
             acc[category] ? acc[category] += 1 : acc[category] = 1
             return acc
         },{})
 
         let sortedArray
-        if (category){
+        if (hasCategory){
             sortedArray = [...appointmentTypes].sort((a, b) => {
                 const diff = categoryCount[b.category] - categoryCount[a.category]
                 if (diff !== 0) return diff
@@ -52,15 +52,15 @@ export default function useAutocompleteLists({appointmentTypes, users, available
         }
 
         const appointmentsArray = sortedArray.map(e => {
-            const boldTitle = category ? `${e.category} :  ` : e.title
+            const suppressed = e.expiresAt ? true : false
+            const boldTitle = (suppressed ? "SUPPRIMÉ : " : "") + (hasCategory ? `${e.category} :  ` : e.title)
 
-            const titleToDisplay = `${category && e.title} - ${e.default_duration}min • ${e.price}€`
+            const lightTitle = `${hasCategory && e.title} - ${e.default_duration}min • ${e.price}€`
 
             return {
                 boldTitle,
-                titleToDisplay,
-                title : boldTitle + titleToDisplay,
-                id: e._id.toString(),
+                lightTitle,
+                title : boldTitle + lightTitle,
                 appointment: e,
             }
         })
@@ -70,6 +70,7 @@ export default function useAutocompleteLists({appointmentTypes, users, available
     }, [appointmentTypes])
 
 
+
     const usersList = useMemo(() => {
         if (!users) return []
 
@@ -77,18 +78,18 @@ export default function useAutocompleteLists({appointmentTypes, users, available
 
         const usersArray = sortedArray.map(e => {
             const boldTitle = `${e.last_name} - ${e.first_name}`
-            const titleToDisplay = ` • ${e.email}`
+            const lightTitle = ` • ${e.email}`
             return {
                 boldTitle,
-                titleToDisplay,
-                title : boldTitle + titleToDisplay,
-                id: e._id.toString(),
+                lightTitle,
+                title : boldTitle + lightTitle,
                 user: e,
             }
         })
 
         return usersArray
     }, [users])
+
 
 
     const availableSlotsList = useMemo(() => {
@@ -98,12 +99,8 @@ export default function useAutocompleteLists({appointmentTypes, users, available
 
         return [...availableSlots].map(e => {
 
-            const id = e.start.toMillis() === eventStart.toMillis() ?
-                "initialValue" : e.start.toISO()
-
             return {
                 title: e.start.toFormat("HH : mm"),
-                id,
                 start: e.start,
             }
         })

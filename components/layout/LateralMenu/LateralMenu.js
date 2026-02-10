@@ -1,6 +1,7 @@
 import { StyleSheet, View, FlatList } from "react-native"
 import Modal from "react-native-modal"
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
+import { useRouter } from "expo-router"
 import LateralMenuItem from "./LateralMenuItem"
 import { appStyle } from "@styles/appStyle"
 
@@ -11,10 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight, screenWidth, modalOffsetTop, freeHeight }) {
 
+    const router = useRouter()
     const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const role = useSelector((state) => state.user.value.role)
     const dispatch = useDispatch()
     const logoutUser = () => {
+        router.push("/")
         dispatch(logout())
         dispatch(deleteInformations())
     }

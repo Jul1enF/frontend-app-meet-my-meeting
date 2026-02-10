@@ -1,20 +1,19 @@
 import { TextInput, Text, View } from "react-native";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import EmployeeSelection from "@components/selection/EmployeeSelection";
 import ProsAppointmentInputs from "./ProsAppointmentInputs";
-import Autocomplete from "@components/ui/Autocomplete"
+import Autocomplete from "@components/ui/autocomplete/Autocomplete";
 import DatePicker from "@components/ui/DatePicker/DatePicker";
 import useAutocompleteLists from "../event-update/useAutocompleteLists";
-import useSetOldEvent from "./useSetOldEvent";
 
 import { phoneDevice, RPH, RPW } from '@utils/dimensions'
 import { appStyle } from '@styles/appStyle';
 
 import { DateTime } from "luxon";
-import { isBefore } from "@utils/timeFunctions";
+import { isBefore, getDayDuration } from "@utils/timeFunctions";
 
-export default function AppointmentInputs({ eventRedactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, availableSlots, clientRedaction }) {
+export default function AppointmentInputs({ eventRedactionContext, setClient, unregisteredClient, setUnregisteredClient, selectedAppointmentType, setSelectedAppointmentType, availableSlots, clientRedaction, client }) {
 
     // Props coming from the root
     const { eventStart, setEventStart, appointmentTypes, users, oldEvent, employees, selectedEmployee, setSelectedEmployee, selectedDate, setSelectedDate, maxFuturDays } = eventRedactionContext
@@ -42,39 +41,34 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
 
 
 
-    // Hook to set the item of autocompletes and the text inputs if an old event has been charged
-    const { typesAutocompleteRef, usersAutocompleteRef } = useSetOldEvent({ oldEvent, appointmentsList, usersList, setUnregisteredClient, employees })
 
+    // Determination of the max date to select in the datepicker 
+    const maxDateInDatePicker = useMemo(()=> {
+    
+    // If an employee has a contract end date, calculation of the remaining days
+    const daysBeforeEmployeeQuit = selectedEmployee?.contract_end ? getDayDuration(DateTime.now({zone: "Europe/Paris"}).endOf("day"), selectedEmployee.contract_end) : null
 
-    // Clear the appointment type autocomplete if the selected type has been cleared in EventSaving after an attempt to save an event with a suppressed type. For oldEvent cases (modifications) it is handle in useSetOldEvent by displaying "SUPPRIMÉ"
-    const appointmentTypeRef = useRef(null)
-    useEffect(() => {
-        if (!selectedAppointmentType && appointmentTypeRef.current && typesAutocompleteRef.current && !oldEvent) {
-            typesAutocompleteRef.current.clear()
-        }
-    }, [selectedAppointmentType])
+    // For a client it is either the max days allowed to take an appointment or the remaining days of employee
+    if (clientRedaction && maxFuturDays) return DateTime.now({ zone: "Europe/Paris" }).endOf('day').plus({ days: daysBeforeEmployeeQuit ? Math.min(maxFuturDays, daysBeforeEmployeeQuit) : maxFuturDays })
+    
+    // For pros there is only a day limit if the employee has contract end date
+    else return daysBeforeEmployeeQuit ? DateTime.now({ zone: "Europe/Paris" }).endOf('day').plus({ days: daysBeforeEmployeeQuit }) : null
 
-
+    },[selectedEmployee, clientRedaction, maxFuturDays])
 
     return (
         <>
             <Autocomplete
                 data={appointmentsList}
                 placeholderText={"Choix du RDV"}
-                setSelectedItem={(item) => {
-                    setSelectedAppointmentType(item?.appointment ?? null)
-                    appointmentTypeRef.current = item
-                }}
-                controllerRef={typesAutocompleteRef}
-                emptyText="Aucun résultat"
-                width="100%"
-                inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
-                inputContainerStyle={{ height: "auto" }}
-                suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6.5) : 40 }}
-                listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
+                setSelectedItem={setSelectedAppointmentType}
+                sectionToSelectKey={"appointment"}
+                selectedItem={selectedAppointmentType}
+                inputStyle={{ ...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg }}
                 multiline={true}
                 editable={false}
             />
+            
 
             {oldEvent &&
                 <>
@@ -94,7 +88,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                         setEventStart(prev => prev.set({ year: date.year, month: date.month, day: date.day }))
                     }}
                         buttonFontStyle={{ fontWeight: "700" }} buttonStyle={{ ...appStyle.largeCardItem, height: appStyle.mediumItemHeight }}
-                        maxDate={(clientRedaction && maxFuturDays) ? DateTime.now({ zone: "Europe/Paris" }).endOf('day').plus({ days: maxFuturDays }) : null} />
+                        maxDate={maxDateInDatePicker} />
                 </>
             }
 
@@ -104,24 +98,21 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
 
 
             <Autocomplete
-                key={availableSlotsList ? availableSlotsList.length : "key"}
                 data={availableSlotsList ?? []}
                 placeholderText={eventStart ? eventStart.toFormat("HH : mm") : "Horaire"}
-                initialValue={"initialValue"}
                 showClear={false}
                 editable={false}
-                setSelectedItem={(item) => item?.start && setEventStart(item?.start)}
-                emptyText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
-                width="100%"
-                inputStyle={{ height: "auto", paddingTop: phoneDevice ? RPW(2.5) : 22, paddingBottom: phoneDevice ? RPW(2.5) : 22, minHeight: appStyle.largeItemHeight }}
-                inputContainerStyle={{ height: "auto" }}
-                suggestionTextStyle={{ lineHeight: phoneDevice ? RPW(6.5) : 40, fontWeight : "700" }}
-                listItemStyle={{ height: "auto", paddingVertical: phoneDevice ? RPW(2.5) : 22 }}
+                setSelectedItem={setEventStart}
+                selectedItem={eventStart}
+                sectionToSelectKey={"start"}
+                emptyResultText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
+                inputStyle={{ ...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg }}
+                dropdownTextStyle={{fontWeight : "700"}}
             />
 
 
             {!clientRedaction &&
-                <ProsAppointmentInputs usersList={usersList} usersAutocompleteRef={usersAutocompleteRef} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} />
+                <ProsAppointmentInputs usersList={usersList} setClient={setClient} unregisteredClient={unregisteredClient} setUnregisteredClient={setUnregisteredClient} client={client} />
             }
 
 
