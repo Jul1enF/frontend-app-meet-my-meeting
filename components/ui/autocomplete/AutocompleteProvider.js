@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native";
-import { useState, createContext, useContext, useRef, useMemo } from "react";
+import { View, StyleSheet, Platform } from "react-native";
+import { useState, createContext, useContext, useRef} from "react";
 import Dropdown from "./Dropdown";
 import useLayoutSpaces from "@hooks/useLayoutSpaces";
 
@@ -16,6 +16,7 @@ export function AutocompleteProvider({ modalPageWrapper = false, children }) {
     // Registration of a potential press outside the autocomplete
     const touchStartRef = useRef(null)
     const [pressEvent, setPressEvent] = useState(null)
+    const pressThreslhold = Platform.OS === "android" ? 14 : 10
 
     // Registration of the current dropdown id to share it with context to all the autocomplete
     const [currentDropdownId, setCurrentDropdownId] = useState(null)
@@ -37,16 +38,6 @@ export function AutocompleteProvider({ modalPageWrapper = false, children }) {
                     touchStartRef.current = { pageX, pageY }
                     return false
                 }}
-                onTouchMove={(e) => {
-                    if (!dropdownProps || !touchStartRef.current) return
-
-                    if (e.nativeEvent?.touches?.length > 1) {
-                        touchStartRef.current = null
-                        return
-                    }
-
-                    touchStartRef.current = null
-                }}
                 onTouchEnd={(e) => {
                     if (!dropdownProps || !touchStartRef.current) return
                     const { pageX, pageY } = e.nativeEvent
@@ -56,7 +47,7 @@ export function AutocompleteProvider({ modalPageWrapper = false, children }) {
                     const dy = pageY - startY
 
                     // If it is not a scroll
-                    const isTap = Math.abs(dx) < 10 && Math.abs(dy) < 10
+                    const isTap = Math.abs(dx) < pressThreslhold && Math.abs(dy) < pressThreslhold
 
                     if (isTap) {
                         setPressEvent({ pageX, pageY })
