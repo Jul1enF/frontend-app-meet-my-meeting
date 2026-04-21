@@ -11,7 +11,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export default function ModalPageWrapper({ visible, setVisible, closeFunction, backHeaderText, noScrollView, children }) {
 
-    const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces(true)
+    const { freeHeight, screenHeight, screenWidth } = useLayoutSpaces({tabBar : true})
 
     const close = () => {
         typeof setVisible === "function" && setVisible(false)

@@ -25,7 +25,7 @@ export default function Header({appObsolete}) {
 
     // Hook for the height/width of the screen (for tablets orientation changes), the height available and detection of android insetTop to use as offset
 
-    const { modalOffsetTop, statusBarOffset, freeHeight, screenHeight, screenWidth } = useLayoutSpaces(tabBar)
+    const { modalOffsetTop, statusBarOffset, freeHeight, screenHeight, screenWidth } = useLayoutSpaces({tabBar})
 
 
     // States for the display of the search modal
