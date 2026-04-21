@@ -16,9 +16,11 @@ import Feather from '@expo/vector-icons/Feather';
 // - THE AUTCOMPLETE HAVE THE PROPS TITLETOSELECTKEY
 // - THE ITEMS ARE DIRECTLY A STRING
 
-// BETTER TO USE IN A SCROLLVIEW WITH : keyboardShouldPersistTaps="handled" TO HAVE ICONS ALWAYS PRESSABLE
+// BETTER TO USE IN A SCROLLVIEW WITH : keyboardShouldPersistTaps="handled" TO HAVE ICONS PRESSABLE EVEN WHEN ANOTHER INPUT IS FOCUSED
 
 // SELECTEDITEM IS MANDATORY
+
+// THE PARENT MUST NOT HAVE alignItems : "strech"
 
 export default function Autocomplete({
     data = [],
