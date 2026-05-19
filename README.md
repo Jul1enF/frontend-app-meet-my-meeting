@@ -14,10 +14,10 @@ The entire calendar and agenda system is built from scratch to allow full contro
 
 ## ✨ Key Features
 
-- Fully custom-built calendar system (no external UI libraries)
+- Fully custom-built calendar system (no external UI libraries) :
     - Monthly calendar view (used as a date picker)
     - Weekly calendar view (used as a date picker)
-- Fully custom-built agenda system (no external UI libraries)
+- Fully custom-built agenda system (no external UI libraries) :
     - Daily agenda view
     - Create, update, and delete events
     - Designed for professionals to manage their full day schedule
