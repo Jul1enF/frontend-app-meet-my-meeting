@@ -30,7 +30,7 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
     const [selectedAppointmentType, setSelectedAppointmentType] = useState(oldEvent?.appointment_type ?? null)
     const [client, setClient] = useState(oldEvent?.client ?? null)
     const [unregisteredClient, setUnregisteredClient] = useState(oldEvent?.unregistered_client ?? { first_name: "", last_name: "" })
-    const [category, setCategory] = useState("appointment")
+    const [category, setCategory] = useState(oldEvent?.category ?? "appointment")
     const [description, setDescription] = useState(oldEvent?.description ?? "")
 
     const [vacationStart, setVacationStart] = useState(

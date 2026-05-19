@@ -47,7 +47,7 @@ export default function Header({appObsolete}) {
                     </TouchableOpacity>
                     <View style={styles.titleContainer}>
                         <Text style={styles.title} allowFontScaling={false}>
-                            Meet My Meeting
+                            Meeting Scheduler
                         </Text>
                     </View>
                     <TouchableOpacity activeOpacity={0.6} style={styles.searchIconContainer} onPress={() => setSearchVisible(!searchVisible)}>

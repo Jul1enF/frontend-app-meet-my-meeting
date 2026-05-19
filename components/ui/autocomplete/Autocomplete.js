@@ -63,6 +63,7 @@ export default function Autocomplete({
     const { setDropdownProps, currentDropdownId, setCurrentDropdownId } = useDropdownProps()
 
     // Var to help set selectedItem
+    const itemsAreStrings = data.length > 0 && data.every(e => typeof e === "string")
     const registerAString = itemsAreStrings || canCreate === "string"
     const titleKey = titleToSelectKey ?? "title"
 
@@ -84,12 +85,12 @@ export default function Autocomplete({
 
     // USEEFFECT TO CHANGE THE INPUTVALUE IF SELECTEDITEM HAS BEEN CHANGE ELSWHERE
 
-    const itemsAreStrings = data.length > 0 && typeof data[0] === "string"
     useEffect(() => {
         if (!selectedItem && inputValue) {
             setInputValue("")
             return
         }
+
         else if (selectedItem && selectedItem !== inputValue) {
 
             if (itemsAreStrings) {
