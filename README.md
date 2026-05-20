@@ -12,6 +12,20 @@ This application provides a flexible interface for:
 
 The entire calendar and agenda system is built from scratch to allow full control over behavior and UI.
 
+## 📱 Screenshots
+
+### Booking flow
+
+<img src="./assets/booking.png" width="250" />
+
+### Daily agenda (professional view)
+
+<img src="./assets/agenda.png" width="250" />
+
+### Custom calendar (date picker)
+
+<img src="./assets/calendar.png" width="250" />
+
 ## ✨ Key Features
 
 - Fully custom-built calendar system (no external UI libraries) :
