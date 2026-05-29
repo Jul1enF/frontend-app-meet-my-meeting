@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "meet-my-meeting",
-    "slug": "meet-my-meeting",
-    "scheme": "meet-my-meeting",
+    "name": "meeting-scheduler",
+    "slug": "meeting-scheduler",
+    "scheme": "meeting-scheduler",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jul1enf.meetmymeeting",
+      "bundleIdentifier": "com.jul1enf.meeting-scheduler",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -28,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.jul1enf.meetmymeeting",
+      "package": "com.jul1enf.meeting-scheduler",
       "versionCode": 2
     },
     "web": {
