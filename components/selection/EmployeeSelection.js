@@ -38,7 +38,7 @@ export default memo(function EmployeeSelection({ employees, selectedEmployee, se
                     editable={false}
                     setSelectedItem={setSelectedEmployee}
                     selectedItem={selectedEmployee}
-                    sectionToSelectKey={"employee"}
+                    valueKey={"employee"}
                     inputStyle={inputStyle}
                     placeholderColor={appStyle.mediumGrey}
                     iconColor={isInRedactionComponent ? null : appStyle.strongBlack}

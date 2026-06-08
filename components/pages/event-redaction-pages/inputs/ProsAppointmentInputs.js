@@ -18,7 +18,7 @@ export default function ProsAppointmentInputs({ usersList, client, setClient, un
 
             <Autocomplete
                 data={usersList}
-                sectionToSelectKey="user"
+                valueKey="user"
                 placeholderText={"Utilisateur ( inscrit )"}
                 setSelectedItem={setClient}
                 selectedItem={client}

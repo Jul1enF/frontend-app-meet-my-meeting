@@ -100,7 +100,7 @@ export default function EventRedaction({ eventRedactionContext, clientRedaction 
                         showClear={false}
                         setSelectedItem={setCategory}
                         selectedItem={category}
-                        sectionToSelectKey={"category"}
+                        valueKey={"category"}
                         inputStyle={{ ...appStyle.input.baseLargeCard, color: appStyle.fontColorDarkBg }}
                     />
                 }

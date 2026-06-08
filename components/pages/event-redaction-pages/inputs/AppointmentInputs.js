@@ -62,7 +62,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                 data={appointmentsList}
                 placeholderText={"Choix du RDV"}
                 setSelectedItem={setSelectedAppointmentType}
-                sectionToSelectKey={"appointment"}
+                valueKey={"appointment"}
                 selectedItem={selectedAppointmentType}
                 inputStyle={{ ...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg }}
                 multiline={true}
@@ -104,7 +104,7 @@ export default function AppointmentInputs({ eventRedactionContext, setClient, un
                 editable={false}
                 setSelectedItem={setEventStart}
                 selectedItem={eventStart}
-                sectionToSelectKey={"start"}
+                valueKey={"start"}
                 emptyResultText={!selectedAppointmentType ? "Merci de sélectionner un RDV" : "Aucun créneau disponible"}
                 inputStyle={{ ...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg }}
                 dropdownTextStyle={{fontWeight : "700"}}

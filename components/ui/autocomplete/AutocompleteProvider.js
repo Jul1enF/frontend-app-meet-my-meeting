@@ -15,7 +15,7 @@ export function AutocompleteProvider({ modalPageWrapper = false, children }) {
 
     // Registration of a potential press outside the autocomplete
     const touchStartRef = useRef(null)
-    const [pressEvent, setPressEvent] = useState(null)
+    const [pressLocation, setPressLocation] = useState(null)
     const pressThreslhold = Platform.OS === "android" ? 14 : 10
 
     // Registration of the current dropdown id to share it with context to all the autocomplete
@@ -50,7 +50,7 @@ export function AutocompleteProvider({ modalPageWrapper = false, children }) {
                     const isTap = Math.abs(dx) < pressThreslhold && Math.abs(dy) < pressThreslhold
 
                     if (isTap) {
-                        setPressEvent({ pageX, pageY })
+                        setPressLocation({ pageX, pageY })
                         touchStartRef.current = null
                     }
 
@@ -66,7 +66,7 @@ export function AutocompleteProvider({ modalPageWrapper = false, children }) {
             >
                 {dropdownProps &&
 
-                    <Dropdown {...dropdownProps} pressEvent={pressEvent} setPressEvent={setPressEvent} />
+                    <Dropdown {...dropdownProps} pressLocation={pressLocation} setPressLocation={setPressLocation} />
                 }
             </View>
 

@@ -3,7 +3,7 @@ import { Keyboard, Platform, Dimensions } from "react-native";
 import useLayoutSpaces from "@hooks/useLayoutSpaces";
 import { phoneDevice, RPH } from "@utils/dimensions";
 
-export default function useDropdownPosition({ dropdownHeight, autocompleteInputRef, tabBar = true, header = true, dropdownId, pressEvent, closeDropdown }) {
+export default function useDropdownPosition({ dropdownHeight, autocompleteInputRef, tabBar = true, header = true, dropdownId, pressLocation, closeDropdown }) {
 
     const inputMeasureRef = useRef(null)
     const { fullHeaderHeight, freeHeight, screenHeight, screenWidth } = useLayoutSpaces({ tabBar, header })
@@ -59,16 +59,16 @@ export default function useDropdownPosition({ dropdownHeight, autocompleteInputR
       ------------------------------------------------------------*/
 
       useEffect(()=>{
-        if (!pressEvent || !inputMeasureRef.current) return
+        if (!pressLocation || !inputMeasureRef.current) return
 
-        const {pageX : eventX, pageY : eventY} = pressEvent
+        const {pageX : eventX, pageY : eventY} = pressLocation
         const { width, height, pageX, pageY } = inputMeasureRef.current
    
         const isInside = eventX >= pageX && eventX <= (pageX + width) && eventY >= pageY && eventY <= (pageY + height) 
 
         if(!isInside) setTimeout(closeDropdown, 0)
 
-      },[pressEvent])
+      },[pressLocation])
 
 
 
@@ -91,13 +91,13 @@ export default function useDropdownPosition({ dropdownHeight, autocompleteInputR
             }
             setKeyboardMounted(true)
         })
-        const hideSubrscription = Keyboard.addListener("keyboardDidHide", () => {
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             keyboardHeightRef.current = 0
             setKeyboardMounted(false)
         })
         return () => {
             showSubscription.remove()
-            hideSubrscription.remove()
+            hideSubscription.remove()
         }
     }, [])
 

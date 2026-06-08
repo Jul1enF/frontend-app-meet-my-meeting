@@ -83,7 +83,7 @@ export default async function request({ path, method = "GET", body, params, send
         }
 
         if (clearEtag) headers["If-None-Match"] = ""
-        if ("storedData" in props) headers["X-Docs-Count"] = getDocsCount(storedData).toString()
+        if (storedData !== undefined) headers["X-Docs-Count"] = getDocsCount(storedData).toString()
 
         // Options
         const options = { method, headers };

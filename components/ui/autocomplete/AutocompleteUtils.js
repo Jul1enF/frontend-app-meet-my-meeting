@@ -61,38 +61,44 @@ const sameObjects = (a, b) => {
 }
 
 
-export const findSelectedItemTitle = ({ data, sectionToSelectKey, titleToSelectKey, selectedItem }) => {
+export const findSelectedItemTitle = ({ data, valueKey, titleKey, selectedItem }) => {
 
     let title = null
-    const titleKey = titleToSelectKey ?? "title"
+    const resolvedTitleKey = titleKey ?? "title"
+
+    // Items are objects, prior check in Autocomplete
 
     for (let item of data) {
-        const selectedSection = sectionToSelectKey ? item[sectionToSelectKey] : null
+        const itemTitle = item[resolvedTitleKey]
+        const selectedTitle = selectedItem[resolvedTitleKey]
 
-        // If there is no section to select in the data array of object
-        if (!sectionToSelectKey) {
-            //selectedItem is an object, check if a title field match the item title field
-            if (typeof selectedItem === "object" && item[titleKey] === selectedItem[titleKey]) {
-                title = item[titleKey]
+        const selectedSection = valueKey ? item[valueKey] : null
+
+        // Case where there is no key/value to select in the data array of object items
+
+        if (!valueKey) {
+            // selectedItem is an object (because without valueKey the all item is selected), check if a title field match the item title field
+            if (itemTitle !== undefined && itemTitle === selectedTitle) {
+                title = itemTitle
                 break;
             }
         }
 
         // There was a section of the items that was selected : trying to find the one matching selectedItem
         else if (typeof selectedSection === "string" && selectedSection === selectedItem) {
-            title = item[titleKey]
+            title = itemTitle ?? ""
             break;
         }
         else if (selectedSection?._id && selectedSection._id === selectedItem._id) {
-            title = item[titleKey]
+            title = itemTitle ?? ""
             break;
         }
         else if (Array.isArray(selectedSection) && sameArrays(selectedItem, selectedSection)) {
-            title = item[titleKey]
+            title = itemTitle ?? ""
             break;
         }
         else if (typeof selectedSection === "object" && sameObjects(selectedItem, selectedSection)) {
-            title = item[titleKey]
+            title = itemTitle ?? ""
             break;
         }
     }

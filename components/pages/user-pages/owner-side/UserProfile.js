@@ -128,7 +128,7 @@ export default function UserProfile({ selectedUser: user, setUserInformations, s
                     selectedItem={newRole}
                     setSelectedItem={setNewRole}
                     placeholderText={"Statut de l'utilisateur"}
-                    sectionToSelectKey={"role"}
+                    valueKey={"role"}
                     inputStyle={{...appStyle.input.baseLargeCard, color : appStyle.fontColorDarkBg}}
                 />
 

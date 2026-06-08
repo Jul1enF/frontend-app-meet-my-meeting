@@ -66,7 +66,7 @@ export default memo(function Agenda({ agendaContext }) {
                     data={employeesAutocompleteList}
                     setSelectedItem={setSelectedEmployees}
                     selectedItem={selectedEmployees}
-                    sectionToSelectKey={"employee"}
+                    valueKey={"employee"}
                     placeholderText="Choisir votre spécialiste"
                     emptyText="Aucun résultat"
                     editable={false}
