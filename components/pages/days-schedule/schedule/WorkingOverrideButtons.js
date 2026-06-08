@@ -17,7 +17,6 @@ export default function WorkingOverrideButtons({ concernedEvents, setOldEvent, s
 
     const role = useSelector((state) => state.user.value.role)
     const _id = useSelector((state) => state.user.value._id)
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const firstEvent = concernedEvents[0]
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [fetchWarning, setFetchWarning] = useState({})
@@ -74,7 +73,7 @@ export default function WorkingOverrideButtons({ concernedEvents, setOldEvent, s
             path: "/events/delete-working-override",
             method: "DELETE",
             functionRef: deleteRef,
-            jwtToken,
+            sendToken : true,
             setSessionExpired,
             setModalVisible: setConfirmationModalVisible,
             setWarning: setFetchWarning,

@@ -14,7 +14,7 @@ import Button from "@components/ui/Button";
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 
 
-export default function UserProfile({ selectedUser: user, jwtToken, setUserInformations, setSessionExpired, defaultSchedule }) {
+export default function UserProfile({ selectedUser: user, setUserInformations, setSessionExpired, defaultSchedule }) {
 
     const rolesData = [
         { title: "Gérant", role: "owner" },
@@ -78,7 +78,7 @@ export default function UserProfile({ selectedUser: user, jwtToken, setUserInfor
             }
         }
 
-        const data = await request({ path: "/pros/update-user", method: "PUT", body, jwtToken, setSessionExpired, functionRef: updateUserRef, setWarning: setFetchWarning, setModalVisible })
+        const data = await request({ path: "/pros/update-user", method: "PUT", body, sendToken : true, setSessionExpired, functionRef: updateUserRef, setWarning: setFetchWarning, setModalVisible })
 
         if (data?.result) {
             setUserInformations(

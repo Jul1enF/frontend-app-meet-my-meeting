@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultUser = {
+    isConnected : false,
     first_name: "",
     last_name: "",
     email: "",
-    jwtToken: "",
     role : "",
     _id : "",
     events : [],

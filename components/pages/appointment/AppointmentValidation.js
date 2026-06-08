@@ -23,15 +23,15 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
 
     const router = useRouter()
     const dispatch = useDispatch()
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const isConnected = useSelector((state) => state.user.value.isConnected)
     const [userIsConnecting, setUserIsConnecting] = useState(false)
     const [signForm, setSignForm] = useState("signin")
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [fetchWarning, setFetchWarning] = useState({})
 
 
-    const buttonText = jwtToken ? "Enregistrer votre RDV" : "Se connecter / S'incrire"
-    const buttonFunction = () => jwtToken ? setConfirmationModalVisible(true) : setUserIsConnecting(true)
+    const buttonText = isConnected ? "Enregistrer votre RDV" : "Se connecter / S'incrire"
+    const buttonFunction = () => isConnected ? setConfirmationModalVisible(true) : setUserIsConnecting(true)
 
     // Function to register the appointment
     const registerRef = useRef(true)
@@ -52,7 +52,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
             path: "/appointments/user-appointment-saving",
             method: "PUT",
             body: { eventToSave },
-            jwtToken,
+            sendToken : true,
             setSessionExpired,
             functionRef: registerRef,
             setWarning: setFetchWarning,
@@ -75,7 +75,7 @@ export default function AppointmentValidation({ selectedAppointmentType: type, s
     }
 
 
-    if (!userIsConnecting || jwtToken) {
+    if (!userIsConnecting || isConnected) {
         return (
             <View style={{ paddingBottom: appStyle.largeMarginTop, width: "100%", alignItems: "center" }} >
                 <StepTitle title="3. Valider votre RDV" noChevron={true} marginTop={appStyle.regularMarginTop * 1.5} />

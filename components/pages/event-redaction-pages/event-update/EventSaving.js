@@ -19,7 +19,6 @@ import { isBefore } from '@utils/timeFunctions';
 export default function EventSaving({ selectedEmployee, eventStart, oldEvent, selectedAppointmentType: appType, setSelectedAppointmentType, client, unregisteredClient, category, description, vacationStart, vacationEnd, breakDuration, availableSlots, resetAndRenewEvents, clientRedaction }) {
 
     const dispatch = useDispatch()
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
 
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
@@ -146,7 +145,7 @@ export default function EventSaving({ selectedEmployee, eventStart, oldEvent, se
             path,
             method: "PUT",
             body: { eventToSave },
-            jwtToken,
+            sendToken : true,
             setSessionExpired,
             functionRef: registerRef,
             setWarning: setFetchWarning,

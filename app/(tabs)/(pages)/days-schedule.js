@@ -26,7 +26,7 @@ export default function DaysSchedule() {
     const scheduleInformations = useSelector((state) => state.planning.value.schedule)
     const { employees } = scheduleInformations
     const _id = useSelector((state) => state.user.value._id)
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const isConnected = useSelector((state) => state.user.value.isConnected)
     const role = useSelector((state) => state.user.value.role)
 
 
@@ -36,14 +36,14 @@ export default function DaysSchedule() {
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const getScheduleInformations = useCallback(async (storedData) => {
-        if (!jwtToken) return
+        if (!isConnected) return
 
-        const data = await request({ path: "/events/schedule-informations", jwtToken, setSessionExpired, setWarning, storedData })
+        const data = await request({ path: "/events/schedule-informations", sendToken : true, setSessionExpired, setWarning, storedData })
 
         if (data?.result) {
             dispatch(loadInformations({ target: "schedule", informations: data.informations }))
         } 
-    }, [jwtToken, _id])
+    }, [isConnected, _id])
 
     // useFocusEffect to fetch the datas every time the screen appears
     useFocusEffect(useCallback(() => {

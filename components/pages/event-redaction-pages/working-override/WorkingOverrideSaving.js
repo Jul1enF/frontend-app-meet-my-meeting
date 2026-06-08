@@ -16,8 +16,6 @@ import ConfirmationModal from '@components/ui/ConfirmationModal';
 
 export default function WorkingOverrideSaving({ oldEvent, workingSchedule, resetAndRenewEvents }) {
 
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
-
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [eventWarning, setEventWarning] = useState("")
     const [fetchWarning, setFetchWarning] = useState({})
@@ -59,7 +57,7 @@ export default function WorkingOverrideSaving({ oldEvent, workingSchedule, reset
             path : "/events/working-override-saving",
             method: "PUT",
             body: { eventToSave },
-            jwtToken,
+            sendToken : true,
             setSessionExpired,
             functionRef: registerRef,
             setWarning: setFetchWarning,

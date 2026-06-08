@@ -18,7 +18,6 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
 
     const { category, _id } = event
 
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
     const [fetchWarning, setFetchWarning] = useState({})
 
@@ -42,7 +41,7 @@ export default memo(function UpdateButtons({ event, setEventStart, setOldEvent, 
             path: "/events/delete-event",
             method: "DELETE",
             functionRef: deleteRef,
-            jwtToken,
+            sendToken : true,
             setSessionExpired,
             setModalVisible: setConfirmationModalVisible,
             setWarning: setFetchWarning,

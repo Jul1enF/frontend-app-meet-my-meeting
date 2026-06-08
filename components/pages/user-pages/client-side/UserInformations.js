@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 import { useState, useRef } from "react"
 import { useRouter } from "expo-router"
+import * as SecureStore from 'expo-secure-store';
 
 import { RPH, RPW, phoneDevice } from "@utils/dimensions"
 import { appStyle } from "@styles/appStyle"
@@ -69,7 +70,7 @@ export default function UserInformations({ user }) {
             path: '/users/update-user',
             method: "PUT",
             body,
-            jwtToken: user.jwtToken,
+            sendToken : true,
             setSessionExpired,
             functionRef: updateUserRef,
             setWarning: setUpdateWarning,
@@ -89,7 +90,7 @@ export default function UserInformations({ user }) {
         const data = await request({
             path: '/users/delete-user',
             method: "DELETE",
-            jwtToken: user.jwtToken,
+            sendToken : true,
             setSessionExpired,
             functionRef: deleteRef,
             setWarning: setDeleteWarning,
@@ -97,10 +98,11 @@ export default function UserInformations({ user }) {
         })
         if (data?.result) {
             const delay = data.delay ?? 0
-            setTimeout(() => {
-                router.push("/")
+            setTimeout(async () => {
+                router.replace("/")
                 dispatch(logout())
                 dispatch(deleteInformations())
+                await SecureStore.deleteItemAsync('jwtToken')
             }, delay)
         }
     }

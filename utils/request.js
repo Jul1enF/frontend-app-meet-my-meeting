@@ -1,3 +1,6 @@
+import * as SecureStore from 'expo-secure-store';
+
+
 // Function to count the number of docs (arrays or objects) owned by stored data
 // Same way of counting than in sendIfUpdated middleware in the back end
 const getDocsCount = (storedData) => {
@@ -43,13 +46,12 @@ const getDocsCount = (storedData) => {
 
 
 
-export default async function request(props) {
-    const { path, method = "GET", body, params, jwtToken, setSessionExpired, functionRef, setWarning, setModalVisible, setUploading, clearEtag, storedData } = props
+export default async function request({ path, method = "GET", body, params, sendToken, setSessionExpired, functionRef, setWarning, setModalVisible, setUploading, clearEtag, storedData }) {
 
-    const warning = typeof setWarning === "function"
-    const modal = typeof setModalVisible === "function"
-    const uploading = typeof setUploading === "function"
-    const session = typeof setSessionExpired === "function"
+    const warning = !!setWarning
+    const modal = !!setModalVisible
+    const uploading = !!setUploading
+    const session = !!setSessionExpired
 
     let warningText
     let sessionExpired
@@ -73,12 +75,20 @@ export default async function request(props) {
 
         const url = process.env.EXPO_PUBLIC_BACK_ADDRESS;
 
-        const headers = jwtToken ? { Authorization: `Bearer ${jwtToken}` } : {};
-        const options = { method, headers };
+        // Headers
+        const headers = {}
+        if (sendToken) {
+            const jwtToken = await SecureStore.getItemAsync('jwtToken')
+            if (jwtToken) headers["Authorization"] = `Bearer ${jwtToken}`
+        }
 
         if (clearEtag) headers["If-None-Match"] = ""
         if ("storedData" in props) headers["X-Docs-Count"] = getDocsCount(storedData).toString()
 
+        // Options
+        const options = { method, headers };
+
+        // Body
         if (body) {
             if (body instanceof FormData) {
                 options.body = body;
@@ -88,10 +98,13 @@ export default async function request(props) {
             }
         }
 
+        // Params
         const urlParams = params
             ? "/" + (Array.isArray(params) ? params.join("/") : params)
             : "";
-       
+
+
+        // Fetch
         const response = await fetch(`${url}${path}${urlParams}`, options);
         const data = await response.json()
 
@@ -99,15 +112,20 @@ export default async function request(props) {
             displayWarning(data.errorText ?? null)
             sessionExpired = data.sessionExpired
             // If the session has not expired (wich mean automatic expulsion of the user), we return the delay during wich the error message will be displayed (in case of an action needed after) and the data in case of a check inside if it is needed
-            if (!sessionExpired) return { 
-                delay : readingTime(warningText) + 400,
+            if (!sessionExpired) return {
+                delay: readingTime(warningText) + 400,
                 ...(data && data),
             }
         }
         else if (data.notModified) {
             return
         }
+        // Successfull fetch with new data
         else {
+            if (data.jwtToken) {
+                await SecureStore.setItemAsync('jwtToken', data.jwtToken)
+                delete data.jwtToken
+            }
             data.successText && displayWarning(data.successText, true)
             data.delay = readingTime(data.successText) + 400
             return data
@@ -126,9 +144,9 @@ export default async function request(props) {
             warningText && setWarning({})
         }, readingTime(warningText))
 
-        if (session && sessionExpired){
+        if (session && sessionExpired) {
             const delay = readingTime(warningText) + (modal ? 400 : 0)
-            setTimeout(()=> setSessionExpired(true), delay)
+            setTimeout(() => setSessionExpired(true), delay)
         }
     }
 }

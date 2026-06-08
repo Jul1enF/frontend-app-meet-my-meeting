@@ -15,7 +15,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import ConfirmationModal from "@components/ui/ConfirmationModal";
 
 
-export default function AppointmentItem({ start, employee, appointment_type, _id, employees, jwtToken, resetAndRenewEvents }) {
+export default function AppointmentItem({ start, employee, appointment_type, _id, employees, resetAndRenewEvents }) {
 
     const dispatch = useDispatch()
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
@@ -51,7 +51,7 @@ export default function AppointmentItem({ start, employee, appointment_type, _id
             path: "/appointments/delete-appointment",
             method: "DELETE",
             functionRef: deleteRef,
-            jwtToken,
+            sendToken : true,
             setSessionExpired,
             params: _id.toString(),
             setModalVisible: setConfirmationModalVisible,

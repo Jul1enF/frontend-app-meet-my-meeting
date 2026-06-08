@@ -19,7 +19,7 @@ import useSessionExpired from "@hooks/useSessionExpired";
 import UserProfile from "@components/pages/user-pages/owner-side/UserProfile";
 
 export default function UsersPage() {
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+
     const [usersInformations, setUsersInformations] = useState(null)
     const [warning, setWarning] = useState({})
     const [searchText, setSearchText] = useState("")
@@ -34,7 +34,7 @@ export default function UsersPage() {
 
     // LOAD USERS FUNCTION AND USEEFFECT
     const fetchUsers = async (storedData) => {
-        const data = await request({ path: "/pros/get-all-users", jwtToken, setSessionExpired, setWarning, storedData })
+        const data = await request({ path: "/pros/get-all-users", sendToken : true, setSessionExpired, setWarning, storedData })
         if (data?.result) {
             setUsersInformations(data.usersInformations)
         }
@@ -143,7 +143,7 @@ export default function UsersPage() {
 
                 <ModalPageWrapper visible={userModalVisible} setVisible={setUserModalVisible} backHeaderText="Liste des utilisateurs" noScrollView={true} >
 
-                    <UserProfile selectedUser={selectedUser} jwtToken={jwtToken} setUserInformations={setUsersInformations} setSessionExpired={setSessionExpired} defaultSchedule={defaultSchedule} />
+                    <UserProfile selectedUser={selectedUser} setUserInformations={setUsersInformations} setSessionExpired={setSessionExpired} defaultSchedule={defaultSchedule} />
 
                 </ModalPageWrapper>
 

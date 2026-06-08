@@ -10,7 +10,7 @@ import ConfirmationModal from "@components/ui/ConfirmationModal"
 import request from "@utils/request"
 import { sortByCategory } from "./AppointmentTypesUtils"
 
-export default function AppointmentTypeRedaction({ selectedType, setSelectedType, jwtToken, setTypes, setSessionExpired, categories, setTypeModalVisible }) {
+export default function AppointmentTypeRedaction({ selectedType, setSelectedType, setTypes, setSessionExpired, categories, setTypeModalVisible }) {
 
     const [category, setCategory] = useState(null)
     const [title, setTitle] = useState("")
@@ -60,7 +60,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
 
         const body = { appointmentTypeToSave, newAppointmentType, _id }
 
-        const data = await request({ path: "/pros/appointment-types-modification", method: "PUT", body, jwtToken, setSessionExpired, functionRef: appointmentTypesModificationRef, setWarning: setFetchWarning, setModalVisible: setConfirmationModalVisible })
+        const data = await request({ path: "/pros/appointment-types-modification", method: "PUT", body, sendToken : true, setSessionExpired, functionRef: appointmentTypesModificationRef, setWarning: setFetchWarning, setModalVisible: setConfirmationModalVisible })
 
         if (data?.result) {
             const { appointmentTypeSaved } = data
@@ -82,7 +82,7 @@ export default function AppointmentTypeRedaction({ selectedType, setSelectedType
     const deleteAppointmentTypeRef = useRef(true)
     const deleteAppointmentType = async () => {
 
-        const data = await request({ path: "/pros/delete-appointment-type", method: "PUT", jwtToken, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, body: { _id: selectedType._id } })
+        const data = await request({ path: "/pros/delete-appointment-type", method: "PUT", sendToken : true, setSessionExpired, functionRef: deleteAppointmentTypeRef, setWarning: setFetchWarning, setModalVisible: setDeleteModalVisible, body: { _id: selectedType._id } })
 
         if (data?.result) {
             setTypes(prev => prev.filter(e => e._id !== selectedType._id))

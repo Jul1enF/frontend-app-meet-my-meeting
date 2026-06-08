@@ -25,7 +25,7 @@ export default function UserAppointments() {
 
     const dispatch = useDispatch()
     const _id = useSelector((state) => state.user.value._id)
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const isConnected = useSelector((state) => state.user.value.isConnected)
     const events = useSelector((state) => state.user.value.events)
     const appointmentsInformations = useSelector((state) => state.planning.value.appointments)
     const { employees } = appointmentsInformations
@@ -36,9 +36,9 @@ export default function UserAppointments() {
     useSessionExpired(sessionExpired, setSessionExpired)
 
     const getAppointmentsInformations = useCallback(async (storedData) => {
-        if (!jwtToken) return
+        if (!isConnected) return
   
-        const data = await request({ path: "/appointments/user-appointment-informations", jwtToken, setSessionExpired, setWarning: setFetchWarning, storedData})
+        const data = await request({ path: "/appointments/user-appointment-informations", sendToken : true, setSessionExpired, setWarning: setFetchWarning, storedData})
 
         if (data?.result) {
             dispatch(loadInformations({ target: "appointments", informations: data.informations }))
@@ -51,7 +51,7 @@ export default function UserAppointments() {
             dispatch(loadEvents(userAppointments))
         }
 
-    }, [jwtToken, _id])
+    }, [isConnected, _id])
 
 
     // useEffect to fetch the user's appointment or select them
@@ -110,14 +110,14 @@ export default function UserAppointments() {
                     {fetchWarning?.text}
                 </Text>
 
-                {(!events.length && jwtToken) ?
+                {(!events.length && isConnected) ?
                     <Text style={{ ...appStyle.pageSubtitle, marginTop: appStyle.largeMarginTop }}>
                         Aucun rendez vous à venir !
                     </Text>
                     : null
                 }
 
-                {!jwtToken &&
+                {!isConnected &&
                     < Text style={{ ...appStyle.pageSubtitle, marginTop: appStyle.largeMarginTop, lineHeight: phoneDevice ? RPW(7.5) : 45 }}>
                         Connectez vous pour enregistrer et voir vos RDV !
                     </Text>
@@ -133,7 +133,7 @@ export default function UserAppointments() {
         <View style={{ flex: 1, backgroundColor: appStyle.pageBody.backgroundColor }}>
 
             {/* Modal to set or modify an appointment */}
-            <ModalPageWrapper visible={eventStart && jwtToken && oldEvent} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Liste des RDV" noScrollView={true}>
+            <ModalPageWrapper visible={eventStart && isConnected && oldEvent} setVisible={setEventStart} closeFunction={() => setOldEvent(null)} backHeaderText="Liste des RDV" noScrollView={true}>
                 <EventRedaction eventRedactionContext={eventRedactionContext} clientRedaction={true} />
             </ModalPageWrapper>
 
@@ -152,7 +152,7 @@ export default function UserAppointments() {
                 keyExtractor={(item) => item._id}
                 renderItem={({ item, index }) =>
                     <TouchableOpacity onPress={() => appointmentPress(item)}>
-                        <AppointmentItem {...item} employees={employees} jwtToken={jwtToken} resetAndRenewEvents={resetAndRenewEvents} />
+                        <AppointmentItem {...item} employees={employees} resetAndRenewEvents={resetAndRenewEvents} />
                     </TouchableOpacity>}
                 style={{ flex: 1 }}
                 contentContainerStyle={{ alignItems: 'center', paddingBottom: appStyle.pagePaddingBottom }}

@@ -8,26 +8,28 @@ import { appStyle } from "@styles/appStyle"
 import { logout } from "@reducers/user";
 import { deleteInformations } from "@reducers/planning"
 import { useDispatch, useSelector } from "react-redux";
+import * as SecureStore from 'expo-secure-store';
 
 
 export default function LateralMenu({ menuVisible, setMenuVisible, screenHeight, screenWidth, modalOffsetTop, freeHeight }) {
 
     const router = useRouter()
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
+    const isConnected = useSelector((state) => state.user.value.isConnected)
     const role = useSelector((state) => state.user.value.role)
     const dispatch = useDispatch()
-    const logoutUser = () => {
-        router.push("/")
+    const logoutUser = async () => {
+        router.replace("/")
         dispatch(logout())
         dispatch(deleteInformations())
+        await SecureStore.deleteItemAsync('jwtToken')
     }
 
     const sectionsArray = [
         { sectionName: "Accueil", link: "/" },
-        { sectionName: jwtToken ? "Se déconnecter" : "Se connecter / S'inscrire", link: jwtToken ? "/" : "/login", func: jwtToken ? logoutUser : null },
+        { sectionName: isConnected ? "Se déconnecter" : "Se connecter / S'inscrire", link: isConnected ? "/" : "/login", func: isConnected ? logoutUser : null },
     ]
 
-    if (jwtToken){
+    if (isConnected){
         sectionsArray.splice( 1, 0,
         { sectionName: "Mes informations", link: "/user-profile" },
     )

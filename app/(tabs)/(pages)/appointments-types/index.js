@@ -15,7 +15,6 @@ import AppointmentTypeRedaction from "@components/pages/appointments-types/Appoi
 import Octicons from '@expo/vector-icons/Octicons';
 
 export default function AppointmentsTypesPage() {
-    const jwtToken = useSelector((state) => state.user.value.jwtToken)
     const [types, setTypes] = useState([])
     const [warning, setWarning] = useState({})
     const [typeModalVisible, setTypeModalVisible] = useState(false)
@@ -27,7 +26,7 @@ export default function AppointmentsTypesPage() {
 
     // LOAD APPOINTMENTS TYPES FUNCTION AND USEEFFECT
     const getTypes = async (storedData) => {
-        const data = await request({ path: "/pros/get-appointments-types", jwtToken, setSessionExpired, setWarning, storedData })
+        const data = await request({ path: "/pros/get-appointments-types", sendToken : true, setSessionExpired, setWarning, storedData })
         if (data?.result) {
             setTypes(sortByCategory(data.appointmentsTypes))
         }
@@ -107,7 +106,7 @@ export default function AppointmentsTypesPage() {
 
             <ModalPageWrapper visible={typeModalVisible} setVisible={setTypeModalVisible} backHeaderText="Liste des modèles de RDV" noScrollView={true} >
 
-                <AppointmentTypeRedaction selectedType={selectedType} setSelectedType={setSelectedType} jwtToken={jwtToken} setTypes={setTypes} setSessionExpired={setSessionExpired} categories={categories} setTypeModalVisible={setTypeModalVisible} />
+                <AppointmentTypeRedaction selectedType={selectedType} setSelectedType={setSelectedType} setTypes={setTypes} setSessionExpired={setSessionExpired} categories={categories} setTypeModalVisible={setTypeModalVisible} />
 
             </ModalPageWrapper>
         </View>
