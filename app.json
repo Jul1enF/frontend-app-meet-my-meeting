@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jul1enf.meeting-scheduler",
+      "bundleIdentifier": "com.jul1enf.meeting.scheduler",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -28,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.jul1enf.meeting-scheduler",
+      "package": "com.jul1enf.meeting.scheduler",
       "versionCode": 2
     },
     "web": {
