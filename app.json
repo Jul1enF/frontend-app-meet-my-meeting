@@ -28,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.jul1enf.meeting.scheduler",
+      "package": "com.jul1enf.meetmymeeting",
       "versionCode": 2
     },
     "web": {
