@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "meeting-scheduler",
-    "slug": "meeting-scheduler",
+    "slug": "meet-my-meeting",
     "scheme": "meeting-scheduler",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jul1enf.meeting.scheduler",
+      "bundleIdentifier": "com.jul1enf.meetmymeeting",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
