@@ -4,7 +4,8 @@ import { useNavigationState } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import { appStyle } from "@styles/appStyle"
 
-export default function useLayoutSpaces({ tabBar, secondHeader = false, header = true } = {}) {   
+export default function useLayoutSpaces({ tabBar, secondHeader = false, header = true } = {}) {
+    
     const tabBarDetected = useNavigationState((state) => {
         if (!state) return false;
 
@@ -12,8 +13,15 @@ export default function useLayoutSpaces({ tabBar, secondHeader = false, header =
             if (!navState) return false;
             if (navState.type === "tab") return true;
 
-            const route = navState.routes?.[navState.index];
-            return route?.state ? findTab(route.state) : false;
+            const routes = navState.routes ?? [];
+            const routesToCheck = navState.stale ? routes : [routes[navState.index ?? 0]];
+
+            for (const route of routesToCheck) {
+                // If the route name includes "tabs", it means it's a tab layout
+                if (route?.name?.includes("tabs")) return true;
+                if (route?.state && findTab(route.state)) return true;
+            }
+            return false;
         }
 
         return findTab(state);
