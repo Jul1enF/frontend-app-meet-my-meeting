@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
-import { useSegments } from "expo-router";
 
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -20,12 +19,9 @@ export default function Header({appObsolete}) {
 
     const [menuVisible, setMenuVisible] = useState(false)
 
-    const segments = useSegments();
-    const tabBar = segments[0] === "(tabs)"
-
     // Hook for the height/width of the screen (for tablets orientation changes), the height available and detection of android insetTop to use as offset
 
-    const { modalOffsetTop, statusBarOffset, freeHeight, screenHeight, screenWidth } = useLayoutSpaces({tabBar})
+    const { modalOffsetTop, statusBarOffset, freeHeight, screenHeight, screenWidth } = useLayoutSpaces()
 
 
     // States for the display of the search modal

@@ -17,6 +17,7 @@ export default function SearchModal({ searchVisible, setSearchVisible, screenWid
     // Function called when a search is submitted
 
     const submitSearch = () => {
+        return
         router.push(`/searches/${searchText}`)
         setSearchText('')
         setSearchVisible(false)
