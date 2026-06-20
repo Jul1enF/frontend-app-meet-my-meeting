@@ -19,7 +19,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.value = {...action.payload, events : []}
+            state.value = {...action.payload, isConnected : true, events : []}
         },
         logout: (state, action) => {
             state.value = defaultUser
